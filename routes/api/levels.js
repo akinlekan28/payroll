@@ -132,7 +132,7 @@ router.delete("/:id", protect, (req, res) => {
 //@route  Delete api/level/bonus/:id/:bid
 //@desc Delete Employee bonus route
 //@access Private
-router.delete("/bonus/:id/:bid", (req, res) => {
+router.delete("/bonus/:id/:bid", protect, (req, res) => {
   Level.findOne({ _id: req.params.id })
     .then(level => {
       //Check if Bonus exist
@@ -148,7 +148,7 @@ router.delete("/bonus/:id/:bid", (req, res) => {
         .map(item => item._id.toString())
         .indexOf(req.params.bid);
 
-      // Splice comment out of array
+      // Splice deductable out of array
       level.bonuses.splice(removeIndex, 1);
 
       level.save().then(level => res.json(level));
@@ -156,6 +156,33 @@ router.delete("/bonus/:id/:bid", (req, res) => {
     .catch(err => res.status(404).json(err));
 });
 
+//@route  Delete api/level/deductable/:id/:did
+//@desc Delete Employee deductable route
+//@access Private
+router.delete("/deductable/:id/:did", protect, (req, res) => {
+  Level.findOne({ _id: req.params.id })
+    .then(level => {
+      //Check if Deductable exist
+      if (
+        level.deductables.filter(
+          deductables => deductables._id.toString() === req.params.did
+        ).length === 0
+      ) {
+        return res
+          .status(404)
+          .json({ deductablesnotexist: "Deductables does not exist" });
+      }
+      // Get remove index
+      const removeIndex = level.deductables
+        .map(item => item._id.toString())
+        .indexOf(req.params.did);
 
+      // Splice deductable out of array
+      level.deductables.splice(removeIndex, 1);
+
+      level.save().then(level => res.json(level));
+    })
+    .catch(err => res.status(404).json(err));
+});
 
 module.exports = router;
