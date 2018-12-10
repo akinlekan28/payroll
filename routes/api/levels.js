@@ -14,6 +14,7 @@ const Level = require("../../models/Level");
 //@desc View Employee level route
 //@access Private
 router.get("/all", (req, res) => {
+  
   const errors = {};
 
   Level.find()
