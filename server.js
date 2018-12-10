@@ -5,6 +5,7 @@ const passport = require('passport');
 
 const users = require('./routes/api/users');
 const level = require('./routes/api/levels');
+const employee = require('./routes/api/employees');
 
 const app = express();
 
@@ -34,6 +35,7 @@ require('./config/passport')(passport);
 //Use routes
 app.use('/api/users', users);
 app.use('/api/level', level);
+app.use('/api/employee', employee);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`));
