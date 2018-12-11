@@ -6,6 +6,7 @@ const passport = require('passport');
 const users = require('./routes/api/users');
 const level = require('./routes/api/levels');
 const employee = require('./routes/api/employees');
+const exception = require('./routes/api/exception');
 const tax = require('./routes/api/tax');
 
 const app = express();
@@ -37,6 +38,7 @@ require('./config/passport')(passport);
 app.use('/api/users', users);
 app.use('/api/level', level);
 app.use('/api/employee', employee);
+app.use('/api/exception', exception);
 app.use('/api/tax', tax);
 
 const PORT = process.env.PORT || 5000;
