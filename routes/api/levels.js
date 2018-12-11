@@ -10,6 +10,24 @@ const deductableInput = require("../../validation/deductable");
 //Load Level model
 const Level = require("../../models/Level");
 
+//@route  Get api/level/:id
+//@desc View single level route
+//@access Private
+router.get("/:id", protect, (req, res) => {
+  const errors = {};
+  Level.findOne({ _id: req.params.id })
+    .then(level => {
+      if (!level) {
+        errors.nolevel = "There is no grade level with this record";
+        return res.status(404).json(errors);
+      }
+      res.json(level);
+    })
+    .catch(err =>
+      res.status(404).json({ message: "Grade level record not found" })
+    );
+});
+
 //@route  Get api/level/all
 //@desc View Employee level route
 //@access Private

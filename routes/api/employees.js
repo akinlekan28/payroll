@@ -42,7 +42,7 @@ router.post("/", protect, (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
-//@route  Post api/employee/:id
+//@route  Put api/employee/:id
 //@desc Edit employee route
 //@access Private
 router.put("/:id", protect, (req, res) => {
@@ -81,8 +81,8 @@ router.put("/:id", protect, (req, res) => {
     );
 });
 
-//@route  Post api/employee
-//@desc View employee route
+//@route  Get api/employee
+//@desc View all employee route
 //@access Private
 router.get("/", protect, (req, res) => {
   const errors = {};
@@ -100,7 +100,25 @@ router.get("/", protect, (req, res) => {
     );
 });
 
-//@route  Post api/employee/:id
+//@route  Get api/employee/:id
+//@desc View single employee route
+//@access Private
+router.get("/:id", protect, (req, res) => {
+  const errors = {};
+  Employee.findOne({ _id: req.params.id })
+    .then(employee => {
+      if (!employee) {
+        errors.noemployee = "There is no employee with this record";
+        return res.status(404).json(errors);
+      }
+      res.json(employee);
+    })
+    .catch(err =>
+      res.status(404).json({ message: "Employee record not found" })
+    );
+});
+
+//@route  Delete api/employee/:id
 //@desc Delete employee route
 //@access Private
 router.delete("/:id", protect, (req, res) => {
