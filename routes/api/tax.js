@@ -6,36 +6,54 @@ const protect = passport.authenticate("jwt", { session: false });
 //Load models
 const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
+const Exception = require("../../models/Exception");
 
 router.get("/:id", protect, (req, res) => {
-  Employee.findOne({ _id: req.params.id})
-    .then(employee => {
-      Level.findOne({ _id: employee.level })
+  Employee.findOne({ _id: req.params.id })
+    .then(employeeDetails => {
+      Level.findOne({ _id: employeeDetails.level })
         .then(level => {
-        let levelBonus = level.bonuses,
-        levelDeductable = level.deductables,
-        deductableSum = 0,
-        bonusSum = 0;
-        levelBonus.forEach(bonus => {
+          let payable,
+            levelBonus = level.bonuses,
+            levelDeductable = level.deductables,
+            deductableSum = 0,
+            bonusSum = 0;
+          levelBonus.forEach(bonus => {
             bonusSum += bonus.amount;
-        });
-        levelDeductable.forEach(deductable => {
+          });
+          levelDeductable.forEach(deductable => {
             deductableSum += deductable.amount;
-        });
+          });
 
-        const payable = (bonusSum+level.basic)-deductableSum;
-
-        const taxReport = {
-            payable,
-            bonusSum,
-            deductableSum,
-            employee,
-            level
-        }
-        return res.status(200).json(taxReport);        
+          Exception.findOne({ employee: employeeDetails._id })
+            .then(employeeException => {
+              if (employeeException) {
+                payable = bonusSum + employeeException.amount - deductableSum;
+                const taxReport = {
+                  payable,
+                  bonusSum,
+                  deductableSum,
+                  employeeDetails,
+                  level,
+                  employeeException
+                };
+                return res.status(200).json(taxReport);
+              } else {
+                payable = bonusSum + level.basic - deductableSum;
+                const taxReport = {
+                  payable,
+                  bonusSum,
+                  deductableSum,
+                  employeeDetails,
+                  level
+                };
+                return res.status(200).json(taxReport);
+              }
+            })
+            .catch(err => console.log(err));
         })
         .catch(err =>
-          res.status.json({ message: "User grade level not found" })
+          res.status(404).json({ message: "User grade level not found" })
         );
     })
     .catch(err => res.status(404).json({ message: "Error fetching user" }));

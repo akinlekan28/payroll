@@ -22,23 +22,22 @@ router.get("/", protect, (req, res) => {
     );
 });
 
-
 //@route  Get api/exception/:id
 //@desc View an Employee salary exception route
 //@access Private
 router.get("/:id", protect, (req, res) => {
-    Exception.findOne({employee: req.params.id})
-      .then(exception => {
-        if (!exception) {
-          errors.noexception = "Exception not found";
-          return res.status(404).json(errors);
-        }
-        res.json(exception);
-      })
-      .catch(err =>
-        res.status(400).json({ message: "Error fetching exception" })
-      );
-  });
+  Exception.findOne({ employee: req.params.id })
+    .then(exception => {
+      if (!exception) {
+        errors.noexception = "Exception not found";
+        return res.status(404).json(errors);
+      }
+      res.json(exception);
+    })
+    .catch(err =>
+      res.status(400).json({ message: "Error fetching exception" })
+    );
+});
 
 //@route  Post api/exception/:id
 //@desc Create Employee salary exception route
@@ -46,28 +45,27 @@ router.get("/:id", protect, (req, res) => {
 router.post("/:id", protect, (req, res) => {
   const errors = {};
 
-  if (req.body.amount == "") {
+  if (!req.body.amount) {
     errors.amount = "Amount field cannot be empty";
     return res.status(400).json(errors);
   }
 
-  Exception.find({ employee: req.params.id }).then(employee => {
-    if (!employee) {
-      const newSalaryException = new Exception({
-        amount: req.body.amount,
-        employee: req.params.id
-      });
-
-      newSalaryException
-        .save()
-        .then(exceptionSalary => res.json(exceptionSalary))
-        .catch(err =>
-          res.status(400).json({ message: "Error saving salary exception" })
-        );
+  Exception.findOne({ employee: req.params.id }).then(employee => {
+    if (employee) {
+      errors.exception = "Employee salary exception already exist";
+      return res.status(400).json(errors);
     }
-    return res
-      .status(400)
-      .json({ message: "Employee salary exception already exist" });
+    const newSalaryException = new Exception({
+      amount: req.body.amount,
+      employee: req.params.id
+    });
+
+    newSalaryException
+      .save()
+      .then(exceptionSalary => res.json(exceptionSalary))
+      .catch(err =>
+        res.status(400).json({ message: "Error saving salary exception" })
+      );
   });
 });
 
@@ -112,8 +110,8 @@ router.put("/:id", protect, (req, res) => {
 //@route  Delete api/exception/:id
 //@desc Delete Employee salary exception route
 //@access Private
-router.delete('/:id', protect, (req, res) => {
-    Exception.findOne({ employee: req.params.id })
+router.delete("/:id", protect, (req, res) => {
+  Exception.findOne({ employee: req.params.id })
     .then(employee => {
       employee
         .remove()
@@ -125,7 +123,9 @@ router.delete('/:id', protect, (req, res) => {
         );
     })
     .catch(err =>
-      res.status(404).json({ message: "Error fetching employee exception information" })
+      res
+        .status(404)
+        .json({ message: "Error fetching employee exception information" })
     );
 });
 
