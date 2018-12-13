@@ -29,25 +29,59 @@ router.get("/:id", protect, (req, res) => {
             .then(employeeException => {
               if (employeeException) {
                 payable = bonusSum + employeeException.amount - deductableSum;
-                const taxReport = {
-                  payable,
-                  bonusSum,
-                  deductableSum,
-                  employeeDetails,
-                  level,
-                  employeeException
-                };
-                return res.status(200).json(taxReport);
+                if((payable * 12) > 200000){
+                  cra = payable * (20/100)
+                  const taxReport = {
+                    payable,
+                    cra,
+                    bonusSum,
+                    deductableSum,
+                    employeeDetails,
+                    level,
+                    employeeException
+                  };
+                  return res.status(200).json(taxReport);
+                } else {
+                  cra = payable * (1/100)
+                  const taxReport = {
+                    payable,
+                    cra,
+                    bonusSum,
+                    deductableSum,
+                    employeeDetails,
+                    level,
+                    employeeException
+                  };
+                  return res.status(200).json(taxReport);
+                }
+                
               } else {
                 payable = bonusSum + level.basic - deductableSum;
-                const taxReport = {
-                  payable,
-                  bonusSum,
-                  deductableSum,
-                  employeeDetails,
-                  level
-                };
-                return res.status(200).json(taxReport);
+                if((payable * 12) > 200000){
+                  cra = payable * (20/100)
+                  const taxReport = {
+                    payable,
+                    cra,
+                    bonusSum,
+                    deductableSum,
+                    employeeDetails,
+                    level,
+                    employeeException
+                  };
+                  return res.status(200).json(taxReport);
+                } else {
+                  cra = payable * (1/100)
+                  const taxReport = {
+                    payable,
+                    cra,
+                    bonusSum,
+                    deductableSum,
+                    employeeDetails,
+                    level,
+                    employeeException
+                  };
+                  return res.status(200).json(taxReport);
+                }
               }
             })
             .catch(err => console.log(err));
