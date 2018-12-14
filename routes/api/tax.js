@@ -9,85 +9,93 @@ const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 
 router.get("/:id", protect, (req, res) => {
-  Employee.findOne({ _id: req.params.id })
-    .then(employeeDetails => {
-      Level.findOne({ _id: employeeDetails.level })
-        .then(level => {
-          let payable,
-            levelBonus = level.bonuses,
-            levelDeductable = level.deductables,
-            deductableSum = 0,
-            bonusSum = 0;
-          levelBonus.forEach(bonus => {
-            bonusSum += bonus.amount;
-          });
-          levelDeductable.forEach(deductable => {
-            deductableSum += deductable.amount;
-          });
+  let date = new Date();
+  let salaryDay = date.getDate();
+  if (salaryDay > 21) {
+    Employee.findOne({ _id: req.params.id })
+      .then(employeeDetails => {
+        Level.findOne({ _id: employeeDetails.level })
+          .then(level => {
+            let payable,
+              levelBonus = level.bonuses,
+              levelDeductable = level.deductables,
+              deductableSum = 0,
+              bonusSum = 0;
+            levelBonus.forEach(bonus => {
+              bonusSum += bonus.amount;
+            });
+            levelDeductable.forEach(deductable => {
+              deductableSum += deductable.amount;
+            });
 
-          Exception.findOne({ employee: employeeDetails._id })
-            .then(employeeException => {
-              if (employeeException) {
-                payable = bonusSum + employeeException.amount - deductableSum;
-                if (payable * 12 > 300000) {
-                  cra = payable * (20 / 100) + payable * (1 / 100);
-                  const taxReport = {
-                    payable,
-                    cra,
-                    bonusSum,
-                    deductableSum,
-                    employeeDetails,
-                    level,
-                    employeeException
-                  };
-                  return res.status(200).json(taxReport);
+            Exception.findOne({ employee: employeeDetails._id })
+              .then(employeeException => {
+                if (employeeException) {
+                  payable = bonusSum + employeeException.amount - deductableSum;
+                  if (payable * 12 > 300000) {
+                    cra = payable * (20 / 100) + payable * (1 / 100);
+                    const taxReport = {
+                      payable,
+                      cra,
+                      bonusSum,
+                      deductableSum,
+                      employeeDetails,
+                      level,
+                      employeeException
+                    };
+                    return res.status(200).json(taxReport);
+                  } else {
+                    cra = payable * (1 / 100);
+                    const taxReport = {
+                      payable,
+                      cra,
+                      bonusSum,
+                      deductableSum,
+                      employeeDetails,
+                      level,
+                      employeeException
+                    };
+                    return res.status(200).json(taxReport);
+                  }
                 } else {
-                  cra = payable * (1 / 100);
-                  const taxReport = {
-                    payable,
-                    cra,
-                    bonusSum,
-                    deductableSum,
-                    employeeDetails,
-                    level,
-                    employeeException
-                  };
-                  return res.status(200).json(taxReport);
+                  payable = bonusSum + level.basic - deductableSum;
+                  if (payable * 12 > 300000) {
+                    cra = payable * (20 / 100) + payable * (1 / 100);
+                    const taxReport = {
+                      payable,
+                      cra,
+                      bonusSum,
+                      deductableSum,
+                      employeeDetails,
+                      level
+                    };
+                    return res.status(200).json(taxReport);
+                  } else {
+                    cra = payable * (1 / 100);
+                    const taxReport = {
+                      payable,
+                      cra,
+                      bonusSum,
+                      deductableSum,
+                      employeeDetails,
+                      level
+                    };
+                    return res.status(200).json(taxReport);
+                  }
                 }
-              } else {
-                payable = bonusSum + level.basic - deductableSum;
-                if (payable * 12 > 300000) {
-                  cra = payable * (20 / 100) + payable * (1 / 100);
-                  const taxReport = {
-                    payable,
-                    cra,
-                    bonusSum,
-                    deductableSum,
-                    employeeDetails,
-                    level
-                  };
-                  return res.status(200).json(taxReport);
-                } else {
-                  cra = payable * (1 / 100);
-                  const taxReport = {
-                    payable,
-                    cra,
-                    bonusSum,
-                    deductableSum,
-                    employeeDetails,
-                    level
-                  };
-                  return res.status(200).json(taxReport);
-                }
-              }
-            })
-            .catch(err => console.log(err));
-        })
-        .catch(err =>
-          res.status(404).json({ message: "User grade level not found" })
-        );
-    })
-    .catch(err => res.status(404).json({ message: "Error fetching user" }));
+              })
+              .catch(err => console.log(err));
+          })
+          .catch(err =>
+            res.status(404).json({ message: "User grade level not found" })
+          );
+      })
+      .catch(err => res.status(404).json({ message: "Error fetching user" }));
+  } else {
+    res
+      .status(400)
+      .json({ message: "Tax report can only be generated after 21 days" });
+  }
 });
 
 module.exports = router;
