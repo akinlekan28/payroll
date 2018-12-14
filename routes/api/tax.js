@@ -29,8 +29,8 @@ router.get("/:id", protect, (req, res) => {
             .then(employeeException => {
               if (employeeException) {
                 payable = bonusSum + employeeException.amount - deductableSum;
-                if((payable * 12) > 200000){
-                  cra = payable * (20/100)
+                if (payable * 12 > 300000) {
+                  cra = payable * (20 / 100) + payable * (1 / 100);
                   const taxReport = {
                     payable,
                     cra,
@@ -42,7 +42,7 @@ router.get("/:id", protect, (req, res) => {
                   };
                   return res.status(200).json(taxReport);
                 } else {
-                  cra = payable * (1/100)
+                  cra = payable * (1 / 100);
                   const taxReport = {
                     payable,
                     cra,
@@ -54,31 +54,28 @@ router.get("/:id", protect, (req, res) => {
                   };
                   return res.status(200).json(taxReport);
                 }
-                
               } else {
                 payable = bonusSum + level.basic - deductableSum;
-                if((payable * 12) > 200000){
-                  cra = payable * (20/100)
+                if (payable * 12 > 300000) {
+                  cra = payable * (20 / 100) + payable * (1 / 100);
                   const taxReport = {
                     payable,
                     cra,
                     bonusSum,
                     deductableSum,
                     employeeDetails,
-                    level,
-                    employeeException
+                    level
                   };
                   return res.status(200).json(taxReport);
                 } else {
-                  cra = payable * (1/100)
+                  cra = payable * (1 / 100);
                   const taxReport = {
                     payable,
                     cra,
                     bonusSum,
                     deductableSum,
                     employeeDetails,
-                    level,
-                    employeeException
+                    level
                   };
                   return res.status(200).json(taxReport);
                 }
