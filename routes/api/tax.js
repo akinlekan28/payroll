@@ -114,10 +114,9 @@ router.get("/:id", protect, (req, res) => {
   }
 });
 
-router.get("/singleslip/:id", (req, res) => {
+router.get("/singleslip/:id", protect, (req, res) => {
   let date = new Date();
-  // let salaryDay = date.getDate();
-  let salaryDay = 22; //test parameter
+  let salaryDay = date.getDate();
   if (salaryDay > 21) {
     Employee.findOne({ _id: req.params.id })
       .then(employeeDetails => {
@@ -145,28 +144,106 @@ router.get("/singleslip/:id", (req, res) => {
                   annualDeductables = deductableSum * 12;
                   
                   if(annualGrossEarning > 300000){
-                    annualConsolidationRelief = annualGrossEarning * 0.2 + 200000,
+                    let annualConsolidationRelief = annualGrossEarning * 0.2 + 200000,
                     annualPension = annualGrossEarning * 0.08,
-                    pension = annualPension / 12,
-                    consolidationRelief = annualConsolidationRelief / 12,
-                    annualTaxableGrossIncome = annualGrossEarning - annualPension - annualConsolidationRelief - annualBonuses - annualDeductables;
-                    let annualTax = taxCalculation(annualTaxableIncome);
-                    tax = annualTax / 12;
-                    netPay = grossEarning - tax - pension;
+                    pension = annualPension/12,
+                    consolidationRelief = annualConsolidationRelief/12,
+                    annualTaxableGrossIncome = annualGrossEarning+annualBonuses-annualPension-annualConsolidationRelief-annualDeductables;
+                    let annualTax = taxCalculation(annualTaxableGrossIncome);
+                    let tax = annualTax/12,
+                    netPay = grossEarning-tax-pension;
+
+                    const salarySlip = {
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      netPay,
+                      employeeDetails,
+                      level,
+                      employeeException
+                    }
+                    return res.status(200).json(salarySlip);
+
+                  } else{
+                    let annualConsolidationRelief = annualGrossEarning * 0.01,
+                    annualPension = annualGrossEarning * 0.08,
+                    pension = annualPension/12,
+                    consolidationRelief = annualConsolidationRelief/12,
+                    annualTaxableGrossIncome = annualGrossEarning+annualBonuses-annualPension-annualConsolidationRelief-annualDeductables;
+                    let annualTax = taxCalculation(annualTaxableGrossIncome);
+                    let tax = annualTax/12,
+                    netPay = grossEarning-tax-pension;
+
+                    const salarySlip = {
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      netPay,
+                      employeeDetails,
+                      level,
+                      employeeException
+                    }
+                    return res.status(200).json(salarySlip);
                   }
-                  const salarySlip = {
-                    basic,
-                    grossEarning,
-                    tax,
-                    pension,
-                    consolidationRelief,
-                    netPay,
-                    employeeDetails,
-                    level
-                  }
+                  
                 } else {
+                  let basic = level.basic, 
+                  grossEarning = bonusSum + basic,
+                  annualGrossEarning = grossEarning * 12,
+                  annualBonuses = bonusSum * 12,
+                  annualDeductables = deductableSum * 12;
+                  
+                  if(annualGrossEarning > 300000){
+                    let annualConsolidationRelief = annualGrossEarning * 0.2 + 200000,
+                    annualPension = annualGrossEarning * 0.08,
+                    pension = annualPension/12,
+                    consolidationRelief = annualConsolidationRelief/12,
+                    annualTaxableGrossIncome = annualGrossEarning+annualBonuses-annualPension-annualConsolidationRelief-annualDeductables;
+                    let annualTax = taxCalculation(annualTaxableGrossIncome);
+                    let tax = annualTax/12,
+                    netPay = grossEarning-tax-pension;
+
+                    const salarySlip = {
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      netPay,
+                      employeeDetails,
+                      level
+                    }
+                    return res.status(200).json(salarySlip);
+
+                  } else{
+                    let annualConsolidationRelief = annualGrossEarning * 0.01,
+                    annualPension = annualGrossEarning * 0.08,
+                    pension = annualPension/12,
+                    consolidationRelief = annualConsolidationRelief/12,
+                    annualTaxableGrossIncome = annualGrossEarning+annualBonuses-annualPension-annualConsolidationRelief-annualDeductables;
+                    let annualTax = taxCalculation(annualTaxableGrossIncome);
+                    let tax = annualTax/12,
+                    netPay = grossEarning-tax-pension;
+
+                    const salarySlip = {
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      netPay,
+                      employeeDetails,
+                      level
+                    }
+                    return res.status(200).json(salarySlip);
+                  }
 
                 }
+
               })
               .catch(err => console.log(err));
           })
