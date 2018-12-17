@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
+import {connect} from 'react-redux';
+import {loginUser} from '../../actions/authActions';
 
 import TextFieldGroup from "../common/TextFieldGroup";
 
@@ -18,6 +20,21 @@ class Login extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentDidMount(){
+      if(this.props.auth.isAuthenticated){
+          this.props.history.push('/dashboard')
+      }
+  }
+
+  componentWillReceiveProps(nextProps){
+      if(nextProps.auth.isAuthenticated){
+          this.props.history.push('/dashboard')
+      }
+      if(nextProps.errors){
+          this.setState({errors: nextProps.errors})
+      }
+  }
+
   onSubmit(e) {
     e.preventDefault();
 
@@ -26,7 +43,7 @@ class Login extends Component {
       password: this.state.password
     };
 
-    console.log(loginData);
+    this.props.loginUser(loginData);
   }
 
   onChange(e) {
@@ -37,12 +54,12 @@ class Login extends Component {
     const { errors } = this.state;
 
     return (
-      <div>
+      <div className="login-bg">
         <div id="app">
           <section className="section">
-            <div className="container mt-5">
-              <div className="row justify-content-center">
-                <div className="col-6">
+            <div className="container">
+              <div className="row justify-content-center mt-5">
+                <div className="col-5">
                   <div className="card card-primary mt-5">
                     <div className="card-header justify-content-center">
                       <h3>Login</h3>
@@ -85,14 +102,14 @@ class Login extends Component {
                         </div>
                       </form>
                     </div>
+                        <div className="text-muted text-center">
+                            <p>
+                            Don't have an account?{" "}
+                            <a href="auth-register.html">Create One</a>
+                            </p>
+                        </div>
                   </div>
-                  <div className="text-muted text-center">
-                    <p>
-                      Don't have an account?{" "}
-                      <a href="auth-register.html">Create One</a>
-                    </p>
-                  </div>
-                  <div className="simple-footer">
+                  <div className="simple-footer text-white">
                     Copyright &copy; Payroller 2018
                   </div>
                 </div>
@@ -105,4 +122,15 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+    loginUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+})
+
+export default connect(mapStateToProps, {loginUser})(Login);
