@@ -19,6 +19,8 @@ export const registerUser = userData => dispatch => {
 
 //Login user
 export const loginUser = userData => dispatch => {
+
+    dispatch(clearErrors());
     axios.post('/api/users/login', userData)
     .then(res => {
         //Save to local storage
@@ -74,6 +76,22 @@ export const sendResetLink = email => dispatch => {
         type: GET_ERRORS,
         payload: err.response.data
       }));
+  }
+
+  //reset user password
+export const resetPassword = (token, userPass) => dispatch => {
+
+    dispatch(clearErrors());
+  
+    return axios.post(`/api/users/resetpassword/${token}`, userPass)
+      .then(res => dispatch({
+        type: GET_SUCCESS,
+        payload: res.data
+      }))
+      .catch(err => dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      }))
   }
   
   //Clear Error

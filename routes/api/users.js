@@ -141,7 +141,7 @@ router.post('/forgotpassword', (req, res) => {
           })
           resetUser.save()
             .then(user => {
-
+console.log(user.token)
               const fromEmail = new mailer.Email('no-reply@payroller.com');
               const toEmail = new mailer.Email(user.email);
               const subject = 'Password Reset';

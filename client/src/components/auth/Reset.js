@@ -1,29 +1,28 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
-import { loginUser } from "../../actions/authActions";
-
+import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
+import { Link } from "react-router-dom";
+import { resetPassword } from "../../actions/authActions";
+import { toast } from "react-toastify";
 
-class Login extends Component {
+class Reset extends Component {
   constructor() {
     super();
 
     this.state = {
-      email: "",
       password: "",
-      errors: {},
+      password2: "",
+      errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isAuthenticated) {
-      nextProps.history.push('/dashboard');
+      nextProps.history.push("/dashboard");
     }
     if (nextProps.errors) {
       return {
@@ -32,19 +31,24 @@ class Login extends Component {
     }
   }
 
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   onSubmit(e) {
     e.preventDefault();
 
-    const loginData = {
-      email: this.state.email,
-      password: this.state.password
+    const userCredentials = {
+      password: this.state.password,
+      password2: this.state.password2
     };
 
-    this.props.loginUser(loginData);
-  }
-
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.props.resetPassword(this.props.match.params.token, userCredentials)
+    .then(res => {
+        if(res.type === 'GET_SUCCESS')
+            toast.success("Yaay! password has been reset, proceed to login")
+    })
+    .catch(err => console.log(err))
   }
 
   render() {
@@ -59,23 +63,15 @@ class Login extends Component {
                 <div className="col-5">
                   <div className="card card-primary mt-5">
                     <div className="card-header justify-content-center">
-                      <h3>Login</h3>
+                      <h3>Set New Password</h3>
                     </div>
+                    <p className="mx-auto text-warning">
+                      *You can now set a new password for login!
+                    </p>
                     <div className="card-body">
                       <form onSubmit={this.onSubmit}>
                         <TextFieldGroup
-                          placeholder="Email Address"
-                          label="Email"
-                          type="email"
-                          value={this.state.email}
-                          name="email"
-                          onChange={this.onChange}
-                          error={errors.email}
-                          tabindex="1"
-                        />
-
-                        <TextFieldGroup
-                          placeholder="Password"
+                          placeholder="Enter new password"
                           label="Password"
                           type="password"
                           value={this.state.password}
@@ -84,9 +80,20 @@ class Login extends Component {
                           error={errors.password}
                           tabindex="1"
                         />
+
+                        <TextFieldGroup
+                          placeholder="Enter new password again"
+                          label="Confirm Password"
+                          type="password"
+                          value={this.state.password2}
+                          name="password2"
+                          onChange={this.onChange}
+                          error={errors.password2}
+                          tabindex="1"
+                        />
+
                         <p>
-                          Forgot password ?{" "}
-                          <Link to="/forgot-password">reset</Link>
+                          Done resetting ? <Link to="/">Back to login</Link>
                         </p>
                         <div className="form-group mt-4 mb-5">
                           <button
@@ -94,16 +101,10 @@ class Login extends Component {
                             className="btn btn-primary btn-lg btn-block"
                             tabIndex="4"
                           >
-                            Login
+                            Set New Password
                           </button>
                         </div>
                       </form>
-                    </div>
-                    <div className="text-muted text-center">
-                      <p>
-                        Don't have an account?{" "}
-                        <Link to="/register">Create One</Link>
-                      </p>
                     </div>
                   </div>
                   <div className="simple-footer text-white">
@@ -119,8 +120,8 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-  loginUser: PropTypes.func.isRequired,
+Reset.propTypes = {
+  resetPassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -132,5 +133,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
-)(Login);
+  { resetPassword }
+)(Reset);
