@@ -68,6 +68,7 @@ class Reset extends Component {
                     <p className="mx-auto text-warning">
                       *You can now set a new password for login!
                     </p>
+                    <p className="mx-auto text-danger">{errors.noToken}</p>
                     <div className="card-body">
                       <form onSubmit={this.onSubmit}>
                         <TextFieldGroup

@@ -203,7 +203,7 @@ router.post('/resetpassword/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .then(user => {
       if (!user.token) {
-        errors.email = 'Password reset token not found or invalid!';
+        errors.noToken = 'Password reset token not found or invalid!';
         return res.status(404).json(errors)
       }
 
@@ -229,7 +229,10 @@ router.post('/resetpassword/:token', (req, res) => {
         return res.status(400).json(errors)
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+        errors.noToken = 'Password reset token not found or invalid!';
+        return res.status(404).json(errors)
+    })
 });
 
 module.exports = router;
