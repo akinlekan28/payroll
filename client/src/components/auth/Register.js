@@ -1,18 +1,21 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { PropTypes } from "prop-types";
-import {connect} from 'react-redux';
-import {loginUser} from '../../actions/authActions';
-
+import { connect } from "react-redux";
+import { registerUser } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-class Login extends Component {
+class Register extends Component {
   constructor() {
     super();
 
     this.state = {
+      name: "",
       email: "",
       password: "",
+      password2: "",
       errors: {}
     };
 
@@ -20,34 +23,39 @@ class Login extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount(){
-      if(this.props.auth.isAuthenticated){
-          this.props.history.push('/dashboard')
-      }
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
   }
 
-  componentWillReceiveProps(nextProps){
-      if(nextProps.auth.isAuthenticated){
-          this.props.history.push('/dashboard')
-      }
-      if(nextProps.errors){
-          this.setState({errors: nextProps.errors})
-      }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   onSubmit(e) {
     e.preventDefault();
 
-    const loginData = {
+    const userData = {
+      name: this.state.name,
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
+      password2: this.state.password2
     };
 
-    this.props.loginUser(loginData);
-  }
-
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.props
+      .registerUser(userData)
+      .then(res => {
+        if (res.type === "ADD_USER")
+            toast.success("User successfully registered, proceed to login!"); 
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -60,12 +68,23 @@ class Login extends Component {
             <div className="container">
               <div className="row justify-content-center mt-5">
                 <div className="col-5">
-                  <div className="card card-primary mt-5">
+                  <div className="card card-primary mt-4">
                     <div className="card-header justify-content-center">
-                      <h3>Login</h3>
+                      <h3>Register</h3>
                     </div>
                     <div className="card-body">
                       <form onSubmit={this.onSubmit}>
+                        <TextFieldGroup
+                          placeholder="Full Name"
+                          label="Name"
+                          type="text"
+                          value={this.state.name}
+                          name="name"
+                          onChange={this.onChange}
+                          error={errors.name}
+                          tabindex="1"
+                        />
+
                         <TextFieldGroup
                           placeholder="Email Address"
                           label="Email"
@@ -87,11 +106,21 @@ class Login extends Component {
                           error={errors.password}
                           tabindex="1"
                         />
+
+                        <TextFieldGroup
+                          placeholder="Confirm Password"
+                          label="Confirm Password"
+                          type="password"
+                          value={this.state.password2}
+                          name="password2"
+                          onChange={this.onChange}
+                          error={errors.password2}
+                          tabindex="1"
+                        />
                         <p>
-                          Forgot password ?{" "}
-                          <Link to="/forgot-password">reset</Link>
+                          Registered ? <Link to="/">Login</Link>
                         </p>
-                        <div className="form-group mt-4 mb-5">
+                        <div className="form-group mt-3 mb-3">
                           <button
                             type="submit"
                             className="btn btn-primary btn-lg btn-block"
@@ -102,12 +131,6 @@ class Login extends Component {
                         </div>
                       </form>
                     </div>
-                        <div className="text-muted text-center">
-                            <p>
-                            Don't have an account?{" "}
-                            <Link to="/register">Create One</Link>
-                            </p>
-                        </div>
                   </div>
                   <div className="simple-footer text-white">
                     Copyright &copy; Payroller 2018
@@ -122,15 +145,18 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-    loginUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
-}
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
-    auth: state.auth,
-    errors: state.errors
-})
+  auth: state.auth,
+  errors: state.errors
+});
 
-export default connect(mapStateToProps, {loginUser})(Login);
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(Register);

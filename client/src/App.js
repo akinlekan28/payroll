@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
-import setAuthToken from './utils/setAuthToken';
-import jwt_decode from 'jwt-decode';
-import {setCurrentUser, logoutUser} from './actions/authActions';
+import setAuthToken from "./utils/setAuthToken";
+import jwt_decode from "jwt-decode";
+import { setCurrentUser, logoutUser } from "./actions/authActions";
+import { ToastContainer } from "react-toastify";
 
 import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 
 //check for token
 if (localStorage.jwtToken) {
@@ -34,7 +36,9 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div className="App">
+            <ToastContainer autoClose={3000} />
             <Route exact path="/" component={Login} />
+            <Route exact path="/register" component={Register} />
           </div>
         </Router>
       </Provider>
