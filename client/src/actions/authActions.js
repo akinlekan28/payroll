@@ -59,6 +59,22 @@ export const setCurrentUser = decoded => {
     //set current user to {} which also sets isAuthenticated to false
     dispatch(setCurrentUser({}));
   }
+
+  //send user password reset link
+export const sendResetLink = email => dispatch => {
+
+    dispatch(clearErrors());
+  
+    return axios.post('/api/users/forgotpassword', email)
+      .then(res => dispatch({
+        type: GET_SUCCESS,
+        payload: res.data
+      }))
+      .catch(err => dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      }));
+  }
   
   //Clear Error
   export const clearErrors = () => {

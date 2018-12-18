@@ -6,12 +6,12 @@ module.exports = function validateResetInput(data) {
 
   data.email = !isEmpty(data.email) ? data.email : '';
 
-  if (!validator.isEmail(data.email)) {
-    errors.email = 'Email is invalid'
-  }
-
   if (validator.isEmpty(data.email)) {
     errors.email = 'Email field is required'
+  }
+
+  if (!validator.isEmail(data.email)) {
+    errors.email = 'Email is invalid'
   }
 
   return {

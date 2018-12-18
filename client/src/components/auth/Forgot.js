@@ -1,21 +1,17 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { registerUser } from "../../actions/authActions";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { sendResetLink } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-class Register extends Component {
+class Forgot extends Component {
   constructor() {
     super();
 
     this.state = {
-      name: "",
       email: "",
-      password: "",
-      password2: "",
       errors: {}
     };
 
@@ -42,18 +38,15 @@ class Register extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const userData = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2
-    };
-
+    const userEmail = {
+        email: this.state.email
+    }
+    
     this.props
-      .registerUser(userData)
+      .sendResetLink(userEmail)
       .then(res => {
-        if (res.type === "ADD_USER")
-          toast.success("User successfully registered, proceed to login!");
+        if (res.type === "GET_SUCCESS")
+          toast.success("Password reset link sent, check your inbox!");
       })
       .catch(err => console.log(err));
   }
@@ -68,23 +61,16 @@ class Register extends Component {
             <div className="container">
               <div className="row justify-content-center mt-5">
                 <div className="col-5">
-                  <div className="card card-primary mt-4">
+                  <div className="card card-primary mt-5">
                     <div className="card-header justify-content-center">
-                      <h3>Register</h3>
+                      <h3>Reset Password</h3>
                     </div>
+                    <p className="mx-auto text-warning">
+                      *Enter the email which you registered with to get a reset
+                      link
+                    </p>
                     <div className="card-body">
                       <form onSubmit={this.onSubmit}>
-                        <TextFieldGroup
-                          placeholder="Full Name"
-                          label="Name"
-                          type="text"
-                          value={this.state.name}
-                          name="name"
-                          onChange={this.onChange}
-                          error={errors.name}
-                          tabindex="1"
-                        />
-
                         <TextFieldGroup
                           placeholder="Email Address"
                           label="Email"
@@ -96,37 +82,16 @@ class Register extends Component {
                           tabindex="1"
                         />
 
-                        <TextFieldGroup
-                          placeholder="Password"
-                          label="Password"
-                          type="password"
-                          value={this.state.password}
-                          name="password"
-                          onChange={this.onChange}
-                          error={errors.password}
-                          tabindex="1"
-                        />
-
-                        <TextFieldGroup
-                          placeholder="Confirm Password"
-                          label="Confirm Password"
-                          type="password"
-                          value={this.state.password2}
-                          name="password2"
-                          onChange={this.onChange}
-                          error={errors.password2}
-                          tabindex="1"
-                        />
                         <p>
-                          Registered ? <Link to="/">Login</Link>
+                          Back to <Link to="/">Login</Link>
                         </p>
-                        <div className="form-group mt-3 mb-3">
+                        <div className="form-group mt-4 mb-5">
                           <button
                             type="submit"
                             className="btn btn-primary btn-lg btn-block"
                             tabIndex="4"
                           >
-                            Login
+                            Send Reset Link
                           </button>
                         </div>
                       </form>
@@ -145,8 +110,8 @@ class Register extends Component {
   }
 }
 
-Register.propTypes = {
-  registerUser: PropTypes.func.isRequired,
+Forgot.propTypes = {
+  sendResetLink: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -158,5 +123,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
-)(Register);
+  { sendResetLink }
+)(Forgot);

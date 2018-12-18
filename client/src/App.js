@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+import Forgot from './components/auth/Forgot';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -38,6 +39,7 @@ class App extends Component {
           <div className="App">
             <ToastContainer autoClose={3000} />
             <Route exact path="/" component={Login} />
+            <Route exact path="/forgot-password" component={Forgot} />
             <Route exact path="/register" component={Register} />
           </div>
         </Router>
