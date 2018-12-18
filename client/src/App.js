@@ -11,6 +11,7 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Forgot from './components/auth/Forgot';
 import Reset from './components/auth/Reset';
+import PrivateRoute from "./components/common/PrivateRoute";
 
 //check for token
 if (localStorage.jwtToken) {
@@ -42,6 +43,9 @@ class App extends Component {
             <Route exact path="/" component={Login} />
             <Route exact path="/forgot-password" component={Forgot} />
             <Route exact path="/register" component={Register} />
+            <Switch>
+              {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
+            </Switch>
             <Route exact path="/resetpassword/:token" component={Reset} />
           </div>
         </Router>
