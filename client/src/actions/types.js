@@ -3,3 +3,6 @@ export const GET_SUCCESS = 'GET_SUCCESS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const ADD_USER = 'ADD_USER';
+export const VIEW_ANALYTICS = 'VIEW_ANALYTICS';
+export const VIEW_EMPLOYEES = 'VIEW_EMPLOYEES';
+export const ANALYTICS_LOADING = 'ANALYTICS_LOADING';

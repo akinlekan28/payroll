@@ -8,7 +8,7 @@ const Level = require('../../models/Level');
 const Exception = require('../../models/Exception');
 const User = require('../../models/User');
 
-router.get('/counts', protect, (req, res) => {
+router.get('/analytics', protect, (req, res) => {
     Employee.countDocuments()
     .then(employeeCount => {
         Level.countDocuments()
@@ -17,13 +17,21 @@ router.get('/counts', protect, (req, res) => {
             .then(exceptionCount => {
                 User.countDocuments()
                 .then(adminCount => {
-                    const totalCount = {
-                        adminCount,
-                        employeeCount,
-                        levelCount,
-                        exceptionCount
-                    }
-                    return res.json(totalCount);
+                    Employee.find()
+                    .limit(5)
+                    .sort({date: -1})
+                    .then(employee => {
+
+                        const totalCount = {
+                            employee,
+                            adminCount,
+                            employeeCount,
+                            levelCount,
+                            exceptionCount
+                        }
+                        return res.json(totalCount);
+                    })
+                    .catch(err => res.status(404).json({message: "Employees not found"}))
                 })
                 .catch(err => console.log(err))
             })
@@ -31,14 +39,6 @@ router.get('/counts', protect, (req, res) => {
         })
         .catch(err => console.log(err))
     })
-    .catch(err => console.log(err))
-});
-
-router.get('/lastfive', protect, (req, res) => {
-    User.find()
-    .limit(5)
-    .sort({date: -1})
-    .then(user => res.json(user))
     .catch(err => console.log(err))
 });
 
