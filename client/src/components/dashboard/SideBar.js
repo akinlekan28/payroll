@@ -25,9 +25,9 @@ render() {
         <ul className="sidebar-menu">
             <li className="menu-header">Employee</li>
             <li className="dropdown">
-                <Link to="" className="nav-link has-dropdown">
+                <a href="" className="nav-link has-dropdown">
                 <i className="fas fa-briefcase"></i><span>Employee</span>
-                </Link>
+                </a>
                 <ul className="dropdown-menu">
                     <li><Link to="/employee/create" className="nav-link">Create profile</Link></li>
                     <li><Link to="/employee/view" className="nav-link">View profiles</Link></li>
@@ -36,9 +36,9 @@ render() {
 
             <li className="menu-header">Payroll</li>
             <li className="dropdown">
-                <Link to="" className="nav-link has-dropdown">
+                <a href="" className="nav-link has-dropdown">
                 <i className="fas fa-paperclip"></i><span>Payroll</span>
-                </Link>
+                </a>
                 <ul className="dropdown-menu">
                     <li><Link to="/payroll/monthly" className="nav-link">Monthly report</Link></li>
                     <li><Link to="/payroll/all" className="nav-link">All report</Link></li>
@@ -47,9 +47,9 @@ render() {
 
             <li className="menu-header">Utilities</li>
             <li className="dropdown">
-                <Link to="" className="nav-link has-dropdown">
+                <a href="" className="nav-link has-dropdown">
                 <i className="fas fa-cogs"></i><span>Utilities</span>
-                </Link>
+                </a>
                 <ul className="dropdown-menu">
                     <li><Link to="/utilities/level" className="nav-link">Employee level</Link></li>
                     <li><Link to="/utilities/exception" className="nav-link">Salary Exception</Link></li>
@@ -57,7 +57,7 @@ render() {
             </li>
 
             <li className="menu-header">Extra</li> 
-            <li><Link to="" className="nav-link" href="blank.html" onClick={this.onHandleClick.bind(this)}><i className="fas fa-sign-out-alt"></i> <span>Logout</span></Link></li>
+            <li><a href="" className="nav-link" onClick={this.onHandleClick.bind(this)}><i className="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
 
         </ul>
      </aside>

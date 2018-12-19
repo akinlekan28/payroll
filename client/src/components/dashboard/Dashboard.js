@@ -5,7 +5,12 @@ import Footer from "./Footer";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAnalytics } from "../../actions/dashActions";
+import Spinner from '../common/Spinner';
 import EmployeeRow from './EmployeeRow';
+import AdminCard from './AdminCard';
+import EmployeeCard from './EmployeeCard';
+import LevelCard from './LevelCard';
+import ExceptionCard from './ExceptionCard';
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -15,15 +20,25 @@ class Dashboard extends Component {
   render() {
     const { dashboard, loading } = this.props.dashboard;
 
-    let EmployeeContainer;
+    let dashboardContent;
 
     if(dashboard === undefined || loading){
-      EmployeeContainer = <h4>Loading employees...</h4>
+      dashboardContent = <Spinner />
     } else {
       if(Object.keys(dashboard).length > 0){
-        EmployeeContainer = <EmployeeRow employeeDetails={dashboard.employee} />
+        dashboardContent = (
+        <React.Fragment>
+          <div className="row">
+            <AdminCard dashboard={dashboard} />
+            <EmployeeCard dashboard={dashboard} />
+            <LevelCard dashboard={dashboard} />
+            <ExceptionCard dashboard={dashboard} />
+          </div>
+          <EmployeeRow employeeDetails={dashboard.employee} />
+        </React.Fragment>
+        )
       } else {
-        EmployeeContainer = <h4>No employees in system...</h4>
+        dashboardContent = <h4>No employees in system...</h4>
       }
     }
 
@@ -38,67 +53,7 @@ class Dashboard extends Component {
               <div className="section-header">
                 <h1>Dashboard</h1>
               </div>
-
-              <div className="row">
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div className="card card-statistic-1">
-                    <div className="card-icon bg-primary">
-                      <i className="far fa-user" />
-                    </div>
-                    <div className="card-wrap">
-                      <div className="card-header">
-                        <h4>Admins</h4>
-                      </div>
-                      <div className="card-body">{dashboard.adminCount}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div className="card card-statistic-1">
-                    <div className="card-icon bg-danger">
-                      <i className="fas fa-briefcase" />
-                    </div>
-                    <div className="card-wrap">
-                      <div className="card-header">
-                        <h4>Employees</h4>
-                      </div>
-                      <div className="card-body">{dashboard.employeeCount}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div className="card card-statistic-1">
-                    <div className="card-icon bg-warning">
-                      <i className="fas fa-tachometer-alt" />
-                    </div>
-                    <div className="card-wrap">
-                      <div className="card-header">
-                        <h4>Employee Levels</h4>
-                      </div>
-                      <div className="card-body">{dashboard.levelCount}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div className="card card-statistic-1">
-                    <div className="card-icon bg-success">
-                      <i className="fas fa-lightbulb" />
-                    </div>
-                    <div className="card-wrap">
-                      <div className="card-header">
-                        <h4>Salary Exceptions</h4>
-                      </div>
-                      <div className="card-body">
-                        {dashboard.exceptionCount}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {EmployeeContainer}
+              {dashboardContent}
             </section>
           </div>
           <Footer />
