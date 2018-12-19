@@ -3,14 +3,14 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
-const keys = require('../../config/keys');
-const mailer = require('sendgrid').mail;
+const keys = require("../../config/keys");
+const mailer = require("sendgrid").mail;
 
 //Load input validation
 const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
-const validateResetInput = require('../../validation/reset');
-const validateNewInput = require('../../validation/newpassword');
+const validateResetInput = require("../../validation/reset");
+const validateNewInput = require("../../validation/newpassword");
 
 //Load user model
 const User = require("../../models/User");
@@ -98,20 +98,23 @@ router.post("/login", (req, res) => {
 //@desc Returns current user route
 //@access Private
 
-router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json({
-    id: req.user.id,
-    name: req.user.name,
-    email: req.user.email
-  })
-})
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    });
+  }
+);
 
 //@route  Post api/users/forgotpassword
 //@desc Send resetpassword token
 //@access Public
 
-router.post('/forgotpassword', (req, res) => {
-
+router.post("/forgotpassword", (req, res) => {
   const { errors, isValid } = validateResetInput(req.body);
 
   if (!isValid) {
@@ -121,31 +124,32 @@ router.post('/forgotpassword', (req, res) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
-        errors.email = 'User not found'
-        return res.status(404).json(errors)
+        errors.email = "User not found";
+        return res.status(404).json(errors);
       }
 
-      let token = Math.random().toString(20).substring(2, 15) + Math.random().toString(20).substring(2, 15);
+      let token = token1();
 
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(token, salt, (err, hash) => {
-          if (err) throw err;
-          token = hash;
-
-          const resetUser = new User({
+          const resetUser = {
             email: req.body.email,
             name: user.name,
             token: token,
             password: user.password,
             expiry: Date.now() + 86400000
-          })
-          resetUser.save()
+          };
+          
+          User.findOneAndUpdate(
+            { name: user.name },
+            { $set: resetUser },
+            { new: true }
+          )
             .then(user => {
-console.log(user.token)
-              const fromEmail = new mailer.Email('no-reply@payroller.com');
+              const fromEmail = new mailer.Email("no-reply@payroller.com");
               const toEmail = new mailer.Email(user.email);
-              const subject = 'Password Reset';
-              const content = new mailer.Content('text/html', `
+              const subject = "Password Reset";
+              const content = new mailer.Content(
+                "text/html",
+                `
                   <html>
                       <head>
                         <title>Forget Password Email</title>
@@ -153,47 +157,53 @@ console.log(user.token)
                    <body>
                       <div>
                           <h3>Dear ${user.name},</h3>
-                          <p>You requested for a password reset on Payroller, kindly use this <a href="https://${req.headers.host}/resetpassword/${user.token}">link</a> to reset your password</p>
+                          <p>You requested for a password reset on Payroller, kindly use this <a href="https://${
+                            req.headers.host
+                          }/resetpassword/${
+                  user.token
+                }">link</a> to reset your password</p>
                           <br>
                           <p>Cheers!</p>
                       </div>
                    </body>
 
                   </html>
-              `)
-              const resetMsg = new mailer.Mail(fromEmail, subject, toEmail, content);
-              const sender = require('sendgrid')(keys.sendGridKey);
+              `
+              );
+              const resetMsg = new mailer.Mail(
+                fromEmail,
+                subject,
+                toEmail,
+                content
+              );
+              const sender = require("sendgrid")(keys.sendGridKey);
               const request = sender.emptyRequest({
-                method: 'POST',
-                path: '/v3/mail/send',
+                method: "POST",
+                path: "/v3/mail/send",
                 body: resetMsg.toJSON()
               });
 
               sender.API(request, (error, response) => {
                 if (error) {
-                  errors.email = 'Error sending password reset link'
-                  return res.status(400).json(errors)
+                  errors.email = "Error sending password reset link";
+                  return res.status(400).json(errors);
                 }
 
-                return res.status(200).json({ success: 'Password link sent successfully!' });
-
-              })
-
+                return res
+                  .status(200)
+                  .json({ success: "Password link sent successfully!" });
+              });
             })
-            .catch(err => console.log(err))
-        })
-      })
+            .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
-
 });
 
 //@route  Post api/users/forgotpassword
 //@desc Reset user password
 //@access Public
 
-router.post('/resetpassword/:token', (req, res) => {
-
+router.post("/resetpassword/:token", (req, res) => {
   const { errors, isValid } = validateNewInput(req.body);
 
   if (!isValid) {
@@ -203,36 +213,48 @@ router.post('/resetpassword/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .then(user => {
       if (!user.token) {
-        errors.noToken = 'Password reset token not found or invalid!';
-        return res.status(404).json(errors)
-      }
-
-      else if (user.expiry < Date.now()) {
-        errors.email = 'Password reset token expired!';
-        return res.status(422).json(errors)
+        errors.noToken = "Password reset token not found or invalid!";
+        return res.status(404).json(errors);
+      } else if (user.expiry < Date.now()) {
+        errors.email = "Password reset token expired!";
+        return res.status(422).json(errors);
       }
       if (req.params.token === user.token) {
-
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(req.body.password, salt, (err, hash) => {
             if (err) throw err;
             req.body.password = hash;
-            User.findOneAndUpdate({ email: user.email }, { password: req.body.password }, { name: user.name })
+            User.findOneAndUpdate(
+              { email: user.email },
+              { password: req.body.password },
+              { name: user.name }
+            )
               .then(user => {
-                res.status(200).json({ user, success: 'Password successfully changed!' })
+                res
+                  .status(200)
+                  .json({ user, success: "Password successfully changed!" });
               })
-              .catch(err => console.log(err))
-          })
-        })
+              .catch(err => console.log(err));
+          });
+        });
       } else {
-        errors.email = 'Password reset token does not match';
-        return res.status(400).json(errors)
+        errors.email = "Password reset token does not match";
+        return res.status(400).json(errors);
       }
     })
     .catch(err => {
-        errors.noToken = 'Password reset token not found or invalid!';
-        return res.status(404).json(errors)
-    })
+      errors.noToken = "Password reset token not found or invalid!";
+      return res.status(404).json(errors);
+    });
 });
+
+const token1 = () => {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for( let i = 0; i < 20; i ++){
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
 
 module.exports = router;

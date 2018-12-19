@@ -65,7 +65,7 @@ class Forgot extends Component {
                       <h3>Reset Password</h3>
                     </div>
                     <p className="mx-auto text-warning">
-                      *Enter the email which you registered with to get a reset
+                      *We will email you a password reset
                       link
                     </p>
                     <div className="card-body">
