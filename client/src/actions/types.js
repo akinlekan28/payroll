@@ -6,3 +6,5 @@ export const ADD_USER = 'ADD_USER';
 export const VIEW_ANALYTICS = 'VIEW_ANALYTICS';
 export const VIEW_EMPLOYEES = 'VIEW_EMPLOYEES';
 export const ANALYTICS_LOADING = 'ANALYTICS_LOADING';
+export const VIEW_LEVELS = 'VIEW_LEVELS';
+export const LEVELS_LOADING = 'LEVELS_LOADING';

@@ -13,7 +13,7 @@ const Level = require("../../models/Level");
 //@route  Get api/level/:id
 //@desc View single level route
 //@access Private
-router.get("/:id", protect, (req, res) => {
+router.get("/single/:id", protect, (req, res) => {
   const errors = {};
   Level.findOne({ _id: req.params.id })
     .then(level => {

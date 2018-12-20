@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import Avatar from "./avatar.png";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -21,29 +20,29 @@ class SearchBar extends Component {
           <form className="form-inline mr-auto">
             <ul className="navbar-nav mr-3">
               <li>
-                <Link
-                  to=""
+                <a
+                  href=""
                   data-toggle="sidebar"
                   className="nav-link nav-link-lg"
                 >
                   <i className="fas fa-bars" />
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  to="#"
+                <a
+                  href="#"
                   data-toggle="search"
                   className="nav-link nav-link-lg d-sm-none"
                 >
                   <i className="fas fa-search" />
-                </Link>
+                </a>
               </li>
             </ul>
           </form>
           <ul className="navbar-nav navbar-right">
             <li className="dropdown">
-              <Link
-                to="#"
+              <a
+                href="#"
                 data-toggle="dropdown"
                 className="nav-link dropdown-toggle nav-link-lg nav-link-user"
               >
@@ -56,15 +55,15 @@ class SearchBar extends Component {
                 <div className="d-sm-none d-lg-inline-block">
                   Hi, {user.name}
                 </div>
-              </Link>
+              </a>
               <div className="dropdown-menu dropdown-menu-right">
-                <Link
-                  to="#"
+                <a
+                  href="#"
                   onClick={this.logOut.bind(this)}
                   className="dropdown-item has-icon text-danger"
                 >
                   <i className="fas fa-sign-out-alt" /> Logout
-                </Link>
+                </a>
               </div>
             </li>
           </ul>

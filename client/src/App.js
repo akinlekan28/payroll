@@ -13,6 +13,7 @@ import Forgot from './components/auth/Forgot';
 import Reset from './components/auth/Reset';
 import PrivateRoute from "./components/common/PrivateRoute";
 import Dashboard from './components/dashboard/Dashboard';
+import AddEmployee from './components/employee/AddEmployee';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -43,11 +44,14 @@ class App extends Component {
             <ToastContainer autoClose={4000} />
             <Route exact path="/" component={Login} />
             <Route exact path="/forgot-password" component={Forgot} />
-            <Route exact path="/register" component={Register} />
+            <Route exact path="/register" component={Register} />        
+            <Route exact path="/resetpassword/:token" component={Reset} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </Switch>
-            <Route exact path="/resetpassword/:token" component={Reset} />
+            <Switch>
+              <PrivateRoute exact path="/employee/create" component={AddEmployee} />
+            </Switch>
           </div>
         </Router>
       </Provider>

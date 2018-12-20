@@ -125,7 +125,7 @@ class Register extends Component {
                             className="btn btn-primary btn-lg btn-block"
                             tabIndex="4"
                           >
-                            Login
+                            Register
                           </button>
                         </div>
                       </form>
