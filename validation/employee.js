@@ -8,6 +8,7 @@ module.exports = function EmployeeInput(data){
   data.email = !isEmpty(data.email) ? data.email : '';
   data.designation = !isEmpty(data.designation) ? data.designation : '';
   data.department = !isEmpty(data.department) ? data.department : '';
+  data.level = !isEmpty(data.level) ? data.level : '';
 
   if(!validator.isLength(data.name, {min: 2, max: 30})){
     errors.name = 'Name must be between 2 and 30 characters';
@@ -31,6 +32,10 @@ module.exports = function EmployeeInput(data){
 
   if (validator.isEmpty(data.department)) {
     errors.department = 'Department field is required'
+  }
+
+  if (validator.isEmpty(data.level)) {
+    errors.level = 'Level field is required'
   }
 
   return {
