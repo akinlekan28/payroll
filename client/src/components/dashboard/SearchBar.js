@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
 
 class SearchBar extends Component {
+  
   logOut(e) {
     e.preventDefault();
 
@@ -30,7 +31,7 @@ class SearchBar extends Component {
               </li>
               <li>
                 <a
-                  href="#"
+                  href=""
                   data-toggle="search"
                   className="nav-link nav-link-lg d-sm-none"
                 >

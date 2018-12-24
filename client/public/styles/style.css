@@ -100,6 +100,15 @@
   outline: none;
 }
 
+.react-confirm-alert-button-group > button:first-child {
+  background-color: #dc3545;
+  font-size: 1rem
+}
+
+.react-confirm-alert-button-group > button:last-child {
+  background-color: #6c757d;
+}
+
 a {
   color: #6777ef;
   font-weight: 500;

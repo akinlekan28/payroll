@@ -14,6 +14,7 @@ import Reset from './components/auth/Reset';
 import PrivateRoute from "./components/common/PrivateRoute";
 import Dashboard from './components/dashboard/Dashboard';
 import AddEmployee from './components/employee/AddEmployee';
+import ViewEmployee from './components/employee/ViewEmployee';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -50,7 +51,10 @@ class App extends Component {
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </Switch>
             <Switch>
-              <PrivateRoute exact path="/employee/create" component={AddEmployee} />
+              <PrivateRoute exact path="/employee" component={AddEmployee} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/employee/all" component={ViewEmployee} />
             </Switch>
           </div>
         </Router>

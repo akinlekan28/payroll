@@ -8,6 +8,7 @@
     "jwt-decode": "^2.2.0",
     "moment": "^2.23.0",
     "react": "^16.6.3",
+    "react-confirm-alert": "^2.0.7",
     "react-dom": "^16.6.3",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",

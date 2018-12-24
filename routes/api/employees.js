@@ -103,7 +103,7 @@ router.get("/", protect, (req, res) => {
 //@route  Get api/employee/:id
 //@desc View single employee route
 //@access Private
-router.get("/:id", protect, (req, res) => {
+router.get("/single/:id", protect, (req, res) => {
   const errors = {};
   Employee.findOne({ _id: req.params.id })
     .then(employee => {

@@ -13,7 +13,8 @@ class SideBar extends Component {
     }
 
 render() {
-  return (
+
+   return (
     <div className="main-sidebar">
      <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
@@ -23,14 +24,17 @@ render() {
             <Link to="/dashboard">PR</Link>
         </div>
         <ul className="sidebar-menu">
+
+            <li><Link to="/dashboard" className="nav-link" ><i className="fas fa-globe"></i> <span>Dashboard</span></Link></li>
+
             <li className="menu-header">Employee</li>
             <li className="dropdown">
                 <a href="" className="nav-link has-dropdown">
                 <i className="fas fa-briefcase"></i><span>Employee</span>
                 </a>
                 <ul className="dropdown-menu">
-                    <li><Link to="/employee/create" className="nav-link">Create profile</Link></li>
-                    <li><Link to="/employee/view" className="nav-link">View profiles</Link></li>
+                    <li><Link to="/employee" className="nav-link">Create profile</Link></li>
+                    <li><Link to="/employee/all" className="nav-link">View profiles</Link></li>
                 </ul>
             </li>
 
@@ -39,7 +43,7 @@ render() {
                 <a href="" className="nav-link has-dropdown">
                 <i className="fas fa-paperclip"></i><span>Payroll</span>
                 </a>
-                <ul className="dropdown-menu">
+                <ul className="dropdown-menu" id="payroll">
                     <li><Link to="/payroll/monthly" className="nav-link">Monthly report</Link></li>
                     <li><Link to="/payroll/all" className="nav-link">All report</Link></li>
                 </ul>

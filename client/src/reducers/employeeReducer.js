@@ -1,7 +1,8 @@
-import { VIEW_EMPLOYEES, EMPLOYEE_LOADING, ADD_EMPLOYEE } from "../actions/types";
+import { VIEW_EMPLOYEES, EMPLOYEE_LOADING, ADD_EMPLOYEE, DELETE_EMPLOYEE } from "../actions/types";
 
 const initialState = {
-  employees: {},
+  employees: [],
+  employee: {},
   loading: false,
 };
 
@@ -17,9 +18,15 @@ export default function(state = initialState, action) {
     case ADD_EMPLOYEE:
       return {
           ...state,
-          employees: action.payload,
+          employees: [action.payload, ...state.employees],
           loading: false
       };
+
+    case DELETE_EMPLOYEE:
+     return {
+       ...state,
+       employees: state.employees.filter(employee => employee._id !== action.payload)
+     }
 
     case EMPLOYEE_LOADING:
       return {
