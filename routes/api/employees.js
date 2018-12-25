@@ -113,9 +113,7 @@ router.get("/single/:id", protect, (req, res) => {
       }
       res.json(employee);
     })
-    .catch(err =>
-      res.status(404).json({ message: "Employee record not found" })
-    );
+    .catch(err => console.log(err));
 });
 
 //@route  Delete api/employee/:id

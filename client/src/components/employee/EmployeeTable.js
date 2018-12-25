@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { deleteEmployee } from "../../actions/employeeActions";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
@@ -25,9 +25,7 @@ class EmployeeTable extends Component {
         },
         {
           label: "No cancel delete!",
-          onClick: () => {
-              
-          }
+          onClick: () => {}
         }
       ]
     });
@@ -44,7 +42,12 @@ class EmployeeTable extends Component {
         <td>{employee.department}</td>
         <td>{employee.designation}</td>
         <td>
-          <Link to={`/employee/${employee._id}`} className="btn btn-primary btn-sm">Edit</Link>{" "}
+          <Link
+            to={`/employee/edit/${employee._id}`}
+            className="btn btn-primary btn-sm"
+          >
+            Edit
+          </Link>{" "}
           <button
             className="btn btn-danger btn-sm"
             onClick={this.deleteDialog.bind(this, employee._id)}
@@ -87,8 +90,9 @@ class EmployeeTable extends Component {
 }
 
 EmployeeTable.propTypes = {
-  deleteEmployee: PropTypes.func.isRequired
+  deleteEmployee: PropTypes.func.isRequired,
 };
+
 
 export default connect(
   null,

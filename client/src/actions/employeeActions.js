@@ -4,6 +4,7 @@ import {
   EMPLOYEE_LOADING,
   GET_ERRORS,
   ADD_EMPLOYEE,
+  GET_EMPLOYEE,
   CLEAR_ERRORS,
   DELETE_EMPLOYEE
 } from "./types";
@@ -52,6 +53,24 @@ export const deleteEmployee = employeeId => dispatch => {
     .then(res =>
       dispatch({
         type: DELETE_EMPLOYEE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+export const getEmployee = employeeId => dispatch => {
+  dispatch(setEmployeeLoading());
+  axios
+    .get(`/api/employee/single/${employeeId}`)
+    .then(res =>
+      dispatch({
+        type: GET_EMPLOYEE,
         payload: res.data
       })
     )

@@ -1,4 +1,4 @@
-import { VIEW_EMPLOYEES, EMPLOYEE_LOADING, ADD_EMPLOYEE, DELETE_EMPLOYEE } from "../actions/types";
+import { VIEW_EMPLOYEES, EMPLOYEE_LOADING, ADD_EMPLOYEE, GET_EMPLOYEE, DELETE_EMPLOYEE } from "../actions/types";
 
 const initialState = {
   employees: [],
@@ -26,6 +26,13 @@ export default function(state = initialState, action) {
      return {
        ...state,
        employees: state.employees.filter(employee => employee._id !== action.payload)
+     }
+
+    case GET_EMPLOYEE:
+     return {
+       ...state,
+       employee: action.payload,
+       loading: false
      }
 
     case EMPLOYEE_LOADING:

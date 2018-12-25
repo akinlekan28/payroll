@@ -1,19 +1,24 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { toast } from "react-toastify";
+import { getEmployee } from "../../actions/employeeActions";
+import { getLevels } from "../../actions/levelActions";
+import TextFieldGroup from "../common/TextFieldGroup";
 import SearchBar from "../dashboard/SearchBar";
 import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
-import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
-import { getLevels } from "../../actions/levelActions";
-import {registerEmployee} from '../../actions/employeeActions';
 import Spinner from "../common/Spinner";
+import isEmpty from '../../validation/is-empty';
 
-class AddEmployee extends Component {
-  constructor() {
-    super();
+class EditEmployee extends Component {
+  componentDidMount() {
+    this.props.getEmployee(this.props.match.params.id);
+    this.props.getLevels();
+  }
+
+  constructor(props) {
+    super(props);
 
     this.state = {
       name: "",
@@ -24,62 +29,74 @@ class AddEmployee extends Component {
       errors: {}
     };
 
-    this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  componentDidMount() {
-    this.props.getLevels();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
-      return {
-        errors: nextProps.errors
-      };
+        this.setState({errors: nextProps.errors})
     }
+
+    if(nextProps.employee){
+        const employee = nextProps.employee.employee;
+
+        employee.name = !isEmpty(employee.name) ? employee.name : '';
+        employee.email = !isEmpty(employee.email) ? employee.email : '';
+        employee.designation = !isEmpty(employee.designation) ? employee.designation : '';
+        employee.department = !isEmpty(employee.department) ? employee.department : '';
+
+        this.setState({
+            name: employee.name,
+            email: employee.email,
+            designation: employee.designation,
+            department: employee.department
+        })
+    }
+
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-
-    const employeeDetails = {
-      name: this.state.name,
-      email: this.state.email,
-      designation: this.state.designation,
-      department: this.state.department,
-      level: this.state.level
-    };
-
-    this.props.registerEmployee(employeeDetails)
-    .then(res => {
-        if(res.type === 'ADD_EMPLOYEE')
-            toast.success("Employee information saved successfully!")
-            this.setState({
-              name: '',
-              email: '',
-              designation: '',
-              department: ''
-            })
-    })
-    .catch(err => console.log(err))
-  }
+  onSubmit(e) {}
 
   render() {
-    const { levels, loading } = this.props.levels;
     const { errors } = this.state;
 
-    let employeeForm;
+    const { employee, loading } = this.props.employee;
+    const { levels } = this.props.levels;
+    console.log(this.state)
 
-    if (levels === null || loading) {
-      employeeForm = <Spinner />;
+    let editEmployeeContainer;
+    let levelContainer;
+
+    if (levels === null || this.props.levels.loading) {
+      levelContainer = <Spinner />;
     } else {
       if (Object.keys(levels).length > 0) {
-        employeeForm = (
+        levelContainer = (
+          <SelectListGroup
+            label="Employee level"
+            placeholder="Select employee level"
+            name="level"
+            value={this.state.level}
+            onChange={this.onChange}
+            error={errors.level}
+            options={levels}
+          />
+        );
+      } else {
+        levelContainer = <option>No level found</option>;
+      }
+    }
+
+    if (employee === null || loading) {
+      editEmployeeContainer = <Spinner />;
+    } else {
+      if (employee) {
+        editEmployeeContainer = (
           <React.Fragment>
             <div className="row justify-content-center">
               <div className="col-md-7">
@@ -135,15 +152,7 @@ class AddEmployee extends Component {
                         tabindex="1"
                       />
 
-                      <SelectListGroup
-                        label="Employee level"
-                        placeholder="Select employee level"
-                        name="level"
-                        value={this.state.level}
-                        onChange={this.onChange}
-                        error={errors.level}
-                        options={levels}
-                      />
+                      {levelContainer}
 
                       <div className="text-center">
                         <button
@@ -151,7 +160,7 @@ class AddEmployee extends Component {
                           className="btn btn-primary btn-lg"
                           tabIndex="4"
                         >
-                          Add Employee
+                          Edit Employee
                         </button>
                       </div>
                     </form>
@@ -162,12 +171,7 @@ class AddEmployee extends Component {
           </React.Fragment>
         );
       } else {
-        employeeForm = (
-          <h4 className="text-danger">
-            There's no previous employee salary level entry! Enter atleast one
-            to proceed
-          </h4>
-        );
+        editEmployeeContainer = <h4>Employee record not found</h4>;
       }
     }
 
@@ -180,9 +184,9 @@ class AddEmployee extends Component {
           <div className="main-content">
             <section className="section">
               <div className="section-header">
-                <h1>Add Employee</h1>
+                <h1>Edit Employee </h1>
               </div>
-              {employeeForm}
+              {editEmployeeContainer}
             </section>
           </div>
           <Footer />
@@ -192,19 +196,19 @@ class AddEmployee extends Component {
   }
 }
 
-AddEmployee.propTypes = {
+EditEmployee.propTypes = {
+  getEmployee: PropTypes.func.isRequired,
   getLevels: PropTypes.func.isRequired,
-  registerEmployee: PropTypes.func.isRequired,
-  levels: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
+  employee: state.employees,
   levels: state.levels
 });
 
 export default connect(
   mapStateToProps,
-  { getLevels, registerEmployee }
-)(AddEmployee);
+  { getEmployee, getLevels }
+)(EditEmployee);
