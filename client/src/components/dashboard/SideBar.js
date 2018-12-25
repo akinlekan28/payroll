@@ -55,7 +55,7 @@ render() {
                 <i className="fas fa-cogs"></i><span>Utilities</span>
                 </a>
                 <ul className="dropdown-menu">
-                    <li><Link to="/utilities/level" className="nav-link">Employee level</Link></li>
+                    <li><Link to="/utilities/level/add" className="nav-link">Employee level</Link></li>
                     <li><Link to="/utilities/exception" className="nav-link">Salary Exception</Link></li>
                 </ul>
             </li>
