@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getEmployee } from "../../actions/employeeActions";
+import { getEmployee, editEmployee } from "../../actions/employeeActions";
 import { getLevels } from "../../actions/levelActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SearchBar from "../dashboard/SearchBar";
@@ -9,7 +9,8 @@ import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
 import SelectListGroup from "../common/SelectListGroup";
 import Spinner from "../common/Spinner";
-import isEmpty from '../../validation/is-empty';
+import isEmpty from "../../validation/is-empty";
+import { toast } from "react-toastify";
 
 class EditEmployee extends Component {
   componentDidMount() {
@@ -35,39 +36,65 @@ class EditEmployee extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
-        this.setState({errors: nextProps.errors})
+      this.setState({ errors: nextProps.errors });
     }
 
-    if(nextProps.employee){
-        const employee = nextProps.employee.employee;
+    if (nextProps.employee) {
+      const employee = nextProps.employee.employee;
 
-        employee.name = !isEmpty(employee.name) ? employee.name : '';
-        employee.email = !isEmpty(employee.email) ? employee.email : '';
-        employee.designation = !isEmpty(employee.designation) ? employee.designation : '';
-        employee.department = !isEmpty(employee.department) ? employee.department : '';
+      employee.name = !isEmpty(employee.name) ? employee.name : "";
+      employee.email = !isEmpty(employee.email) ? employee.email : "";
+      employee.designation = !isEmpty(employee.designation)
+        ? employee.designation
+        : "";
+      employee.department = !isEmpty(employee.department)
+        ? employee.department
+        : "";
 
-        this.setState({
-            name: employee.name,
-            email: employee.email,
-            designation: employee.designation,
-            department: employee.department
-        })
+      this.setState({
+        name: employee.name,
+        email: employee.email,
+        designation: employee.designation,
+        department: employee.department
+      });
     }
-
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  onSubmit(e) {}
+  onSubmit(e) {
+    e.preventDefault();
+
+    const employeeData = {
+      name: this.state.name,
+      email: this.state.email,
+      designation: this.state.designation,
+      department: this.state.department,
+      level: this.state.level
+    };
+
+    this.props
+      .editEmployee(this.props.match.params.id, employeeData)
+      .then(res => {
+        if (res.type === "ADD_EMPLOYEE")
+          toast.success("Employee information successfully edited!");
+        this.setState({
+          name: "",
+          email: "",
+          designation: "",
+          department: ""
+        });
+      })
+      .catch(err => console.log(err));
+  }
 
   render() {
     const { errors } = this.state;
 
     const { employee, loading } = this.props.employee;
     const { levels } = this.props.levels;
-    console.log(this.state)
 
     let editEmployeeContainer;
     let levelContainer;
@@ -210,5 +237,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getEmployee, getLevels }
+  { getEmployee, getLevels, editEmployee }
 )(EditEmployee);

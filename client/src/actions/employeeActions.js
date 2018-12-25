@@ -47,6 +47,7 @@ export const getEmployees = () => dispatch => {
     );
 };
 
+//Delete employee
 export const deleteEmployee = employeeId => dispatch => {
   return axios
     .delete(`/api/employee/${employeeId}`)
@@ -64,6 +65,7 @@ export const deleteEmployee = employeeId => dispatch => {
     );
 };
 
+//Get single employee
 export const getEmployee = employeeId => dispatch => {
   dispatch(setEmployeeLoading());
   axios
@@ -81,6 +83,18 @@ export const getEmployee = employeeId => dispatch => {
       })
     );
 };
+
+export const editEmployee = (employeeId, employeeData) => dispatch => {
+  return axios.put(`/api/employee/${employeeId}`, employeeData)
+  .then(res => dispatch({
+    type: ADD_EMPLOYEE,
+    payload: res.payload
+  }))
+  .catch(err => dispatch({
+    type: GET_ERRORS,
+    payload: err.response.data
+  }))
+}
 
 //Set loading state
 export const setEmployeeLoading = () => {
