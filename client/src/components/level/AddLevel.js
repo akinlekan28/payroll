@@ -6,6 +6,7 @@ import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
 import LevelTab from "./LevelTab";
 import AddLevelForm from "./AddLevelForm";
+import ViewLevelForm from "./ViewLevelTable";
 
 class AddLevel extends Component {
 
@@ -36,7 +37,7 @@ class AddLevel extends Component {
                             <AddLevelForm />
                           </div>
                           <div className="tab-pane fade" id="profile4" role="tabpanel" aria-labelledby="profile-tab4">
-                            Sed sed metus vel lacus hendrerit tempus. Sed efficitur velit tortor, ac efficitur est lobortis quis. Nullam lacinia metus erat, sed fermentum justo rutrum ultrices. Proin quis iaculis tellus. Etiam ac vehicula eros, pharetra consectetur dui. Aliquam convallis neque eget tellus efficitur, eget maximus massa imperdiet. Morbi a mattis velit. Donec hendrerit venenatis justo, eget scelerisque tellus pharetra a.
+                            <ViewLevelForm />
                           </div>
                           <div className="tab-pane fade" id="contact4" role="tabpanel" aria-labelledby="contact-tab4">
                             Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor. Nam malesuada orci non ornare vulputate. Ut ut sollicitudin magna. Vestibulum eget ligula ut ipsum venenatis ultrices. Proin bibendum bibendum augue ut luctus.

@@ -61,7 +61,6 @@ class AddLevelForm extends Component {
     return (
       <div className="row justify-content-center">
         <div className="col-md-10">
-          <div className="card">
             <div className="card-header">
               <h4 className="justify-content-center text-danger">
                 *All fields are required
@@ -114,7 +113,6 @@ class AddLevelForm extends Component {
                 </div>
               </form>
             </div>
-          </div>
         </div>
       </div>
     );
