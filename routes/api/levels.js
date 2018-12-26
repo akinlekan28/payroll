@@ -9,6 +9,7 @@ const deductableInput = require("../../validation/deductable");
 
 //Load Level model
 const Level = require("../../models/Level");
+const Employee = require("../../models/Employee");
 
 //@route  Get api/level/:id
 //@desc View single level route
@@ -32,7 +33,6 @@ router.get("/single/:id", protect, (req, res) => {
 //@desc View Employee level route
 //@access Private
 router.get("/all", (req, res) => {
-  
   const errors = {};
 
   Level.find()
@@ -138,13 +138,25 @@ router.post("/deductable/:id", protect, (req, res) => {
 //@desc Delete Employee level route
 //@access Private
 router.delete("/:id", protect, (req, res) => {
-  Level.findOneAndRemove({ _id: req.params.id })
-    .then(() => {
-      res.json({ success: true });
+  Employee.findOne({ level: req.params.id })
+    .then(employee => {
+      if (!employee) {
+        Level.findOneAndRemove({ _id: req.params.id })
+          .then(() => {
+            res.json({ success: true });
+          })
+          .catch(err =>
+            res.status(404).json({ message: "Error getting level information" })
+          );
+      } else {
+        res
+          .status(400)
+          .json({
+            message: "Cannot delete level that is attached to an employee!"
+          });
+      }
     })
-    .catch(err =>
-      res.status(404).json({ message: "Error getting level information" })
-    );
+    .catch(err => console.log(err));
 });
 
 //@route  Delete api/level/bonus/:id/:bid

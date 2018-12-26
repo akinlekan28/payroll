@@ -4,6 +4,7 @@ import {
   LEVELS_LOADING,
   GET_ERRORS,
   ADD_LEVEL,
+  DELETE_LEVEL,
   CLEAR_ERRORS
 } from "./types";
 
@@ -34,6 +35,24 @@ export const addLevel = levelDetails => dispatch => {
     .then(res =>
       dispatch({
         type: ADD_LEVEL,
+        payload: res.payload
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Delete employee level
+export const deleteLevel = levelId => dispatch => {
+  return axios
+    .delete(`/api/level/${levelId}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_LEVEL,
         payload: res.payload
       })
     )

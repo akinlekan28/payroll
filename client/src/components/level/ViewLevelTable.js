@@ -1,55 +1,91 @@
 import React, { Component } from "react";
-import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import {getLevels} from '../../actions/levelActions';
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getLevels, deleteLevel } from "../../actions/levelActions";
+import { confirmAlert } from "react-confirm-alert";
+import { toast } from "react-toastify";
 
 class ViewLevelTable extends Component {
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.getLevels();
   }
 
-  deleteDialog(id){
-
+  deleteDialog(id) {
+    confirmAlert({
+      title: "Delete employee level ?",
+      message: "Are you sure to do this",
+      buttons: [
+        {
+          label: "Yes Delete level!",
+          onClick: () => {
+            this.props
+              .deleteLevel(id)
+              .then(res => {
+                if (res.type === "DELETE_LEVEL"){
+                  window.location.reload()
+                } else {
+                  if(res.type === "GET_ERRORS")
+                  toast.error(`${res.payload.message}`)
+                }
+              })
+              .catch(err => console.log(err));
+          }
+        },
+        {
+          label: "No cancel delete!",
+          onClick: () => {}
+        }
+      ]
+    });
   }
 
   render() {
-    const {levels, loading} = this.props.levels;
+
+    const formatMoney = money => {
+      let formatedValue = money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+      return formatedValue;
+    }
+
+    const { levels, loading } = this.props.levels;
 
     let levelTableContainer;
 
-    if(levels === null || loading){
-      levelTableContainer = <tr>
-      <td>loading...</td>
-    </tr>
+    if (levels === null || loading) {
+      levelTableContainer = (
+        <tr>
+          <td>loading...</td>
+        </tr>
+      );
     } else {
-      if(Object.keys(levels).length > 0){
+      if (levels !== undefined && Object.keys(levels).length > 0) {
         levelTableContainer = levels.map(level => (
           <tr key={level._id}>
-        <td>{level.name}</td>
-        <td>{level.basic}</td>
-        <td>{level.description}</td>
-        <td>
-          <Link
-            to={`/level/edit/${level._id}`}
-            className="btn btn-primary btn-sm"
-          >
-            Edit
-          </Link>{" "}
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={this.deleteDialog.bind(this, level._id)}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-        ))
+            <td>{level.name}</td>
+            <td>{formatMoney(level.basic)}</td>
+            <td>{level.description}</td>
+            <td>
+              <Link
+                to={`/level/edit/${level._id}`}
+                className="btn btn-primary btn-sm"
+              >
+                Edit
+              </Link>{" "}
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={this.deleteDialog.bind(this, level._id)}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ));
       } else {
-        levelTableContainer = <tr>
-          <td>No previous entries</td>
-        </tr>
+        levelTableContainer = (
+          <tr>
+            <td>No previous entries</td>
+          </tr>
+        );
       }
     }
 
@@ -81,11 +117,15 @@ class ViewLevelTable extends Component {
 }
 
 ViewLevelTable.proptypes = {
-  getLevels: PropTypes.func.isRequired
-}
+  getLevels: PropTypes.func.isRequired,
+  deleteLevel: PropTypes.func.isRequired
+};
 
 const mapStateToProps = state => ({
   levels: state.levels
-})
+});
 
-export default connect(mapStateToProps, {getLevels})(ViewLevelTable);
+export default connect(
+  mapStateToProps,
+  { getLevels, deleteLevel }
+)(ViewLevelTable);
