@@ -1,4 +1,4 @@
-import { VIEW_LEVELS, LEVELS_LOADING } from "../actions/types";
+import { VIEW_LEVELS, LEVELS_LOADING, ADD_LEVEL } from "../actions/types";
 
 const initialState = {
   levels: {},
@@ -13,6 +13,13 @@ export default function(state = initialState, action) {
         levels: action.payload,
         loading: false
       };
+
+      case ADD_LEVEL: 
+        return {
+          ...state,
+          levels: action.payload,
+          loading: false
+        }
 
     case LEVELS_LOADING:
       return {

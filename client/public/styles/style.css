@@ -105,6 +105,10 @@
   font-size: 1rem
 }
 
+.dropdown-divider {
+  border-top-color: #6777ef !important;
+}
+
 .react-confirm-alert-button-group > button:last-child {
   background-color: #6c757d;
 }
