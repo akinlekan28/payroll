@@ -6,6 +6,7 @@ module.exports = function levelInput(data) {
 
   data.name = !isEmpty(data.name) ? data.name : '';
   data.basic = !isEmpty(data.basic) ? data.basic : '';
+  data.description = !isEmpty(data.description) ? data.description : '';
 
   if(validator.isEmpty(data.name)){
     errors.name = 'Level name is required';
@@ -13,6 +14,10 @@ module.exports = function levelInput(data) {
 
   if (validator.isEmpty(data.basic)) {
     errors.basic = 'Basic salary field is required';
+  }
+
+  if (validator.isEmpty(data.description)) {
+    errors.description = 'Level description field is required';
   }
 
   return {

@@ -1,5 +1,11 @@
 import axios from "axios";
-import { VIEW_LEVELS, LEVELS_LOADING, GET_ERRORS, ADD_LEVEL } from "./types";
+import {
+  VIEW_LEVELS,
+  LEVELS_LOADING,
+  GET_ERRORS,
+  ADD_LEVEL,
+  CLEAR_ERRORS
+} from "./types";
 
 //Get employee levels
 export const getLevels = () => dispatch => {
@@ -22,6 +28,7 @@ export const getLevels = () => dispatch => {
 
 //Add employee level
 export const addLevel = levelDetails => dispatch => {
+  dispatch(clearErrors());
   return axios
     .post("/api/level/", levelDetails)
     .then(res =>
@@ -42,5 +49,12 @@ export const addLevel = levelDetails => dispatch => {
 export const setLevelsLoading = () => {
   return {
     type: LEVELS_LOADING
+  };
+};
+
+//Clear errors
+const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
   };
 };

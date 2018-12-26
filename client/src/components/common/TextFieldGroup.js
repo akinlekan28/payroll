@@ -28,7 +28,7 @@ const TextFieldGroup = ({
           placeholder={placeholder}
           tabIndex={tabindex}
         />
-        {info && <small className="form-text text-muted">{info}</small>}
+        {info && <small className="form-text text-warning">{info}</small>}
         {error && <div className="invalid-feedback">{error}</div>}
       </div>
     </div>

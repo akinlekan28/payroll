@@ -8,7 +8,7 @@ import Footer from "../dashboard/Footer";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { getLevels } from "../../actions/levelActions";
-import {registerEmployee} from '../../actions/employeeActions';
+import { registerEmployee } from "../../actions/employeeActions";
 import Spinner from "../common/Spinner";
 
 class AddEmployee extends Component {
@@ -55,18 +55,20 @@ class AddEmployee extends Component {
       level: this.state.level
     };
 
-    this.props.registerEmployee(employeeDetails)
-    .then(res => {
-        if(res.type === 'ADD_EMPLOYEE')
-            toast.success("Employee information saved successfully!")
-            this.setState({
-              name: '',
-              email: '',
-              designation: '',
-              department: ''
-            })
-    })
-    .catch(err => console.log(err))
+    this.props
+      .registerEmployee(employeeDetails)
+      .then(res => {
+        if (res.type === "ADD_EMPLOYEE") {
+          toast.success("Employee information saved successfully!");
+          this.setState({
+            name: "",
+            email: "",
+            designation: "",
+            department: ""
+          });
+        }
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
