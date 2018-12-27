@@ -16,7 +16,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import AddEmployee from './components/employee/AddEmployee';
 import ViewEmployee from './components/employee/ViewEmployee';
 import EditEmployee from './components/employee/EditEmployee';
-import Addlevel from './components/level/AddLevel';
+import Level from './components/level/Level';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -62,7 +62,7 @@ class App extends Component {
               <PrivateRoute exact path="/employee/edit/:id" component={EditEmployee} />
             </Switch>
             <Switch>
-              <PrivateRoute exact path="/utilities/level/add" component={Addlevel} />
+              <PrivateRoute exact path="/utilities/level" component={Level} />
             </Switch>
           </div>
         </Router>

@@ -8,7 +8,7 @@ import LevelTab from "./LevelTab";
 import AddLevelForm from "./AddLevelForm";
 import ViewLevelForm from "./ViewLevelTable";
 
-class AddLevel extends Component {
+class Level extends Component {
 
   render() {
 
@@ -61,4 +61,4 @@ class AddLevel extends Component {
 //   errors: state.errors
 // })
 
-export default AddLevel;
+export default Level;
