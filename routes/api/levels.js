@@ -87,14 +87,14 @@ router.post("/", protect, (req, res) => {
 //@route  Post api/level/bonus/:id
 //@desc Create Employee bonus route
 //@access Private
-router.post("/bonus/:id", protect, (req, res) => {
+router.post("/bonus", protect, (req, res) => {
   const { errors, isValid } = bonusInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  Level.findOne({ _id: req.params.id }).then(level => {
+  Level.findOne({ _id: req.body.level }).then(level => {
     const newBonus = {
       name: req.body.name,
       amount: req.body.amount
@@ -106,7 +106,8 @@ router.post("/bonus/:id", protect, (req, res) => {
       .catch(err =>
         res.status(400).json({ message: "Error saving bonus information" })
       );
-  });
+  })
+  .catch(err => res.status(404).json({message: "Error fetching level"}))
 });
 
 //@route  Post api/level/deductables/:id

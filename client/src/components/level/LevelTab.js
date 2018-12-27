@@ -20,11 +20,11 @@ const LevelTab = () => {
         <li className="nav-item">
           <a
             className="nav-link"
-            id="profile-tab4"
+            id="viewlevel-tab4"
             data-toggle="tab"
-            href="#profile4"
+            href="#viewlevel"
             role="tab"
-            aria-controls="profile"
+            aria-controls="viewlevel"
             aria-selected="false"
           >
             View levels
@@ -34,11 +34,11 @@ const LevelTab = () => {
         <li className="nav-item">
           <a
             className="nav-link"
-            id="contact-tab4"
+            id="addbonus-tab4"
             data-toggle="tab"
-            href="#contact4"
+            href="#addbonus"
             role="tab"
-            aria-controls="contact"
+            aria-controls="addbonus"
             aria-selected="false"
           >
             Add bonus

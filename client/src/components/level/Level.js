@@ -7,6 +7,7 @@ import Footer from "../dashboard/Footer";
 import LevelTab from "./LevelTab";
 import AddLevelForm from "./AddLevelForm";
 import ViewLevelForm from "./ViewLevelTable";
+import AddBonusForm from "./AddBonusForm";
 
 class Level extends Component {
 
@@ -36,8 +37,11 @@ class Level extends Component {
                           <div className="tab-pane fade show active" id="addlevel" role="tabpanel" aria-labelledby="addlevel-tab4">
                             <AddLevelForm />
                           </div>
-                          <div className="tab-pane fade" id="profile4" role="tabpanel" aria-labelledby="profile-tab4">
+                          <div className="tab-pane fade" id="viewlevel" role="tabpanel" aria-labelledby="viewlevel-tab4">
                             <ViewLevelForm />
+                          </div>
+                          <div className="tab-pane fade" id="addbonus" role="tabpanel" aria-labelledby="addbonus-tab4">
+                            <AddBonusForm />
                           </div>
                           <div className="tab-pane fade" id="contact4" role="tabpanel" aria-labelledby="contact-tab4">
                             Vestibulum imperdiet odio sed neque ultricies, ut dapibus mi maximus. Proin ligula massa, gravida in lacinia efficitur, hendrerit eget mauris. Pellentesque fermentum, sem interdum molestie finibus, nulla diam varius leo, nec varius lectus elit id dolor. Nam malesuada orci non ornare vulputate. Ut ut sollicitudin magna. Vestibulum eget ligula ut ipsum venenatis ultrices. Proin bibendum bibendum augue ut luctus.

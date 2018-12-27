@@ -15,14 +15,6 @@ import ExceptionCard from './ExceptionCard';
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getAnalytics();
-
-      // document.querySelectorAll("a[href^='']").forEach(node => {
-      //   node.addEventListener('click', e => {
-      //     e.preventDefault();
-      //     console.log(e.target.href);
-      //     //this.props.history.push(e.target.href);
-      //   });
-      // })
   }
 
   render() {

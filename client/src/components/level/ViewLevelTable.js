@@ -7,6 +7,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 
 class ViewLevelTable extends Component {
+  
   componentDidMount() {
     this.props.getLevels();
   }

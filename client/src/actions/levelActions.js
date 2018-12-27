@@ -64,6 +64,25 @@ export const deleteLevel = levelId => dispatch => {
     );
 };
 
+//Add bonus to level
+export const addBonus = bonusDetails => dispatch => {
+  dispatch(clearErrors());
+  return axios
+    .post("/api/level/bonus", bonusDetails)
+    .then(res =>
+      dispatch({
+        type: ADD_LEVEL,
+        payload: res.payload
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Set loding state
 export const setLevelsLoading = () => {
   return {

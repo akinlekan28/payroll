@@ -9,14 +9,14 @@ import { ToastContainer } from "react-toastify";
 
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import Forgot from './components/auth/Forgot';
-import Reset from './components/auth/Reset';
+import Forgot from "./components/auth/Forgot";
+import Reset from "./components/auth/Reset";
 import PrivateRoute from "./components/common/PrivateRoute";
-import Dashboard from './components/dashboard/Dashboard';
-import AddEmployee from './components/employee/AddEmployee';
-import ViewEmployee from './components/employee/ViewEmployee';
-import EditEmployee from './components/employee/EditEmployee';
-import Level from './components/level/Level';
+import Dashboard from "./components/dashboard/Dashboard";
+import AddEmployee from "./components/employee/AddEmployee";
+import ViewEmployee from "./components/employee/ViewEmployee";
+import EditEmployee from "./components/employee/EditEmployee";
+import Level from "./components/level/Level";
 
 //check for token
 if (localStorage.jwtToken) {
@@ -39,15 +39,37 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      isShowing: false
+    };
+  }
+
+  openModalHandler = () => {
+    this.setState({
+      isShowing: true
+    });
+  };
+
+  closeModalHandler = () => {
+    this.setState({
+      isShowing: false
+    });
+  };
   render() {
     return (
       <Provider store={store}>
         <Router>
           <div className="App">
+            {this.state.isShowing ? (
+              <div onClick={this.closeModalHandler} className="back-drop" />
+            ) : null}
             <ToastContainer autoClose={4000} />
             <Route exact path="/" component={Login} />
             <Route exact path="/forgot-password" component={Forgot} />
-            <Route exact path="/register" component={Register} />        
+            <Route exact path="/register" component={Register} />
             <Route exact path="/resetpassword/:token" component={Reset} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
@@ -56,10 +78,18 @@ class App extends Component {
               <PrivateRoute exact path="/employee" component={AddEmployee} />
             </Switch>
             <Switch>
-              <PrivateRoute exact path="/employee/all" component={ViewEmployee} />
+              <PrivateRoute
+                exact
+                path="/employee/all"
+                component={ViewEmployee}
+              />
             </Switch>
             <Switch>
-              <PrivateRoute exact path="/employee/edit/:id" component={EditEmployee} />
+              <PrivateRoute
+                exact
+                path="/employee/edit/:id"
+                component={EditEmployee}
+              />
             </Switch>
             <Switch>
               <PrivateRoute exact path="/utilities/level" component={Level} />
