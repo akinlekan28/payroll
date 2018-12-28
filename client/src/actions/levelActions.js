@@ -22,7 +22,7 @@ export const getLevels = () => dispatch => {
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: null
+        payload: err.response.data
       })
     );
 };
@@ -82,6 +82,7 @@ export const addBonus = bonusDetails => dispatch => {
       })
     );
 };
+
 
 //Set loding state
 export const setLevelsLoading = () => {

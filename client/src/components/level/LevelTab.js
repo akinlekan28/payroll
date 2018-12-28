@@ -47,11 +47,11 @@ const LevelTab = () => {
         <li className="nav-item">
           <a
             className="nav-link"
-            id="contact-tab4"
+            id="viewbonus-tab4"
             data-toggle="tab"
-            href="#contact4"
+            href="#viewbonus"
             role="tab"
-            aria-controls="contact"
+            aria-controls="viewbonus"
             aria-selected="false"
           >
             View bonuses

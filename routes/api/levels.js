@@ -29,6 +29,7 @@ router.get("/single/:id", protect, (req, res) => {
     );
 });
 
+
 //@route  Get api/level/all
 //@desc View Employee level route
 //@access Private

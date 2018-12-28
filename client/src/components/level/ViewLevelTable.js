@@ -2,15 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getLevels, deleteLevel } from "../../actions/levelActions";
+import { deleteLevel } from "../../actions/levelActions";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 
 class ViewLevelTable extends Component {
-  
-  componentDidMount() {
-    this.props.getLevels();
-  }
 
   deleteDialog(id) {
     confirmAlert({
@@ -66,6 +62,7 @@ class ViewLevelTable extends Component {
             <td>{formatMoney(level.basic)}</td>
             <td>{level.description}</td>
             <td>
+            <Link to="" className="btn btn-sm btn-secondary">Bonuses</Link>{" "}
               <Link
                 to={`/level/edit/${level._id}`}
                 className="btn btn-primary btn-sm"
@@ -118,7 +115,7 @@ class ViewLevelTable extends Component {
 }
 
 ViewLevelTable.proptypes = {
-  getLevels: PropTypes.func.isRequired,
+  levels: PropTypes.object.isRequired,
   deleteLevel: PropTypes.func.isRequired
 };
 
@@ -128,5 +125,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getLevels, deleteLevel }
+  { deleteLevel }
 )(ViewLevelTable);

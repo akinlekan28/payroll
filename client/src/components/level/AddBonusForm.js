@@ -23,9 +23,10 @@ class AddBonusForm extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidMount(){
-        this.props.getLevels();
+    componentDidMount = () => {
+      this.props.getLevels();
     }
+    
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.errors) {
@@ -184,6 +185,7 @@ class AddBonusForm extends Component {
 AddBonusForm.propTypes = {
     getLevels: PropTypes.func.isRequired,
     addBonus: PropTypes.func.isRequired,
+    levels: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 }
 
