@@ -54,7 +54,7 @@ export const deleteEmployee = employeeId => dispatch => {
     .then(res =>
       dispatch({
         type: DELETE_EMPLOYEE,
-        payload: res.data
+        payload: employeeId
       })
     )
     .catch(err =>

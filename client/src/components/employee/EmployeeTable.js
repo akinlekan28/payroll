@@ -5,6 +5,7 @@ import { deleteEmployee } from "../../actions/employeeActions";
 import { Link } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { toast } from "react-toastify";
 
 class EmployeeTable extends Component {
   deleteDialog(id) {
@@ -18,7 +19,9 @@ class EmployeeTable extends Component {
             this.props
               .deleteEmployee(id)
               .then(res => {
-                if (res.type === "DELETE_EMPLOYEE") window.location.reload();
+                if (res.type === "DELETE_EMPLOYEE"){
+                  toast.success("Employee record deleted!")
+                }
               })
               .catch(err => console.log(err));
           }

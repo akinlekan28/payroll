@@ -53,7 +53,7 @@ export const deleteLevel = levelId => dispatch => {
     .then(res =>
       dispatch({
         type: DELETE_LEVEL,
-        payload: res.payload
+        payload: levelId
       })
     )
     .catch(err =>
@@ -83,6 +83,23 @@ export const addBonus = bonusDetails => dispatch => {
     );
 };
 
+//Delete level bonus
+export const deleteBonus = (levelId, bonusId) => dispatch => {
+  return axios
+    .delete(`/api/level/bonus/${levelId}/${bonusId}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_LEVEL,
+        payload: bonusId
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 //Set loding state
 export const setLevelsLoading = () => {

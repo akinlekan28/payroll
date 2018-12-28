@@ -6,12 +6,16 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  levels: {},
+  levels: [],
   loading: false
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
+
+    default:
+      return state;
+
     case VIEW_LEVELS:
       return {
         ...state,
@@ -28,7 +32,7 @@ export default function(state = initialState, action) {
     case DELETE_LEVEL:
       return {
         ...state,
-        levels: action.payload,
+        levels: state.levels.filter(level => level._id !== action.payload),
         loading: false
       };
 
@@ -37,8 +41,5 @@ export default function(state = initialState, action) {
         ...state,
         loading: true
       };
-
-    default:
-      return state;
   }
 }

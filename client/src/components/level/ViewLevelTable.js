@@ -20,7 +20,7 @@ class ViewLevelTable extends Component {
               .deleteLevel(id)
               .then(res => {
                 if (res.type === "DELETE_LEVEL"){
-                  window.location.reload()
+                  toast.success("Employee level deleted!")
                 } else {
                   if(res.type === "GET_ERRORS")
                   toast.error(`${res.payload.message}`)
@@ -62,7 +62,6 @@ class ViewLevelTable extends Component {
             <td>{formatMoney(level.basic)}</td>
             <td>{level.description}</td>
             <td>
-            <Link to="" className="btn btn-sm btn-secondary">Bonuses</Link>{" "}
               <Link
                 to={`/level/edit/${level._id}`}
                 className="btn btn-primary btn-sm"

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {getLevels} from '../../actions/levelActions';
+import {getLevels, deleteBonus} from '../../actions/levelActions';
+import { toast } from 'react-toastify';
 
 class ViewBonusTable extends Component {
 
@@ -10,7 +11,13 @@ class ViewBonusTable extends Component {
     }
 
     onDelete(levelId, bonusId) {
-        console.log(levelId+" "+bonusId)
+        this.props.deleteBonus(levelId, bonusId)
+        .then(res => {
+            if(res.type === 'DELETE_LEVEL'){
+                toast.success('Bonus Deleted!')
+            }
+        })
+        .catch(err => console.log(err))
     }
     
   render() {
@@ -35,6 +42,7 @@ class ViewBonusTable extends Component {
                     {level.bonuses.map(bonus => (
                         <div key={bonus._id} className="text-center mb-3">
                             <p>Bonus name: {bonus.name}</p>
+                            <p>Amount: {formatMoney(bonus.amount)}</p>
                             <div>
                                 <button className="btn btn-sm btn-danger" onClick={this.onDelete.bind(this, level._id, bonus._id)}>Delete</button>
                             </div>
@@ -63,11 +71,12 @@ class ViewBonusTable extends Component {
 
 ViewBonusTable.propTypes = {
     levels: PropTypes.object.isRequired,
-    getLevels: PropTypes.func.isRequired
+    getLevels: PropTypes.func.isRequired,
+    deleteBonus: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     levels: state.levels
 })
 
-export default connect(mapStateToProps, {getLevels})(ViewBonusTable);
+export default connect(mapStateToProps, {getLevels, deleteBonus})(ViewBonusTable);
