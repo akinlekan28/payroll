@@ -8,19 +8,38 @@ class ViewBonusTable extends Component {
     componentDidMount = () => {
       this.props.getLevels();
     }
+
+    onDelete(levelId, bonusId) {
+        console.log(levelId+" "+bonusId)
+    }
     
   render() {
      
+    const formatMoney = money => {
+        let formatedValue = money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        return formatedValue;
+      }
+
     const {levels} = this.props.levels
 
       let bonusTableContainer; 
+      
 
       if(levels !== undefined && Object.keys(levels).length > 0){
 
         bonusTableContainer = levels.map(level => (
             <div key={level._id} className="col-md-5 mx-auto card card-primary mt-2">
                     <p className="mt-3"><strong>Level Name</strong> : {level.name}</p>
-                    <p className="mt-2"><strong>Level Salary</strong> : {level.basic}</p>
+                    <p className="mt-2"><strong>Level Salary</strong> : {formatMoney(level.basic)}</p>
+                    <h5 className="text-center">Bonus</h5>
+                    {level.bonuses.map(bonus => (
+                        <div key={bonus._id} className="text-center mb-3">
+                            <p>Bonus name: {bonus.name}</p>
+                            <div>
+                                <button className="btn btn-sm btn-danger" onClick={this.onDelete.bind(this, level._id, bonus._id)}>Delete</button>
+                            </div>
+                        </div>
+                    ))}
             </div>
         ))
           
