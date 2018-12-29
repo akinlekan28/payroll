@@ -19,11 +19,11 @@ class ViewLevelTable extends Component {
             this.props
               .deleteLevel(id)
               .then(res => {
-                if (res.type === "DELETE_LEVEL"){
-                  toast.success("Employee level deleted!")
+                if (res.type === "DELETE_LEVEL") {
+                  toast.success("Employee level deleted!");
                 } else {
-                  if(res.type === "GET_ERRORS")
-                  toast.error(`${res.payload.message}`)
+                  if (res.type === "GET_ERRORS")
+                    toast.error(`${res.payload.message}`);
                 }
               })
               .catch(err => console.log(err));
@@ -38,28 +38,21 @@ class ViewLevelTable extends Component {
   }
 
   render() {
-
     const formatMoney = money => {
-      let formatedValue = money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+      let formatedValue = money
+        .toString()
+        .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
       return formatedValue;
-    }
+    };
 
-    const { levels, loading } = this.props.levels;
+    const { levels } = this.props;
 
-    let levelTableContainer;
-
-    if (levels === null || loading) {
-      levelTableContainer = (
-        <tr>
-          <td>loading...</td>
-        </tr>
-      );
-    } else {
-      if (levels !== undefined && Object.keys(levels).length > 0) {
-        levelTableContainer = levels.map(level => (
+        const levelTableContainer = levels.map(level => (
           <tr key={level._id}>
             <td>{level.name}</td>
-            <td>{formatMoney(level.basic)}</td>
+            <td>
+              <span>&#8358;</span> {formatMoney(level.basic)}
+            </td>
             <td>{level.description}</td>
             <td>
               <Link
@@ -77,14 +70,6 @@ class ViewLevelTable extends Component {
             </td>
           </tr>
         ));
-      } else {
-        levelTableContainer = (
-          <tr>
-            <td>No previous entries</td>
-          </tr>
-        );
-      }
-    }
 
     return (
       <div className="row justify-content-center">
@@ -114,15 +99,8 @@ class ViewLevelTable extends Component {
 }
 
 ViewLevelTable.proptypes = {
-  levels: PropTypes.object.isRequired,
+  levels: PropTypes.array.isRequired,
   deleteLevel: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  levels: state.levels
-});
-
-export default connect(
-  mapStateToProps,
-  { deleteLevel }
-)(ViewLevelTable);
+export default connect(null,{ deleteLevel })(ViewLevelTable);

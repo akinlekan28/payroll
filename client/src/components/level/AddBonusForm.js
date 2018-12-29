@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {getLevels, addBonus} from '../../actions/levelActions';
-import Spinner from '../common/Spinner';
+import { addBonus } from '../../actions/levelActions';
 import TextFieldGroup from '../common/TextFieldGroup';
 import SelectListGroup from '../common/SelectListGroup';
 import { toast } from 'react-toastify';
@@ -21,12 +20,7 @@ class AddBonusForm extends Component {
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
-    }
-
-    componentDidMount = () => {
-      this.props.getLevels();
-    }
-    
+    }    
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.errors) {
@@ -67,15 +61,9 @@ class AddBonusForm extends Component {
 
     const {errors} = this.state
 
-    const {levels, loading} = this.props.levels
+    const {levels} = this.props
 
-    let bonusFormContainer; 
-
-    if(levels === null || loading){
-        bonusFormContainer = <Spinner />
-    } else {
-        if(levels !== undefined && Object.keys(levels).length > 0) {
-            bonusFormContainer = (
+           const bonusFormContainer = (
                 <form onSubmit={this.onSubmit}>
                     <TextFieldGroup
                         type="text"
@@ -122,48 +110,7 @@ class AddBonusForm extends Component {
 
                 </form>
             )
-        } else {
-            bonusFormContainer = (
-                <form onSubmit={this.onSubmit}>
-                    <TextFieldGroup
-                        type="text"
-                        label="Bonus Name"
-                        placeholder="Enter name"
-                        name="name"
-                        value={this.state.name}
-                        error={errors.name}
-                        onChange={this.onChange}
-                        tabindex="1"
-                    />
-
-                    <TextFieldGroup
-                        type="number"
-                        label="Bonus Amount"
-                        placeholder="Enter bonus amount"
-                        name="amount"
-                        value={this.state.amount}
-                        error={errors.amount}
-                        onChange={this.onChange}
-                        tabindex="1"
-                        info="Amount value should be without comma"
-                    />
-
-                    <h4>Reload page to view and select employee level</h4>
-
-                    <div className="text-center">
-                        <button
-                          type="submit"
-                          className="btn btn-primary btn-lg"
-                          tabIndex="4"
-                        >
-                          Add Bonus
-                        </button>
-                    </div>
-
-                </form>
-            )
-        }
-    }
+       
 
     return (
       <div className="row justify-content-center">
@@ -183,15 +130,13 @@ class AddBonusForm extends Component {
 }
 
 AddBonusForm.propTypes = {
-    getLevels: PropTypes.func.isRequired,
     addBonus: PropTypes.func.isRequired,
-    levels: PropTypes.object.isRequired,
+    levels: PropTypes.array.isRequired,
     errors: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-    errors: state.errors,
-    levels: state.levels
+    errors: state.errors
 })
 
-export default connect(mapStateToProps, {getLevels, addBonus})(AddBonusForm);
+export default connect(mapStateToProps, { addBonus })(AddBonusForm);

@@ -33,10 +33,7 @@ export const addLevel = levelDetails => dispatch => {
   return axios
     .post("/api/level/", levelDetails)
     .then(res =>
-      dispatch({
-        type: ADD_LEVEL,
-        payload: res.payload
-      })
+      dispatch(getLevels())
     )
     .catch(err =>
       dispatch({
@@ -88,10 +85,7 @@ export const deleteBonus = (levelId, bonusId) => dispatch => {
   return axios
     .delete(`/api/level/bonus/${levelId}/${bonusId}`)
     .then(res =>
-      dispatch({
-        type: DELETE_LEVEL,
-        payload: bonusId
-      })
+      dispatch(getLevels())
     )
     .catch(err =>
       dispatch({

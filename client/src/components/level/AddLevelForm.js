@@ -44,14 +44,12 @@ class AddLevelForm extends Component {
     this.props
       .addLevel(levelDetails)
       .then(res => {
-        if (res.type === "ADD_LEVEL") {
           toast.success("Level information successfully added!");
           this.setState({
             name: "",
             basic: "",
             description: ""
           });
-        }
       })
       .catch(err => console.log(err));
   }
