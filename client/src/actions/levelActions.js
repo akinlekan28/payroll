@@ -3,7 +3,6 @@ import {
   VIEW_LEVELS,
   LEVELS_LOADING,
   GET_ERRORS,
-  ADD_LEVEL,
   DELETE_LEVEL,
   CLEAR_ERRORS
 } from "./types";
@@ -32,9 +31,7 @@ export const addLevel = levelDetails => dispatch => {
   dispatch(clearErrors());
   return axios
     .post("/api/level/", levelDetails)
-    .then(res =>
-      dispatch(getLevels())
-    )
+    .then(res => dispatch(getLevels()))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -66,12 +63,7 @@ export const addBonus = bonusDetails => dispatch => {
   dispatch(clearErrors());
   return axios
     .post("/api/level/bonus", bonusDetails)
-    .then(res =>
-      dispatch({
-        type: ADD_LEVEL,
-        payload: res.payload
-      })
-    )
+    .then(res => dispatch(getLevels()))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -84,9 +76,7 @@ export const addBonus = bonusDetails => dispatch => {
 export const deleteBonus = (levelId, bonusId) => dispatch => {
   return axios
     .delete(`/api/level/bonus/${levelId}/${bonusId}`)
-    .then(res =>
-      dispatch(getLevels())
-    )
+    .then(res => dispatch(getLevels()))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

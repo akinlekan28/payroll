@@ -38,7 +38,6 @@ class ViewBonusTable extends Component {
     };
 
     const { levels } = this.props
-    console.log(this.props)
 
       const bonusTableContainer = levels.map(level => (
         <div

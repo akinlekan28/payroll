@@ -44,12 +44,12 @@ class AddLevelForm extends Component {
     this.props
       .addLevel(levelDetails)
       .then(res => {
-          toast.success("Level information successfully added!");
-          this.setState({
-            name: "",
-            basic: "",
-            description: ""
-          });
+        toast.success("Level information successfully added!");
+        this.setState({
+          name: "",
+          basic: "",
+          description: ""
+        });
       })
       .catch(err => console.log(err));
   }
@@ -59,58 +59,58 @@ class AddLevelForm extends Component {
     return (
       <div className="row justify-content-center">
         <div className="col-md-10">
-            <div className="card-header">
-              <h4 className="justify-content-center text-danger">
-                *All fields are required
-              </h4>
-            </div>
-            <div className="card-body">
-              <form onSubmit={this.onSubmit}>
-                <TextFieldGroup
-                  type="text"
-                  label="Level Name"
-                  placeholder="Enter name"
-                  name="name"
-                  value={this.state.name}
-                  error={errors.name}
-                  onChange={this.onChange}
-                  tabindex="1"
-                />
+          <div className="card-header">
+            <h4 className="justify-content-center text-danger">
+              *All fields are required
+            </h4>
+          </div>
+          <div className="card-body">
+            <form onSubmit={this.onSubmit}>
+              <TextFieldGroup
+                type="text"
+                label="Level Name"
+                placeholder="Enter name"
+                name="name"
+                value={this.state.name}
+                error={errors.name}
+                onChange={this.onChange}
+                tabindex="1"
+              />
 
-                <TextFieldGroup
-                  type="number"
-                  label="Basic Salary"
-                  placeholder="Enter basic salary"
-                  name="basic"
-                  value={this.state.basic}
-                  error={errors.basic}
-                  onChange={this.onChange}
-                  tabindex="1"
-                  info="Salary value should be without comma"
-                />
+              <TextFieldGroup
+                type="number"
+                label="Basic Salary"
+                placeholder="Enter basic salary"
+                name="basic"
+                value={this.state.basic}
+                error={errors.basic}
+                onChange={this.onChange}
+                tabindex="1"
+                info="Salary value should be without comma"
+              />
 
-                <TextFieldGroup
-                  type="text"
-                  label="Level Description"
-                  placeholder="Enter description"
-                  name="description"
-                  value={this.state.description}
-                  error={errors.description}
-                  onChange={this.onChange}
-                  tabindex="1"
-                />
+              <TextFieldGroup
+                type="text"
+                label="Level Description"
+                placeholder="Enter description"
+                name="description"
+                value={this.state.description}
+                error={errors.description}
+                onChange={this.onChange}
+                tabindex="1"
+              />
 
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-lg"
-                    tabIndex="4"
-                  >
-                    Add Level
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  tabIndex="4"
+                >
+                  Add Level
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     );
