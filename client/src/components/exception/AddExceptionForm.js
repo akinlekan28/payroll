@@ -61,6 +61,7 @@ class AddExceptionForm extends Component {
 
     const exceptionFormContainer = (
       <form onSubmit={this.onSubmit}>
+      <p className="text-danger text-center">{errors.exception}</p>
         <TextFieldGroup
           type="number"
           label="Amount"

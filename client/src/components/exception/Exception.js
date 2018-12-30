@@ -2,26 +2,30 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getEmployees } from "../../actions/employeeActions";
+import {getExceptions} from '../../actions/exceptionActions';
 import SearchBar from "../dashboard/SearchBar";
 import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
 import ExceptionTab from './ExceptionTab'; 
 import Spinner from '../common/Spinner';
 import AddExceptionForm from './AddExceptionForm';
+import ViewException from './ViewException';
 
 
 class Exception extends Component {
 
     componentDidMount = () => {
       this.props.getEmployees();
+      this.props.getExceptions();
     }
     
   render() {
       const {employees, loading} = this.props.employees
+      const {exceptions} = this.props.exceptions
 
       let exceptionContainer;
 
-      if(employees === null || loading){
+      if(employees === null || exceptions === null || loading){
           exceptionContainer = <Spinner />
       } else {
           exceptionContainer = (
@@ -40,7 +44,7 @@ class Exception extends Component {
               role="tabpanel"
               aria-labelledby="viewexception-tab4"
             >
-              tab 2
+              <ViewException exceptions={exceptions} />
             </div>
           </div>
           )
@@ -83,11 +87,13 @@ class Exception extends Component {
 }
 
 Exception.propTypes = {
-    getEmployees: PropTypes.func.isRequired
+    getEmployees: PropTypes.func.isRequired,
+    getExceptions: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-    employees: state.employees
+    employees: state.employees,
+    exceptions: state.exceptions
 })
 
-export default connect(mapStateToProps, {getEmployees})(Exception);
+export default connect(mapStateToProps, {getEmployees, getExceptions})(Exception);

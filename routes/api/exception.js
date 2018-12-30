@@ -64,12 +64,12 @@ router.post("/", protect, (req, res) => {
 
   Exception.findOne({ employee: req.body.employee }).then(employee => {
     if (employee) {
-      errors.exception = "Employee salary exception already exist";
+      errors.exception = "Employee salary exception already exist!";
       return res.status(400).json(errors);
     }
     const newSalaryException = new Exception({
       amount: req.body.amount,
-      employee: req.params.id
+      employee: req.body.employee
     });
 
     newSalaryException
@@ -78,7 +78,8 @@ router.post("/", protect, (req, res) => {
       .catch(err =>
         res.status(400).json({ message: "Error saving salary exception" })
       );
-  });
+  })
+  .catch(err => console.log(err))
 });
 
 //@route  Put api/exception/:id

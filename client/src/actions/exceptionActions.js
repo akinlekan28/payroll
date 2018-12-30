@@ -8,7 +8,7 @@ import {
   GET_ERRORS
 } from "./types";
 
-//Add salaryexception
+//Add salary exception
 export const addException = exceptionDetails => dispatch => {
   dispatch(clearErrors());
   return axios
@@ -27,8 +27,30 @@ export const addException = exceptionDetails => dispatch => {
     );
 };
 
+//View salary exceptions
+export const getExceptions = () => dispatch => {
+  dispatch(setExceptionLoading());
+  axios
+    .get("/api/exception")
+    .then(res =>
+      dispatch({
+        type: VIEW_EXCEPTIONS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Delete exception
+export const deleteException = () => dispatch => {};
+
 //Set loding state
-export const setLevelsLoading = () => {
+export const setExceptionLoading = () => {
   return {
     type: EXCEPTION_LOADING
   };
