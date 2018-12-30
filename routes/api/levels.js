@@ -33,7 +33,7 @@ router.get("/single/:id", protect, (req, res) => {
 //@route  Get api/level/all
 //@desc View Employee level route
 //@access Private
-router.get("/all", (req, res) => {
+router.get("/all", protect, (req, res) => {
   const errors = {};
 
   Level.find()
@@ -103,7 +103,11 @@ router.post("/bonus", protect, (req, res) => {
     level.bonuses.unshift(newBonus);
     level
       .save()
-      .then(level => res.json(level))
+      .then(level => {
+        Level.find()
+        .then(levels => res.json(levels))
+        .catch(err => console.log(err))
+      })
       .catch(err =>
         res.status(400).json({ message: "Error saving bonus information" })
       );
@@ -114,14 +118,14 @@ router.post("/bonus", protect, (req, res) => {
 //@route  Post api/level/deductables/:id
 //@desc Create Employee deductable route
 //@access Private
-router.post("/deductable/:id", protect, (req, res) => {
+router.post("/deductable", protect, (req, res) => {
   const { errors, isValid } = deductableInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  Level.findOne({ _id: req.params.id }).then(level => {
+  Level.findOne({ _id: req.body.level }).then(level => {
     const newDeductable = {
       name: req.body.name,
       amount: req.body.amount
@@ -129,7 +133,11 @@ router.post("/deductable/:id", protect, (req, res) => {
     level.deductables.unshift(newDeductable);
     level
       .save()
-      .then(level => res.json(level))
+      .then(level => {
+        Level.find()
+        .then(levels => res.json(levels))
+        .catch(err => console.log(err))
+      })
       .catch(err =>
         res.status(400).json({ message: "Error saving deductable information" })
       );
@@ -183,7 +191,11 @@ router.delete("/bonus/:id/:bid", protect, (req, res) => {
       // Splice deductable out of array
       level.bonuses.splice(removeIndex, 1);
 
-      level.save().then(level => res.json(level));
+      level.save().then(level => {
+        Level.find()
+        .then(levels => res.json(levels))
+        .catch(err => console.log(err))
+      });
     })
     .catch(err => res.status(404).json(err));
 });
@@ -212,7 +224,11 @@ router.delete("/deductable/:id/:did", protect, (req, res) => {
       // Splice deductable out of array
       level.deductables.splice(removeIndex, 1);
 
-      level.save().then(level => res.json(level));
+      level.save().then(level => {
+        Level.find()
+        .then(levels => res.json(levels))
+        .catch(err => console.log(err))
+      });
     })
     .catch(err => res.status(404).json(err));
 });

@@ -17,6 +17,7 @@ import AddEmployee from "./components/employee/AddEmployee";
 import ViewEmployee from "./components/employee/ViewEmployee";
 import EditEmployee from "./components/employee/EditEmployee";
 import Level from "./components/level/Level";
+import Exception from './components/exception/Exception';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -39,33 +40,12 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      isShowing: false
-    };
-  }
-
-  openModalHandler = () => {
-    this.setState({
-      isShowing: true
-    });
-  };
-
-  closeModalHandler = () => {
-    this.setState({
-      isShowing: false
-    });
-  };
+  
   render() {
     return (
       <Provider store={store}>
         <Router>
           <div className="App">
-            {this.state.isShowing ? (
-              <div onClick={this.closeModalHandler} className="back-drop" />
-            ) : null}
             <ToastContainer autoClose={4000} />
             <Route exact path="/" component={Login} />
             <Route exact path="/forgot-password" component={Forgot} />
@@ -93,6 +73,9 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/utilities/level" component={Level} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/utilities/exception" component={Exception} />
             </Switch>
           </div>
         </Router>

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { addBonus } from "../../actions/levelActions";
+import { addDeductable } from "../../actions/levelActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { toast } from "react-toastify";
 
-class AddBonusForm extends Component {
+class AddDeductableForm extends Component {
   constructor() {
     super();
 
@@ -36,17 +36,17 @@ class AddBonusForm extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const bonusDetails = {
+    const deductableDetails = {
       name: this.state.name,
       amount: this.state.amount,
       level: this.state.level
     };
 
     this.props
-      .addBonus(bonusDetails)
+      .addDeductable(deductableDetails)
       .then(res => {
-        if(res.type === 'GETBONUSDEDUCTABLE'){
-          toast.success("Bonus successfully added!");
+        if (res.type === 'VIEW_LEVELS') {
+          toast.success("Deductable successfully added!");
           this.setState({
             name: '',
             amount: '',
@@ -56,17 +56,16 @@ class AddBonusForm extends Component {
       })
       .catch(err => console.log(err));
   }
-
   render() {
     const { errors } = this.state;
 
     const { levels } = this.props;
 
-    const bonusFormContainer = (
+    const deductableFormContainer = (
       <form onSubmit={this.onSubmit}>
         <TextFieldGroup
           type="text"
-          label="Bonus Name"
+          label="Deductable Name"
           placeholder="Enter name"
           name="name"
           value={this.state.name}
@@ -77,8 +76,8 @@ class AddBonusForm extends Component {
 
         <TextFieldGroup
           type="number"
-          label="Bonus Amount"
-          placeholder="Enter bonus amount"
+          label="Deductable Amount"
+          placeholder="Enter amount"
           name="amount"
           value={this.state.amount}
           error={errors.amount}
@@ -99,7 +98,7 @@ class AddBonusForm extends Component {
 
         <div className="text-center">
           <button type="submit" className="btn btn-primary btn-lg" tabIndex="4">
-            Add Bonus
+            Add Deductable
           </button>
         </div>
       </form>
@@ -113,15 +112,15 @@ class AddBonusForm extends Component {
               *All fields are required
             </h4>
           </div>
-          <div className="card-body">{bonusFormContainer}</div>
+          <div className="card-body">{deductableFormContainer}</div>
         </div>
       </div>
     );
   }
 }
 
-AddBonusForm.propTypes = {
-  addBonus: PropTypes.func.isRequired,
+AddDeductableForm.propTypes = {
+  addDeductable: PropTypes.func.isRequired,
   levels: PropTypes.array.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -132,5 +131,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addBonus }
-)(AddBonusForm);
+  { addDeductable }
+)(AddDeductableForm);

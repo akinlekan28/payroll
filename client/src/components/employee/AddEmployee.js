@@ -64,7 +64,8 @@ class AddEmployee extends Component {
             name: "",
             email: "",
             designation: "",
-            department: ""
+            department: "",
+            level: ''
           });
         }
       })

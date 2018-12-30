@@ -26,9 +26,10 @@ export default function(state = initialState, action) {
     case ADD_LEVEL:
       return {
         ...state,
-        levels: action.payload,
+        levels: [action.payload, ...state.levels],
         loading: false
       };
+
     case DELETE_LEVEL:
       return {
         ...state,

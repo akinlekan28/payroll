@@ -11,6 +11,8 @@ import ViewLevelTable from "./ViewLevelTable";
 import AddBonusForm from "./AddBonusForm";
 import ViewBonusTable from "./ViewBonusTable";
 import Spinner from "../common/Spinner";
+import AddDeductableForm from "./AddDeductableForm";
+import ViewDeductableTable from "./ViewDeductableTable";
 
 class Level extends Component {
   _isMounted = false;
@@ -74,7 +76,15 @@ class Level extends Component {
             role="tabpanel"
             aria-labelledby="deductable-tab4"
           >
-            Add deductable form
+            <AddDeductableForm levels={levels} />
+          </div>
+          <div
+            className="tab-pane fade"
+            id="viewdeductable"
+            role="tabpanel"
+            aria-labelledby="viewdeductable-tab4"
+          >
+            <ViewDeductableTable levels={levels} />
           </div>
         </div>
       );

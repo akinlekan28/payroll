@@ -6,6 +6,7 @@ module.exports = function deductableInput(data) {
 
   data.name = !isEmpty(data.name) ? data.name : '';
   data.amount = !isEmpty(data.amount) ? data.amount : '';
+  data.level = !isEmpty(data.level) ? data.level : '';
 
   if(validator.isEmpty(data.name)){
     errors.name = 'Deductable name is required';
@@ -13,6 +14,10 @@ module.exports = function deductableInput(data) {
 
   if (validator.isEmpty(data.amount)) {
     errors.amount = 'Amount field is required';
+  }
+
+  if (validator.isEmpty(data.level)) {
+    errors.level = 'Level field is required';
   }
 
   return {

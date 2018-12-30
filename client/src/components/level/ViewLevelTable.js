@@ -46,7 +46,6 @@ class ViewLevelTable extends Component {
     };
 
     const { levels } = this.props;
-
         const levelTableContainer = levels.map(level => (
           <tr key={level._id}>
             <td>{level.name}</td>

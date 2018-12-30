@@ -6,8 +6,8 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import { addLevel } from "../../actions/levelActions";
 
 class AddLevelForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       name: "",
@@ -44,12 +44,14 @@ class AddLevelForm extends Component {
     this.props
       .addLevel(levelDetails)
       .then(res => {
-        toast.success("Level information successfully added!");
-        this.setState({
-          name: "",
-          basic: "",
-          description: ""
-        });
+        if (res.type === "ADD_LEVEL") {
+          toast.success("Level information successfully added!");
+          this.setState({
+            name: "",
+            basic: "",
+            description: ""
+          });
+        }
       })
       .catch(err => console.log(err));
   }

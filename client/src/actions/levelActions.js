@@ -4,7 +4,8 @@ import {
   LEVELS_LOADING,
   GET_ERRORS,
   DELETE_LEVEL,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  ADD_LEVEL
 } from "./types";
 
 //Get employee levels
@@ -31,7 +32,10 @@ export const addLevel = levelDetails => dispatch => {
   dispatch(clearErrors());
   return axios
     .post("/api/level/", levelDetails)
-    .then(res => dispatch(getLevels()))
+    .then(res => dispatch({
+      type: ADD_LEVEL,
+      payload: res.data
+    }))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -63,7 +67,10 @@ export const addBonus = bonusDetails => dispatch => {
   dispatch(clearErrors());
   return axios
     .post("/api/level/bonus", bonusDetails)
-    .then(res => dispatch(getLevels()))
+    .then(res => dispatch({
+      type: VIEW_LEVELS,
+      payload: res.data
+    }))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -76,7 +83,43 @@ export const addBonus = bonusDetails => dispatch => {
 export const deleteBonus = (levelId, bonusId) => dispatch => {
   return axios
     .delete(`/api/level/bonus/${levelId}/${bonusId}`)
-    .then(res => dispatch(getLevels()))
+    .then(res => dispatch({
+      type: VIEW_LEVELS,
+      payload: res.data
+    }))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Add deductable to level
+export const addDeductable = deductableDetails => dispatch => {
+  dispatch(clearErrors());
+  return axios
+    .post("/api/level/deductable", deductableDetails)
+    .then(res => dispatch({
+      type: VIEW_LEVELS,
+      payload: res.data
+    }))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Delete level bonus
+export const deleteDeductable = (levelId, deductableId) => dispatch => {
+  return axios
+    .delete(`/api/level/deductable/${levelId}/${deductableId}`)
+    .then(res => dispatch({
+      type: VIEW_LEVELS,
+      payload: res.data
+    }))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
