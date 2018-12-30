@@ -42,15 +42,27 @@ router.get("/:id", protect, (req, res) => {
 //@route  Post api/exception/:id
 //@desc Create Employee salary exception route
 //@access Private
-router.post("/:id", protect, (req, res) => {
+router.post("/", protect, (req, res) => {
   const errors = {};
+
+  if (!req.body.amount && !req.body.employee) {
+    errors.amount = "Amount field cannot be empty";
+    errors.employee = "Please select an employee"
+    return res.status(400).json(errors);
+  }
 
   if (!req.body.amount) {
     errors.amount = "Amount field cannot be empty";
     return res.status(400).json(errors);
   }
 
-  Exception.findOne({ employee: req.params.id }).then(employee => {
+  if (!req.body.employee) {
+    errors.employee = "Please select an employee"
+    return res.status(400).json(errors);
+  }
+
+
+  Exception.findOne({ employee: req.body.employee }).then(employee => {
     if (employee) {
       errors.exception = "Employee salary exception already exist";
       return res.status(400).json(errors);
