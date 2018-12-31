@@ -28,40 +28,19 @@ render() {
             <li><Link to="/dashboard" className="nav-link" ><i className="fas fa-globe"></i> <span>Dashboard</span></Link></li>
 
             <li className="menu-header">Employee</li>
-            <li className="dropdown">
-                <a href="" className="nav-link has-dropdown">
-                <i className="fas fa-briefcase"></i><span>Employee</span>
-                </a>
-                <ul className="dropdown-menu">
-                    <li><Link to="/employee" className="nav-link">Create profile</Link></li>
-                    <li><Link to="/employee/all" className="nav-link">View profiles</Link></li>
-                </ul>
-            </li>
+            <li><Link to="/employee" className="nav-link"><i className="fas fa-briefcase"></i> <span>Create profile</span></Link></li>
+            <li><Link to="/employee/all" className="nav-link"><i className="fas fa-archive"></i> <span>View profiles</span></Link></li>
 
             <li className="menu-header">Payroll</li>
-            <li className="dropdown">
-                <a href="" className="nav-link has-dropdown">
-                <i className="fas fa-paperclip"></i><span>Payroll</span>
-                </a>
-                <ul className="dropdown-menu" id="payroll">
-                    <li><Link to="/payroll/monthly" className="nav-link">Monthly report</Link></li>
-                    <li><Link to="/payroll/all" className="nav-link">All report</Link></li>
-                </ul>
-            </li>
+            <li><Link to="/payroll/monthly" className="nav-link"><i className="fas fa-calendar-alt"></i> <span>Monthly report</span></Link></li>
+            <li><Link to="/payroll/all" className="nav-link"><i className="fas fa-paperclip"></i> <span>All report</span></Link></li>
 
             <li className="menu-header">Utilities</li>
-            <li className="dropdown">
-                <a href="" className="nav-link has-dropdown">
-                <i className="fas fa-cogs"></i><span>Utilities</span>
-                </a>
-                <ul className="dropdown-menu">
-                    <li><Link to="/utilities/level" className="nav-link">Employee level</Link></li>
-                    <li><Link to="/utilities/exception" className="nav-link">Salary Exception</Link></li>
-                </ul>
-            </li>
+            <li><Link to="/utilities/level" className="nav-link"><i className="fas fa-location-arrow"></i> <span>Employee level</span></Link></li>
+            <li><Link to="/utilities/exception" className="nav-link"><i className="fas fa-sign"></i> <span>Salary Exception</span></Link></li>
 
             <li className="menu-header">Extra</li> 
-            <li><a href="" className="nav-link" onClick={this.onHandleClick.bind(this)}><i className="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+            <li><Link to="" className="nav-link" onClick={this.onHandleClick.bind(this)}><i className="fas fa-sign-out-alt"></i> <span>Logout</span></Link></li>
 
         </ul>
      </aside>
