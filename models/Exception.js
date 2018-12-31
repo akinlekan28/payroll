@@ -9,6 +9,9 @@ const ExceptionSchema = new Schema({
   employee: {
     type: Schema.Types.ObjectId,
     ref: "employee"
+  },
+  name: {
+    type: String
   }
 });
 

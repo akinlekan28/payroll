@@ -4,6 +4,7 @@ const passport = require("passport");
 const protect = passport.authenticate("jwt", { session: false });
 
 const Exception = require("../../models/Exception");
+const Employee = require("../../models/Employee");
 
 //@route  Get api/exception
 //@desc View All Employee salary exception route
@@ -47,7 +48,7 @@ router.post("/", protect, (req, res) => {
 
   if (!req.body.amount && !req.body.employee) {
     errors.amount = "Amount field cannot be empty";
-    errors.employee = "Please select an employee"
+    errors.employee = "Please select an employee";
     return res.status(400).json(errors);
   }
 
@@ -57,29 +58,41 @@ router.post("/", protect, (req, res) => {
   }
 
   if (!req.body.employee) {
-    errors.employee = "Please select an employee"
+    errors.employee = "Please select an employee";
     return res.status(400).json(errors);
   }
 
+  Exception.findOne({ employee: req.body.employee })
+    .then(employee => {
+      if (employee) {
+        errors.exception = "Employee salary exception already exist!";
+        return res.status(400).json(errors);
+      }
 
-  Exception.findOne({ employee: req.body.employee }).then(employee => {
-    if (employee) {
-      errors.exception = "Employee salary exception already exist!";
-      return res.status(400).json(errors);
-    }
-    const newSalaryException = new Exception({
-      amount: req.body.amount,
-      employee: req.body.employee
-    });
+      Employee.findOne({ _id: req.body.employee })
+        .then(employeeDetails => {
+          if (employeeDetails) {
+            let name = employeeDetails.name;
 
-    newSalaryException
-      .save()
-      .then(exceptionSalary => res.json(exceptionSalary))
-      .catch(err =>
-        res.status(400).json({ message: "Error saving salary exception" })
-      );
-  })
-  .catch(err => console.log(err))
+            const newSalaryException = new Exception({
+              amount: req.body.amount,
+              employee: req.body.employee,
+              name
+            });
+
+            newSalaryException
+              .save()
+              .then(exceptionSalary => res.json(exceptionSalary))
+              .catch(err =>
+                res
+                  .status(400)
+                  .json({ message: "Error saving salary exception" })
+              );
+          }
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
 });
 
 //@route  Put api/exception/:id
@@ -124,7 +137,7 @@ router.put("/:id", protect, (req, res) => {
 //@desc Delete Employee salary exception route
 //@access Private
 router.delete("/:id", protect, (req, res) => {
-  Exception.findOne({ employee: req.params.id })
+  Exception.findOne({ _id: req.params.id })
     .then(employee => {
       employee
         .remove()

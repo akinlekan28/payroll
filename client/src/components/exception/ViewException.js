@@ -15,14 +15,14 @@ class ViewException extends Component {
             {
               label: "Yes delete exception!",
               onClick: () => {
-                // this.props
-                //   .deleteBonus(id)
-                //   .then(res => {
-                //     if(res.type === 'VIEW_EXCEPTION'){
-                //         toast.success("Exception Deleted!")
-                //     }
-                //   })
-                //   .catch(err => console.log(err));
+                this.props
+                  .deleteException(id)
+                  .then(res => {
+                    if(res.type === 'DELETE_EXCEPTION'){
+                        toast.success("Exception Deleted!")
+                    }
+                  })
+                  .catch(err => console.log(err));
               }
             },
             {
@@ -37,8 +37,6 @@ class ViewException extends Component {
       
     const {exceptions} = this.props
 
-    console.log(exceptions)
-
     const formatMoney = money => {
         let formatedValue = money
           .toString()
@@ -52,7 +50,10 @@ class ViewException extends Component {
           className="col-md-4 mx-auto card card-primary mt-2 bg-light"
         >
             <p className="mt-2">
-                <strong>Salary amount</strong> : <span>&#8358;</span> {formatMoney(exceptionItem.amount)}
+              <strong>Employee name</strong>: {exceptionItem.name}
+            </p>
+            <p className="mt-2">
+                <strong>Amount</strong> : <span>&#8358;</span> {formatMoney(exceptionItem.amount)}
             </p>
                 <div className="text-center">
                     <button

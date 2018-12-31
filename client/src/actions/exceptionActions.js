@@ -47,7 +47,22 @@ export const getExceptions = () => dispatch => {
 };
 
 //Delete exception
-export const deleteException = () => dispatch => {};
+export const deleteException = id => dispatch => {
+  return axios
+    .delete(`/api/exception/${id}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_EXCEPTION,
+        payload: id
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 //Set loding state
 export const setExceptionLoading = () => {
