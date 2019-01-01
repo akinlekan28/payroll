@@ -5,6 +5,7 @@ import dashReducer from './dashReducer';
 import levelReducer from './levelReducer';
 import employeeReducer from './employeeReducer';
 import exceptionReducer from './exceptionReducer';
+import payrollReducer from './payrollReducer';
 
 export default combineReducers({
     auth: authReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
     dashboard: dashReducer,
     levels: levelReducer,
     employees: employeeReducer,
-    exceptions: exceptionReducer
+    exceptions: exceptionReducer,
+    payroll: payrollReducer
 });

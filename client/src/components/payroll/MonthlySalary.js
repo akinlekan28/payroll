@@ -6,14 +6,15 @@ import { getEmployees } from "../../actions/employeeActions";
 import SearchBar from "../dashboard/SearchBar";
 import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
-import EmployeeTable from "./EmployeeTable";
+import MonthlySalaryTable from './MonthlySalaryTable';
 
-class ViewEmployee extends Component {
+class MonthlySalary extends Component {
   componentDidMount() {
     this.props.getEmployees();
   }
 
   render() {
+
     const { employees, loading } = this.props.employees;
 
     let employeeTable;
@@ -22,7 +23,7 @@ class ViewEmployee extends Component {
       employeeTable = <Spinner />;
     } else {
       if (Object.keys(employees).length > 0) {
-        employeeTable = <EmployeeTable employees={employees} />;
+        employeeTable = <MonthlySalaryTable employees={employees} />;
       } else {
         employeeTable = <h4>No previous employee entries!</h4>;
       }
@@ -37,7 +38,7 @@ class ViewEmployee extends Component {
           <div className="main-content">
             <section className="section">
               <div className="section-header">
-                <h1>View Employees</h1>
+                <h1>Employee monthly salary</h1>
               </div>
               {employeeTable}
             </section>
@@ -49,7 +50,7 @@ class ViewEmployee extends Component {
   }
 }
 
-ViewEmployee.propTypes = {
+MonthlySalary.propTypes = {
   getEmployees: PropTypes.func.isRequired
 };
 
@@ -60,4 +61,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getEmployees }
-)(ViewEmployee);
+)(MonthlySalary);

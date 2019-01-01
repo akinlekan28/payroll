@@ -18,6 +18,8 @@ import ViewEmployee from "./components/employee/ViewEmployee";
 import EditEmployee from "./components/employee/EditEmployee";
 import Level from "./components/level/Level";
 import Exception from './components/exception/Exception';
+import MonthlySalary from './components/payroll/MonthlySalary';
+import MonthlySlip from './components/payroll/MonthlySlip';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -76,6 +78,12 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/utilities/exception" component={Exception} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/monthly" component={MonthlySalary} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/monthly/viewslip/:id" component={MonthlySlip} />
             </Switch>
           </div>
         </Router>
