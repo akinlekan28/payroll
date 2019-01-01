@@ -8,6 +8,7 @@ import Footer from "../dashboard/Footer";
 import { getPayroll } from "../../actions/payrollActions";
 import PayslipTable from "./PayslipTable";
 import { toast } from "react-toastify";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 class MonthlySlip extends Component {
   componentDidMount = () => {
@@ -33,7 +34,21 @@ class MonthlySlip extends Component {
       payslipTable = <Spinner />;
     } else {
       if (Object.keys(payroll).length > 0) {
-        payslipTable = <PayslipTable payroll={payroll} />;
+        payslipTable = (
+          <div>
+            <PayslipTable payroll={payroll} />
+            <div className="text-center">
+              <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button btn btn-primary btn-lg"
+                table="table-to-xls"
+                filename={payroll.employeeDetails.name}
+                sheet="tablexls"
+                buttonText="Download Payslip"
+              />
+            </div>
+          </div>
+        );
       } else {
         payslipTable = <h4>No previous employee entries!</h4>;
       }

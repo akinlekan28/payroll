@@ -16,7 +16,7 @@ class PayslipTable extends Component {
       <div className="row">
         <div className="col-12">
           <div className="card">
-            <table className="table table-striped" border="2">
+            <table className="table table-striped" border="2" id="table-to-xls">
               <tr>
                 <td colspan="2" className="text-center">
                   <strong>PaySlip</strong>
