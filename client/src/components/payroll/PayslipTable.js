@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import PropTypes from 'prop-types';
 
-class PayslipTable extends Component {
+class PayslipTable extends PureComponent {
   render() {
     const { payroll } = this.props;
 
@@ -18,7 +19,7 @@ class PayslipTable extends Component {
           <div className="card">
             <table className="table table-striped" border="2" id="table-to-xls">
               <tr>
-                <td colspan="2" className="text-center">
+                <td colSpan="2" className="text-center">
                   <strong>PaySlip</strong>
                 </td>
               </tr>
@@ -29,7 +30,7 @@ class PayslipTable extends Component {
                     {payroll.employeeDetails.name}
                   </strong>
                 </td>
-                <td>Tax Year: 2018</td>
+                <td>Tax Year: <strong className="ml-5">{(new Date().getFullYear())}</strong></td>
               </tr>
               <tr>
                 <td>
@@ -38,7 +39,7 @@ class PayslipTable extends Component {
                     {payroll.employeeDetails.tag}
                   </strong>
                 </td>
-                <td>Pay Period: 27-12-2018</td>
+                <td>Pay Period: <strong className="ml-5">{(new Date().toUTCString())}</strong></td>
               </tr>
               <tr>
                 <td>
@@ -186,6 +187,10 @@ class PayslipTable extends Component {
       </div>
     );
   }
+}
+
+PayslipTable.propTypes = {
+    payroll: PropTypes.object.isRequired
 }
 
 export default PayslipTable;

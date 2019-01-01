@@ -45,13 +45,13 @@ export const addLevel = levelDetails => dispatch => {
 };
 
 //Delete employee level
-export const deleteLevel = levelId => dispatch => {
+export const deleteLevel = id => dispatch => {
   return axios
-    .delete(`/api/level/${levelId}`)
+    .delete(`/api/level/${id}`)
     .then(res =>
       dispatch({
         type: DELETE_LEVEL,
-        payload: levelId
+        payload: id
       })
     )
     .catch(err =>

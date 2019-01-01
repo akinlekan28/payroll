@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
@@ -9,8 +10,10 @@ import { getPayroll } from "../../actions/payrollActions";
 import PayslipTable from "./PayslipTable";
 import { toast } from "react-toastify";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import ReactToPrint from "react-to-print";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
-class MonthlySlip extends Component {
+class MonthlySlip extends PureComponent {
   componentDidMount = () => {
     this.props
       .getPayroll(this.props.match.params.id)
@@ -25,6 +28,10 @@ class MonthlySlip extends Component {
       .catch(err => console.log(err));
   };
 
+  exportPDF = () => {
+    this.resume.save();
+  };
+
   render() {
     const { payroll, loading } = this.props.payroll;
 
@@ -36,16 +43,44 @@ class MonthlySlip extends Component {
       if (Object.keys(payroll).length > 0) {
         payslipTable = (
           <div>
-            <PayslipTable payroll={payroll} />
+            <PDFExport
+              paperSize={"Letter"}
+              fileName={payroll.employeeDetails.name + " payslip"}
+              title={payroll.employeeDetails.name + " payslip"}
+              subject=""
+              keywords=""
+              ref={r => (this.resume = r)}
+            >
+              <PayslipTable
+                payroll={payroll}
+                ref={el => (this.componentRef = el)}
+              />
+            </PDFExport>
             <div className="text-center">
               <ReactHTMLTableToExcel
                 id="test-table-xls-button"
-                className="download-table-xls-button btn btn-primary btn-lg"
+                className="download-table-xls-button btn btn-primary btn-lg mr-4"
                 table="table-to-xls"
                 filename={payroll.employeeDetails.name}
-                sheet="tablexls"
-                buttonText="Download Payslip"
+                sheet={payroll.employeeDetails.name + " payslip"}
+                buttonText="Download Payslip excel"
               />
+
+              <ReactToPrint
+                trigger={() => (
+                  <Link to="#" className="btn btn-lg btn-warning">
+                    Print payslip
+                  </Link>
+                )}
+                content={() => this.componentRef}
+              />
+
+              <button
+                className="btn btn-lg btn-success ml-3"
+                onClick={this.exportPDF}
+              >
+                Download payslip Pdf
+              </button>
             </div>
           </div>
         );
