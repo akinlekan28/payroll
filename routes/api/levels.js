@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const protect = passport.authenticate("jwt", { session: false });
 
+//Validation rules
 const levelInput = require("../../validation/level");
 const bonusInput = require("../../validation/bonus");
 const deductableInput = require("../../validation/deductable");

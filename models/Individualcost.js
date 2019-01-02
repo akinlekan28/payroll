@@ -6,7 +6,7 @@ const IndividualcostSchema = new Schema({
     type: String,
     required: true
   },
-  type: {
+  costType: {
     type: String,
     required: true
   },

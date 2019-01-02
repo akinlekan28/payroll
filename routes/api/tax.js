@@ -8,6 +8,9 @@ const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 
+//@route  Get api/singleslip/:id
+//@desc Get Employee payslip route
+//@access Private
 router.get("/singleslip/:id", protect, (req, res) => {
   let date = new Date();
   // let salaryDay = date.getDate();
