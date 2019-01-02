@@ -13,11 +13,13 @@ class PayslipTable extends PureComponent {
       return formatedValue;
     };
 
+    const date = new Date();
+
     return (
       <div className="row">
         <div className="col-12">
           <div className="card">
-            <table className="table table-striped" border="2" id="table-to-xls">
+            <table className="table table-striped" border="2">
               <tr>
                 <td colSpan="2" className="text-center">
                   <strong>PaySlip</strong>
@@ -26,11 +28,11 @@ class PayslipTable extends PureComponent {
               <tr>
                 <td>
                   Employee Name:{" "}
-                  <strong className="ml-5">
+                  <strong className="ml-2">
                     {payroll.employeeDetails.name}
                   </strong>
                 </td>
-                <td>Tax Year: <strong className="ml-5">{(new Date().getFullYear())}</strong></td>
+                <td>Tax Year: <strong className="ml-5">{date.getFullYear()}</strong></td>
               </tr>
               <tr>
                 <td>
@@ -39,7 +41,7 @@ class PayslipTable extends PureComponent {
                     {payroll.employeeDetails.tag}
                   </strong>
                 </td>
-                <td>Pay Period: <strong className="ml-5">{(new Date().toUTCString())}</strong></td>
+                <td>Pay Period: <strong className="ml-5">{date.toLocaleString('en-us', {month: 'long'})}</strong></td>
               </tr>
               <tr>
                 <td>

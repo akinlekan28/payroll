@@ -8,6 +8,9 @@ const EmployeeInput = require("../../validation/employee");
 //Load Employee model
 const Employee = require("../../models/Employee");
 
+//Load Salary exception model
+const Exception = require("../../models/Exception");
+
 //@route  Post api/employee
 //@desc Create employee route
 //@access Private
@@ -120,16 +123,12 @@ router.get("/single/:id", protect, (req, res) => {
 //@desc Delete employee route
 //@access Private
 router.delete("/:id", protect, (req, res) => {
-  Employee.findOne({ _id: req.params.id })
-    .then(employee => {
-      employee
-        .remove()
-        .then(() => res.json({ success: true }))
-        .catch(err =>
-          res
-            .status(404)
-            .json({ message: "Error removing employee information" })
-        );
+  let employeeId = req.params.id;
+  Employee.findOneAndRemove({ _id: req.params.id })
+    .then(() => {
+      Exception.findOneAndRemove({ employee: employeeId })
+        .then(() => res.json({ Success: true }))
+        .catch(err => res.json(err));
     })
     .catch(err =>
       res.status(404).json({ message: "Error fetching employee information" })

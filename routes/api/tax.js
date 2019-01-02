@@ -8,111 +8,32 @@ const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 
-router.get("/:id", protect, (req, res) => {
+router.get('/monthlyslip', (req, res) => {
   let date = new Date();
   // let salaryDay = date.getDate();
-  let salaryDay = 22; //test parameter
-  if (salaryDay > 21) {
-    Employee.findOne({ _id: req.params.id })
-      .then(employeeDetails => {
-        Level.findOne({ _id: employeeDetails.level })
-          .then(level => {
-            let netPay,
-              pension,
-              cra,
-              tax,
-              taxableIncome,
-              totalPension,
-              grossEarnings,
-              levelBonus = level.bonuses,
-              levelDeductable = level.deductables,
-              deductableSum = 0,
-              bonusSum = 0;
-            levelBonus.forEach(bonus => {
-              bonusSum += bonus.amount;
-            });
-            levelDeductable.forEach(deductable => {
-              deductableSum += deductable.amount;
-            });
-
-            Exception.findOne({ employee: employeeDetails._id })
-              .then(employeeException => {
-                if (employeeException) {
-                  payable = bonusSum + employeeException.amount - deductableSum;
-                  if (payable * 12 > 300000) {
-                    annualPay = payable * 12;
-                    totalCra = annualPay * 0.2 + 200000;
-                    totalPension = annualPay * 0.08;
-                    taxableIncome = payable - totalCra - totalPension;
-                    console.log(taxableIncome);
-                    let test = taxCalculation(1986538.35);
-                    console.log("test is " + test);
-                    const taxReport = {
-                      payable,
-                      monthlyCra,
-                      bonusSum,
-                      deductableSum,
-                      annualPay,
-                      employeeDetails,
-                      level,
-                      employeeException
-                    };
-                    return res.status(200).json(taxReport);
-                  } else {
-                    cra = payable * (1 / 100);
-                    annualPay = payable * 12;
-                    const taxReport = {
-                      payable,
-                      cra,
-                      bonusSum,
-                      deductableSum,
-                      annualPay,
-                      employeeDetails,
-                      level,
-                      employeeException
-                    };
-                    return res.status(200).json(taxReport);
-                  }
-                } else {
-                  payable = bonusSum + level.basic - deductableSum;
-                  if (payable * 12 > 300000) {
-                    cra = payable * (20 / 100) + payable * (1 / 100);
-                    const taxReport = {
-                      payable,
-                      cra,
-                      bonusSum,
-                      deductableSum,
-                      employeeDetails,
-                      level
-                    };
-                    return res.status(200).json(taxReport);
-                  } else {
-                    cra = payable * (1 / 100);
-                    const taxReport = {
-                      payable,
-                      cra,
-                      bonusSum,
-                      deductableSum,
-                      employeeDetails,
-                      level
-                    };
-                    return res.status(200).json(taxReport);
-                  }
-                }
-              })
-              .catch(err => console.log(err));
-          })
-          .catch(err =>
-            res.status(404).json({ message: "User grade level not found" })
-          );
+  let salaryDay = 23;
+  if(salaryDay > 21){
+    Employee.find()
+    .then(employeeDetails => {
+      let levelDetails = []
+      employeeDetails.forEach(employee => {
+        Level.findOne({_id: employee.level})
+        .then(level => levelDetails.push(level))
+        .catch(err => res.status(400).json(err))
       })
-      .catch(err => res.status(404).json({ message: "Error fetching user" }));
+      console.log(levelDetails)
+
+      // const payload = {
+      //   employeeDetails,
+      //   levelDetails
+      // }
+      // res.json(levelDetails)
+    })
+    .catch(err => res.json(err))
   } else {
-    res
-      .status(400)
-      .json({ message: "Tax report can only be generated after 21 days" });
+    res.status(400).json({message: "Salary report can only be generated after 21 days"})
   }
-});
+})
 
 router.get("/singleslip/:id", protect, (req, res) => {
   let date = new Date();
@@ -280,7 +201,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
   } else {
     res
       .status(400)
-      .json({ message: "Tax report can only be generated after 21 days" });
+      .json({ message: "Salary report can only be generated after 21 days" });
   }
 });
 

@@ -9,7 +9,6 @@ import Footer from "../dashboard/Footer";
 import { getPayroll } from "../../actions/payrollActions";
 import PayslipTable from "./PayslipTable";
 import { toast } from "react-toastify";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import ReactToPrint from "react-to-print";
 import { PDFExport } from "@progress/kendo-react-pdf";
 
@@ -54,18 +53,18 @@ class MonthlySlip extends PureComponent {
               <PayslipTable
                 payroll={payroll}
                 ref={el => (this.componentRef = el)}
+                style={{
+                    height: 792,
+                    width: 612,
+                    padding: 'none',
+                    backgroundColor: 'white',
+                    boxShadow: '5px 5px 5px black',
+                    margin: 'auto',
+                    overflowX: 'hidden',
+                    overflowY: 'hidden'}}
               />
             </PDFExport>
             <div className="text-center">
-              <ReactHTMLTableToExcel
-                id="test-table-xls-button"
-                className="download-table-xls-button btn btn-primary btn-lg mr-4"
-                table="table-to-xls"
-                filename={payroll.employeeDetails.name}
-                sheet={payroll.employeeDetails.name + " payslip"}
-                buttonText="Download Payslip excel"
-              />
-
               <ReactToPrint
                 trigger={() => (
                   <Link to="#" className="btn btn-lg btn-warning">
