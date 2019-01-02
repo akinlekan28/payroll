@@ -8,33 +8,6 @@ const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 
-router.get('/monthlyslip', (req, res) => {
-  let date = new Date();
-  // let salaryDay = date.getDate();
-  let salaryDay = 23;
-  if(salaryDay > 21){
-    Employee.find()
-    .then(employeeDetails => {
-      let levelDetails = []
-      employeeDetails.forEach(employee => {
-        Level.findOne({_id: employee.level})
-        .then(level => levelDetails.push(level))
-        .catch(err => res.status(400).json(err))
-      })
-      console.log(levelDetails)
-
-      // const payload = {
-      //   employeeDetails,
-      //   levelDetails
-      // }
-      // res.json(levelDetails)
-    })
-    .catch(err => res.json(err))
-  } else {
-    res.status(400).json({message: "Salary report can only be generated after 21 days"})
-  }
-})
-
 router.get("/singleslip/:id", protect, (req, res) => {
   let date = new Date();
   // let salaryDay = date.getDate();
