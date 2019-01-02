@@ -17,6 +17,9 @@ const IndividualcostSchema = new Schema({
   employee: {
     type: Schema.Types.ObjectId,
     ref: "employee"
+  },
+  employeeName: {
+    type: String
   }
 });
 

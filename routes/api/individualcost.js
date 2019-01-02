@@ -6,8 +6,9 @@ const protect = passport.authenticate("jwt", { session: false });
 //Validation rules
 const individualcostInput = require("../../validation/individualcost");
 
-//load Individualcost model
+//load models
 const Individualcost = require("../../models/Individualcost");
+const Employee = require("../../models/Employee");
 
 //@route  Post api/individualcost
 //@desc Create/Edit Employee individual exception route
@@ -27,31 +28,40 @@ router.post("/", protect, (req, res) => {
   if (req.body.amount) individualcostFields.amount = req.body.amount;
   if (req.body.costType) individualcostFields.costType = req.body.costType;
   if (req.body.employee) individualcostFields.employee = req.body.employee;
+  individualcostFields.employeeName = "";
 
-  Individualcost.findOne({ _id: req.body.id })
-    .then(individualCost => {
-      if (individualCost) {
-        //Update
-        Individualcost.findOneAndUpdate(
-          { _id: req.body.id },
-          { $set: individualcostFields },
-          { new: true }
-        )
-          .then(updatedIndividualCost => res.json(updatedIndividualCost))
-          .catch(err =>
-            res.status(400).json({ message: "Error updating this information" })
-          );
-      } else {
-        //Create
-        new Individualcost(individualcostFields)
-          .save()
-          .then(newIndividualCost => res.json(newIndividualCost))
-          .catch(err =>
-            res
-              .status(400)
-              .json({ message: "Error saving new employee exception" })
-          );
-      }
+  Employee.findOne({ _id: req.body.employee })
+    .then(employee => {
+      individualcostFields.employeeName = employee.name;
+
+      Individualcost.findOne({ _id: req.body.id })
+        .then(individualCost => {
+          if (individualCost) {
+            //Update
+            Individualcost.findOneAndUpdate(
+              { _id: req.body.id },
+              { $set: individualcostFields },
+              { new: true }
+            )
+              .then(updatedIndividualCost => res.json(updatedIndividualCost))
+              .catch(err =>
+                res
+                  .status(400)
+                  .json({ message: "Error updating this information" })
+              );
+          } else {
+            //Create
+            new Individualcost(individualcostFields)
+              .save()
+              .then(newIndividualCost => res.json(newIndividualCost))
+              .catch(err =>
+                res
+                  .status(400)
+                  .json({ message: "Error saving new employee exception" })
+              );
+          }
+        })
+        .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
 });
