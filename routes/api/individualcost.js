@@ -85,8 +85,8 @@ router.get("/", protect, (req, res) => {
 //@route  Delete api/individualcost
 //@desc Delete Employee individual exception route
 //@access Private
-router.delete("/", protect, (req, res) => {
-  Individualcost.findOneAndRemove({ _id: req.body.id })
+router.delete("/:id", protect, (req, res) => {
+  Individualcost.findOneAndRemove({ _id: req.params.id })
     .then(() => res.json({ success: true }))
     .catch(err => console.log(err));
 });

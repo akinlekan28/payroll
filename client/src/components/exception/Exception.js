@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getEmployees } from "../../actions/employeeActions";
-import {getExceptions} from '../../actions/exceptionActions';
+import {getExceptions, getOtherExceptions} from '../../actions/exceptionActions';
 import SearchBar from "../dashboard/SearchBar";
 import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
@@ -10,7 +10,8 @@ import ExceptionTab from './ExceptionTab';
 import Spinner from '../common/Spinner';
 import AddExceptionForm from './AddExceptionForm';
 import ViewException from './ViewException';
-import AddindividualForm from './AddindividualForm';
+import AddOtherExceptionForm from './AddOtherExceptionForm';
+import ViewOtherException from './ViewOtherException';
 
 
 class Exception extends Component {
@@ -18,15 +19,16 @@ class Exception extends Component {
     componentDidMount = () => {
       this.props.getEmployees();
       this.props.getExceptions();
+      this.props.getOtherExceptions();
     }
     
   render() {
       const {employees, loading} = this.props.employees
-      const {exceptions} = this.props.exceptions
+      const {exceptions, otherexception} = this.props.exceptions
 
       let exceptionContainer;
 
-      if(employees === null || exceptions === null || loading){
+      if(employees === null || exceptions === null || otherexception === null  || loading){
           exceptionContainer = <Spinner />
       } else {
           exceptionContainer = (
@@ -53,7 +55,7 @@ class Exception extends Component {
               role="tabpanel"
               aria-labelledby="addindividual-tab4"
             >
-              <AddindividualForm employees={employees} />
+              <AddOtherExceptionForm employees={employees} />
             </div>
             <div
               className="tab-pane fade"
@@ -61,7 +63,7 @@ class Exception extends Component {
               role="tabpanel"
               aria-labelledby="viewindividual-tab4"
             >
-              <ViewException exceptions={exceptions} />
+              <ViewOtherException otherexception={otherexception} />
             </div>
           </div>
           )
@@ -105,12 +107,14 @@ class Exception extends Component {
 
 Exception.propTypes = {
     getEmployees: PropTypes.func.isRequired,
-    getExceptions: PropTypes.func.isRequired
+    getExceptions: PropTypes.func.isRequired,
+    getOtherExceptions: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     employees: state.employees,
-    exceptions: state.exceptions
+    exceptions: state.exceptions,
+    otherexceptions: state.otherexceptions
 })
 
-export default connect(mapStateToProps, {getEmployees, getExceptions})(Exception);
+export default connect(mapStateToProps, {getEmployees, getExceptions, getOtherExceptions})(Exception);

@@ -1,8 +1,11 @@
 import axios from "axios";
 import {
   ADD_EXCEPTION,
+  ADD_OTHER_EXCEPTION,
   VIEW_EXCEPTIONS,
+  VIEW_OTHER_EXCEPTION,
   DELETE_EXCEPTION,
+  DELETE_OTHER_EXCEPTION,
   EXCEPTION_LOADING,
   CLEAR_ERRORS,
   GET_ERRORS
@@ -71,7 +74,44 @@ export const addOtherException = otherExceptionDetails => dispatch => {
     .post("/api/individualcost", otherExceptionDetails)
     .then(res =>
       dispatch({
-        type: ADD_EXCEPTION,
+        type: ADD_OTHER_EXCEPTION,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Delete other exception
+export const deleteOtherException = id => dispatch => {
+  return axios
+    .delete(`/api/individualcost/${id}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_OTHER_EXCEPTION,
+        payload: id
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//View other exceptions
+export const getOtherExceptions = () => dispatch => {
+  dispatch(setExceptionLoading());
+  axios
+    .get("/api/individualcost")
+    .then(res =>
+      dispatch({
+        type: VIEW_OTHER_EXCEPTION,
         payload: res.data
       })
     )

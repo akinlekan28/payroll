@@ -6,15 +6,15 @@ import SelectListGroup from "../common/SelectListGroup";
 import { toast } from "react-toastify";
 import { addOtherException } from "../../actions/exceptionActions";
 
-class AddindividualForm extends Component {
+class AddOtherExceptionForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
+      name: "",
       amount: "",
       employee: "",
-      costType: '',
+      costType: "",
       errors: {}
     };
 
@@ -43,13 +43,13 @@ class AddindividualForm extends Component {
     this.props
       .addOtherException(exceptionDetails)
       .then(res => {
-        if (res.type === "ADD_EXCEPTION") {
+        if (res.type === "ADD_OTHER_EXCEPTION") {
           toast.success("Other exception successfully added!");
           this.setState({
-            name: '',
+            name: "",
             amount: "",
             employee: "",
-            costType: ''
+            costType: ""
           });
         }
       })
@@ -66,15 +66,15 @@ class AddindividualForm extends Component {
     const { employees } = this.props;
 
     const options = [
-        { name: "Income", value: "income", _id: "income" },
-        { name: "Deduction", value: "deduction", _id: "deduction" }
-      ];
+      { name: "Income", value: "income", _id: "income" },
+      { name: "Deduction", value: "deduction", _id: "deduction" }
+    ];
 
     const exceptionFormContainer = (
       <form onSubmit={this.onSubmit}>
-      <p className="text-danger text-center">{errors.exception}</p>
+        <p className="text-danger text-center">{errors.exception}</p>
 
-      <TextFieldGroup
+        <TextFieldGroup
           type="text"
           label="Name"
           placeholder="Enter exception name"
@@ -139,7 +139,7 @@ class AddindividualForm extends Component {
   }
 }
 
-AddindividualForm.propTypes = {
+AddOtherExceptionForm.propTypes = {
   employees: PropTypes.array.isRequired,
   addOtherException: PropTypes.func.isRequired
 };
@@ -151,4 +151,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { addOtherException }
-)(AddindividualForm);
+)(AddOtherExceptionForm);

@@ -1,12 +1,16 @@
 import {
   ADD_EXCEPTION,
+  ADD_OTHER_EXCEPTION,
   VIEW_EXCEPTIONS,
+  VIEW_OTHER_EXCEPTION,
   DELETE_EXCEPTION,
+  DELETE_OTHER_EXCEPTION,
   EXCEPTION_LOADING
 } from "../actions/types";
 
 const initialState = {
   exceptions: [],
+  otherexception: [],
   loading: false
 };
 
@@ -21,10 +25,22 @@ export default function(state = initialState, action) {
         exceptions: [action.payload, ...state.exceptions],
         loading: false
       };
+    case ADD_OTHER_EXCEPTION:
+      return {
+        ...state,
+        otherexception: [action.payload, ...state.otherexception],
+        loading: false
+      };
     case VIEW_EXCEPTIONS:
       return {
         ...state,
         exceptions: action.payload,
+        loading: false
+      };
+    case VIEW_OTHER_EXCEPTION:
+      return {
+        ...state,
+        otherexception: action.payload,
         loading: false
       };
     case DELETE_EXCEPTION:
@@ -32,6 +48,14 @@ export default function(state = initialState, action) {
         ...state,
         exceptions: state.exceptions.filter(
           exception => exception._id !== action.payload
+        ),
+        loading: false
+      };
+    case DELETE_OTHER_EXCEPTION:
+      return {
+        ...state,
+        otherexception: state.otherexception.filter(
+          otherexceptionItem => otherexceptionItem._id !== action.payload
         ),
         loading: false
       };

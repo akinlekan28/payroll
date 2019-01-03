@@ -11,6 +11,9 @@ const Employee = require("../../models/Employee");
 //Load Salary exception model
 const Exception = require("../../models/Exception");
 
+//Load other exception model
+const OtherException = require("../../models/Individualcost");
+
 //@route  Post api/employee
 //@desc Create employee route
 //@access Private
@@ -127,7 +130,20 @@ router.delete("/:id", protect, (req, res) => {
   Employee.findOneAndRemove({ _id: req.params.id })
     .then(() => {
       Exception.findOneAndRemove({ employee: employeeId })
-        .then(() => res.json({ Success: true }))
+        .then(() => {
+          OtherException.find({ employee: employeeId })
+            .then(exceptiondetails => {
+              exceptiondetails.forEach(exceptiondetail => {
+                exceptiondetail
+                  .remove()
+                  .then(() => console.log("Deleted"))
+                  .catch(err => console.log(err));
+              });
+
+              res.json({ success: true });
+            })
+            .catch(err => res.json(err));
+        })
         .catch(err => res.json(err));
     })
     .catch(err =>
