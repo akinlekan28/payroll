@@ -10,6 +10,7 @@ import ExceptionTab from './ExceptionTab';
 import Spinner from '../common/Spinner';
 import AddExceptionForm from './AddExceptionForm';
 import ViewException from './ViewException';
+import AddindividualForm from './AddindividualForm';
 
 
 class Exception extends Component {
@@ -43,6 +44,22 @@ class Exception extends Component {
               id="viewexception"
               role="tabpanel"
               aria-labelledby="viewexception-tab4"
+            >
+              <ViewException exceptions={exceptions} />
+            </div>
+            <div
+              className="tab-pane fade"
+              id="addindividual"
+              role="tabpanel"
+              aria-labelledby="addindividual-tab4"
+            >
+              <AddindividualForm employees={employees} />
+            </div>
+            <div
+              className="tab-pane fade"
+              id="viewindividual"
+              role="tabpanel"
+              aria-labelledby="viewindividual-tab4"
             >
               <ViewException exceptions={exceptions} />
             </div>

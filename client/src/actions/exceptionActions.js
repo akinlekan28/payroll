@@ -64,6 +64,25 @@ export const deleteException = id => dispatch => {
     );
 };
 
+//Add other exception
+export const addOtherException = otherExceptionDetails => dispatch => {
+  dispatch(clearErrors());
+  return axios
+    .post("/api/individualcost", otherExceptionDetails)
+    .then(res =>
+      dispatch({
+        type: ADD_EXCEPTION,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Set loding state
 export const setExceptionLoading = () => {
   return {

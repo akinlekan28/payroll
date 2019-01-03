@@ -14,7 +14,7 @@ const ExceptionTab = () => {
             aria-controls="addexception"
             aria-selected="true"
           >
-            Add Exception
+            Add basic salary exception
           </a>
         </li>
         <li className="nav-item">
@@ -27,7 +27,34 @@ const ExceptionTab = () => {
             aria-controls="viewexception"
             aria-selected="false"
           >
-            View Exceptions
+            View basic salary exceptions
+          </a>
+        </li>
+        <div className="dropdown-divider" />
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            id="addindividual-tab4"
+            data-toggle="tab"
+            href="#addindividual"
+            role="tab"
+            aria-controls="addindividual"
+            aria-selected="false"
+          >
+            Add other exceptions
+          </a>
+        </li>
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            id="viewindividual-tab4"
+            data-toggle="tab"
+            href="#viewindividual"
+            role="tab"
+            aria-controls="viewindividual"
+            aria-selected="false"
+          >
+            View other exceptions
           </a>
         </li>
       </ul>
