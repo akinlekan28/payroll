@@ -5,6 +5,17 @@ class PayslipTable extends PureComponent {
   render() {
     const { payroll } = this.props;
 
+    let extraEarning = [];
+    let extraDeduction = [];
+
+    payroll.individualcost.forEach(individualcostItem => {
+      if(individualcostItem.costType === 'income'){
+        extraEarning.push(individualcostItem)
+      } else {
+        extraDeduction.push(individualcostItem)
+      }
+    })
+
     const formatMoney = money => {
       let formatedValue = money
         .toFixed(2)
@@ -87,6 +98,18 @@ class PayslipTable extends PureComponent {
                           </td>
                         </tr>
                       ))}
+                      {extraEarning.map(extraEarningItem => (
+                        <tr key={extraEarningItem._id}>
+                          <td>
+                            <strong>{extraEarningItem.name}</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              <span>&#8358;</span> {formatMoney(extraEarningItem.amount)}
+                            </strong>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </td>
@@ -127,6 +150,18 @@ class PayslipTable extends PureComponent {
                             <strong className="text-danger">
                               <span>&#8358;</span>{" "}
                               {formatMoney(deductable.amount)}
+                            </strong>
+                          </td>
+                        </tr>
+                      ))}
+                      {extraDeduction.map(extraDeductionItem => (
+                        <tr key={extraDeductionItem._id}>
+                          <td>
+                            <strong>{extraDeductionItem.name}</strong>
+                          </td>
+                          <td>
+                            <strong className="text-danger">
+                              <span>&#8358;</span> {formatMoney(extraDeductionItem.amount)}
                             </strong>
                           </td>
                         </tr>

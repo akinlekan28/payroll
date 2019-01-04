@@ -7,6 +7,7 @@ const protect = passport.authenticate("jwt", { session: false });
 const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
+const IndividualCost = require('../../models/Individualcost');
 
 //@route  Get api/singleslip/:id
 //@desc Get Employee payslip route
@@ -31,14 +32,27 @@ router.get("/singleslip/:id", protect, (req, res) => {
               deductableSum += deductable.amount;
             });
 
-            Exception.findOne({ employee: employeeDetails._id })
+            IndividualCost.find({employee: employeeDetails._id})
+            .then(individualcost => {
+              let individualIncomeSum = 0,
+              individualDeductionSum = 0;
+
+              individualcost.forEach(individualcostItem => {
+                if(individualcostItem.costType === 'income'){
+                  individualIncomeSum += individualcostItem.amount
+                }else {
+                  individualDeductionSum += individualcostItem.amount
+                }
+              })
+
+              Exception.findOne({ employee: employeeDetails._id })
               .then(employeeException => {
                 if (employeeException) {
                   let basic = employeeException.amount,
-                    grossEarning = bonusSum + basic,
+                    grossEarning = bonusSum + basic + individualIncomeSum,
                     annualGrossEarning = grossEarning * 12,
-                    annualBonuses = bonusSum * 12,
-                    annualDeductables = deductableSum * 12;
+                    annualBonuses = (bonusSum + individualIncomeSum) * 12,
+                    annualDeductables = (deductableSum + individualDeductionSum ) * 12;
 
                   if (annualGrossEarning > 300000) {
                     let annualConsolidationRelief =
@@ -54,8 +68,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
                         annualDeductables;
                     let annualTax = taxCalculation(annualTaxableGrossIncome);
                     let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum;
-                    let totalDeductable = tax + pension + deductableSum;
+                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
+                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
 
                     const salarySlip = {
                       basic,
@@ -67,6 +81,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       netPay,
                       employeeDetails,
                       level,
+                      individualcost,
                       employeeException
                     };
                     return res.status(200).json(salarySlip);
@@ -83,8 +98,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
                         annualDeductables;
                     let annualTax = taxCalculation(annualTaxableGrossIncome);
                     let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum;
-                    let totalDeductable = tax + pension + deductableSum;
+                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
+                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
 
                     const salarySlip = {
                       basic,
@@ -95,6 +110,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       totalDeductable,
                       netPay,
                       employeeDetails,
+                      individualcost,
                       level,
                       employeeException
                     };
@@ -102,10 +118,10 @@ router.get("/singleslip/:id", protect, (req, res) => {
                   }
                 } else {
                   let basic = level.basic,
-                    grossEarning = bonusSum + basic,
-                    annualGrossEarning = grossEarning * 12,
-                    annualBonuses = bonusSum * 12,
-                    annualDeductables = deductableSum * 12;
+                  grossEarning = bonusSum + basic + individualIncomeSum,
+                  annualGrossEarning = grossEarning * 12,
+                  annualBonuses = (bonusSum + individualIncomeSum) * 12,
+                  annualDeductables = (deductableSum + individualDeductionSum ) * 12;
 
                   if (annualGrossEarning > 300000) {
                     let annualConsolidationRelief =
@@ -121,8 +137,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
                         annualDeductables;
                     let annualTax = taxCalculation(annualTaxableGrossIncome);
                     let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum;
-                    let totalDeductable = tax + pension + deductableSum;
+                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
+                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
 
                     const salarySlip = {
                       basic,
@@ -133,6 +149,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       totalDeductable,
                       netPay,
                       employeeDetails,
+                      individualcost,
                       level
                     };
                     return res.status(200).json(salarySlip);
@@ -149,8 +166,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
                         annualDeductables;
                     let annualTax = taxCalculation(annualTaxableGrossIncome);
                     let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum;
-                    let totalDeductable = tax + pension + deductableSum;
+                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
+                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
 
                     const salarySlip = {
                       basic,
@@ -161,6 +178,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       totalDeductable,
                       netPay,
                       employeeDetails,
+                      individualcost,
                       level
                     };
                     return res.status(200).json(salarySlip);
@@ -168,6 +186,10 @@ router.get("/singleslip/:id", protect, (req, res) => {
                 }
               })
               .catch(err => console.log(err));
+
+
+            })
+            .catch(err => res.status(404).json({message: "Error fetching other exception"}))
           })
           .catch(err =>
             res.status(404).json({ message: "User grade level not found" })
