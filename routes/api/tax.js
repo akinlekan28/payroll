@@ -2,6 +2,12 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const protect = passport.authenticate("jwt", { session: false });
+const keys = require("../../config/keys");
+const email = require('emailjs')
+const pdfMakePrinter = require('pdfmake/src/printer');
+const path = require('path');
+const fs = require('fs');
+const emailTemplate = require('../../emailTemplates/emailTemplate');
 
 //Load models
 const Level = require("../../models/Level");
@@ -202,6 +208,82 @@ router.get("/singleslip/:id", protect, (req, res) => {
       .json({ message: "Salary report can only be generated after 21 days" });
   }
 });
+
+router.get('/test', (req, res) => {
+
+const errors = {}
+
+const docDefinition = {
+  content: ['This will show up in the file created']
+};
+
+generatePdf(docDefinition, (response) => {
+
+  pdfLocation = path.join(__dirname, '../../', 'docs', '/payroll.pdf')
+
+  const emailService = email.server.connect({
+    user: keys.username,
+    password: keys.password,
+    host: keys.smtp,
+    ssl: true
+  })
+
+  const userDetails = {
+    fullname: "Raphael"
+  }
+
+  const htmlData = emailTemplate(userDetails)
+
+  const message = {
+   from:	"no-reply@payroller.com", 
+   to:		"raphealolams@gmail.com",
+   subject:	"Monthly payroll",
+   attachment: 
+   [
+      {data: htmlData, alternative:true},
+      {path:pdfLocation, type:"application/pdf", name:"payroll.pdf"}
+   ]
+  }
+
+  emailService.send(message, (err, success) => {
+    if(err){
+      return res.status(400).json({message: "Error sending employee payslip"})
+    }
+    return res.json({message: "Payslip successfully sent!"})
+  })
+ 
+});
+
+})
+
+const generatePdf = (docDefinition, successCallback, errorCallback) => {
+  try {
+    const fontDescriptors = {Roboto: {
+			normal: path.join(__dirname, '../../', 'fonts', '/Roboto-Regular.ttf'),
+			bold: path.join(__dirname, '../../', 'fonts', '/Roboto-Medium.ttf'),
+			italics: path.join(__dirname, '../../', 'fonts', '/Roboto-Italic.ttf'),
+			bolditalics: path.join(__dirname, '../../', 'fonts', '/Roboto-MediumItalic.ttf')
+    }};
+    
+    const printer = new pdfMakePrinter(fontDescriptors);
+    const doc = printer.createPdfKitDocument(docDefinition);
+
+    doc.pipe(
+      fs.createWriteStream('docs/payroll.pdf').on("error", (err) => {
+        errorCallback(err.message);
+      })
+    );
+  
+    doc.on('end', () => {
+      successCallback("PDF successfully created and stored");
+    });
+    
+    doc.end();
+    
+  } catch(err) {
+    throw(err);
+  }
+};
 
 const taxCalculation = annualTaxableIncome => {
   let annualTaxMap = new Map([
