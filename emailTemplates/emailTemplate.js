@@ -1,4 +1,5 @@
 module.exports = userDetails => {
+  const name = userDetails.name.split(' ')
     return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -151,7 +152,7 @@ module.exports = userDetails => {
                         </tr>
                         <tr>
                           <td>
-                            <h2 style="color: #ffffff;">Awesome ${userDetails.fullname}!</h2>
+                            <h2 style="color: #ffffff;">Awesome ${name[0]}!</h2>
                           </td>
                         </tr>
                         <tr>

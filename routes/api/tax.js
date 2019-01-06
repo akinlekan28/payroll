@@ -14,6 +14,7 @@ const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 const IndividualCost = require('../../models/Individualcost');
+const Payslip = require('../../models/Payslip');
 
 //@route  Get api/singleslip/:id
 //@desc Get Employee payslip route
@@ -25,8 +26,22 @@ router.get("/singleslip/:id", protect, (req, res) => {
   if (salaryDay > 21) {
     Employee.findOne({ _id: req.params.id })
       .then(employeeDetails => {
+
+        const employeeId = employeeDetails._id;
+        const tag = employeeDetails.tag
+        const name = employeeDetails.name;
+        const department = employeeDetails.department;
+        const employeeEmail = employeeDetails.email;
+        const designation = employeeDetails.designation;
+
+        //Get employee level
         Level.findOne({ _id: employeeDetails.level })
           .then(level => {
+
+            const bonuses = level.bonuses;
+            const deductables = level.deductables
+
+            //Get Employee bonuses and deduction and sum total
             let levelBonus = level.bonuses,
               levelDeductable = level.deductables,
               deductableSum = 0,
@@ -38,6 +53,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
               deductableSum += deductable.amount;
             });
 
+            //Check if employee has individual cost
             IndividualCost.find({employee: employeeDetails._id})
             .then(individualcost => {
               let individualIncomeSum = 0,
@@ -51,6 +67,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                 }
               })
 
+              //Check if employee has a salary exception
               Exception.findOne({ employee: employeeDetails._id })
               .then(employeeException => {
                 if (employeeException) {
@@ -77,6 +94,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
                     let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
 
+                    //Payslip variables for frontend
                     const salarySlip = {
                       basic,
                       grossEarning,
@@ -90,6 +108,46 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       individualcost,
                       employeeException
                     };
+
+                    //payslip variables for server side further processing
+
+                    const payslipDetails = {
+                      tag,
+                      name,
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      totalDeductions: totalDeductable,
+                      netPay,
+                      email: employeeEmail,
+                      designation,
+                      employee: employeeId,
+                      bonuses,
+                      deductables,
+                      individualcost
+                    }
+
+                    //Saves employee payslip details to db
+                    Payslip.findOne({employee: employeeDetails._id})
+                    .then(payslipFound => {
+                      if(payslipFound){
+                        Payslip.findOneAndUpdate(
+                          {employee: employeeId },
+                          {$set: payslipDetails},
+                          {new: true}
+                        )
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      } else {
+                        new Payslip(payslipDetails)
+                        .save()
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      }
+                    })
+                    .catch(err => console.log(err))
                     return res.status(200).json(salarySlip);
                   } else {
                     let annualConsolidationRelief = annualGrossEarning * 0.01,
@@ -120,6 +178,45 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       level,
                       employeeException
                     };
+
+                    const payslipDetails = {
+                      tag,
+                      name,
+                      department,
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      totalDeductions: totalDeductable,
+                      netPay,
+                      email: employeeEmail,
+                      designation,
+                      employee: employeeId,
+                      bonuses,
+                      deductables,
+                      individualcost
+                    }
+
+                    Payslip.findOne({employee: employeeDetails._id})
+                    .then(payslipFound => {
+                      if(payslipFound){
+                        Payslip.findOneAndUpdate(
+                          {employee: employeeId },
+                          {$set: payslipDetails},
+                          {new: true}
+                        )
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      } else {
+                        new Payslip(payslipDetails)
+                        .save()
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      }
+                    })
+                    .catch(err => console.log(err))
+
                     return res.status(200).json(salarySlip);
                   }
                 } else {
@@ -158,6 +255,45 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       individualcost,
                       level
                     };
+
+                    const payslipDetails = {
+                      tag,
+                      name,
+                      department,
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      totalDeductions: totalDeductable,
+                      netPay,
+                      email: employeeEmail,
+                      designation,
+                      employee: employeeId,
+                      bonuses,
+                      deductables,
+                      individualcost
+                    }
+
+                    Payslip.findOne({employee: employeeDetails._id})
+                    .then(payslipFound => {
+                      if(payslipFound){
+                        Payslip.findOneAndUpdate(
+                          {employee: employeeId },
+                          {$set: payslipDetails},
+                          {new: true}
+                        )
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      } else {
+                        new Payslip(payslipDetails)
+                        .save()
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      }
+                    })
+                    .catch(err => console.log(err))
+
                     return res.status(200).json(salarySlip);
                   } else {
                     let annualConsolidationRelief = annualGrossEarning * 0.01,
@@ -187,7 +323,47 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       individualcost,
                       level
                     };
+
+                    const payslipDetails = {
+                      tag,
+                      name,
+                      department,
+                      basic,
+                      grossEarning,
+                      tax,
+                      pension,
+                      consolidationRelief,
+                      totalDeductions: totalDeductable,
+                      netPay,
+                      email: employeeEmail,
+                      designation,
+                      employee: employeeId,
+                      bonuses,
+                      deductables,
+                      individualcost
+                    }
+
+                    Payslip.findOne({employee: employeeDetails._id})
+                    .then(payslipFound => {
+                      if(payslipFound){
+                        Payslip.findOneAndUpdate(
+                          {employee: employeeId },
+                          {$set: payslipDetails},
+                          {new: true}
+                        )
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      } else {
+                        new Payslip(payslipDetails)
+                        .save()
+                        .then(newlySavedPayslip => console.log('Saved!'))
+                        .catch(err => console.log(err))
+                      }
+                    })
+                    .catch(err => console.log(err))
+                    
                     return res.status(200).json(salarySlip);
+
                   }
                 }
               })
@@ -209,52 +385,177 @@ router.get("/singleslip/:id", protect, (req, res) => {
   }
 });
 
-router.get('/test', (req, res) => {
+
+//@route  Get api/singleslip/send/:id
+//@desc Send Employee payslip pdf as email route
+//@access Private
+router.get('/singleslip/send/:id', (req, res) => {
 
 const errors = {}
+const date = new Date();
 
-const docDefinition = {
-  content: ['This will show up in the file created']
-};
+  Payslip.findOne({employee: req.params.id})
+  .then(employeePayslip => {
 
-generatePdf(docDefinition, (response) => {
-
-  pdfLocation = path.join(__dirname, '../../', 'docs', '/payroll.pdf')
-
-  const emailService = email.server.connect({
-    user: keys.username,
-    password: keys.password,
-    host: keys.smtp,
-    ssl: true
-  })
-
-  const userDetails = {
-    fullname: "Raphael"
-  }
-
-  const htmlData = emailTemplate(userDetails)
-
-  const message = {
-   from:	"no-reply@payroller.com", 
-   to:		"raphealolams@gmail.com",
-   subject:	"Monthly payroll",
-   attachment: 
-   [
-      {data: htmlData, alternative:true},
-      {path:pdfLocation, type:"application/pdf", name:"payroll.pdf"}
-   ]
-  }
-
-  emailService.send(message, (err, success) => {
-    if(err){
-      return res.status(400).json({message: "Error sending employee payslip"})
+    let moneyFix = money => {
+      let fixedMoney = money.toFixed(2);
+      return fixedMoney;
     }
-    return res.json({message: "Payslip successfully sent!"})
-  })
- 
-});
 
-})
+    //Begin insertion of earnings
+    let payBonus = employeePayslip.bonuses;
+    let otherEarnings = employeePayslip.individualcost;
+
+    let bodyData = [
+      ['Earnings', 'Amount'],
+      ['Basic', `${moneyFix(employeePayslip.basic)}`],
+    ];
+
+    //Insert payslip bonuses into rows
+    payBonus.forEach(bonus => {
+      let dataRow = [];
+
+      dataRow.push(bonus.name)
+      dataRow.push(bonus.amount)
+
+      bodyData.push(dataRow)
+
+      otherEarnings.forEach(otherEarning => {
+      let earningRow = []
+      if(otherEarning.costType === 'income'){
+        earningRow.push(otherEarning.name)
+        earningRow.push(otherEarning.amount)
+
+        bodyData.push(earningRow)
+      }
+    })
+  })
+
+  //End insertion of earnings
+
+
+   //Begin insertion of earnings
+   let payDeduction = employeePayslip.deductables;
+
+   let bodyData1 = [
+     ['Deductions', 'Amount'],
+     ['Tax', `${moneyFix(employeePayslip.tax)}`],
+     ['Pension', `${moneyFix(employeePayslip.pension)}`],
+   ];
+
+   //Insert payslip deduction into rows
+   payDeduction.forEach(deduction => {
+     let dataRow = [];
+
+     dataRow.push(deduction.name)
+     dataRow.push(deduction.amount)
+
+     bodyData1.push(dataRow)
+
+     otherEarnings.forEach(otherEarning => {
+      let earningRow = []
+      if(otherEarning.costType === 'deduction'){
+        earningRow.push(otherEarning.name)
+        earningRow.push(otherEarning.amount)
+
+        bodyData1.push(earningRow)
+      }
+    })
+ })
+
+ //End insertion of deductions
+
+
+  //Write payslip data to pdf
+    const docDefinition = {
+      content: [
+
+        {text: ' '},
+        {text: `${employeePayslip.name} payslip`, style: 'header', alignment: 'center'},
+        {text: ' '},
+        {text: ' '},
+        {text: ' '},
+        {
+          style: 'tableExample',
+          table: {
+            widths: [268, 250],
+            heights: 50,
+            alignment: 'center',
+            body: [
+              [`Employee Name:  ${employeePayslip.name}`, `Tax year:    ${date.getFullYear()}`],
+              [`Emplyee Tag: 	${employeePayslip.tag}`, `Pay period:   ${date.toLocaleString('en-us', {month: 'long'})}`],
+              [`Designation:  ${employeePayslip.designation}`, `Department:   ${employeePayslip.department}`],
+              [
+                {
+                  table: {
+                    widths: [133, 117],
+                    alignment: 'center',
+                    body: bodyData
+                  },
+                  layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+                      return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+                    }
+                  }
+                },
+                {
+                  table: {
+                    widths: [125, 106],
+                    alignment: 'center',
+                    body: bodyData1
+                  },
+                  layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+                      return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
+                    }
+                  }
+                }
+              ],
+              [`Gross Earnings:            ${moneyFix(employeePayslip.grossEarning)}`, ''],
+              [`Total Deduction:            ${moneyFix(employeePayslip.totalDeductions)}`, ''],  
+              [`Net Pay:            ${moneyFix(employeePayslip.netPay)}`, ''],
+            ],
+          }
+        }
+      ]
+    };
+    
+    generatePdf(docDefinition, (response) => {
+    
+      pdfLocation = path.join(__dirname, '../../', 'docs', '/payroll.pdf')
+    
+      const emailService = email.server.connect({
+        user: keys.username,
+        password: keys.password,
+        host: keys.smtp,
+        ssl: true
+      })
+    
+      const htmlData = emailTemplate(employeePayslip)
+    
+      const message = {
+       from:	"no-reply@payroller.com", 
+       to:		"akinlekan28@yahoo.com",
+       subject:	"Monthly payroll",
+       attachment: 
+       [
+          {data: htmlData, alternative:true},
+          {path:pdfLocation, type:"application/pdf", name:"payroll.pdf"}
+       ]
+      }
+    
+      emailService.send(message, (err, success) => {
+        if(err){
+          return res.status(400).json({message: "Error sending employee payslip"})
+        }
+        return res.json({message: "Payslip successfully sent!"})
+      })
+     
+    });
+
+  })
+
+});
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
   try {
