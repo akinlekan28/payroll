@@ -461,6 +461,18 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
         let fixedMoney = money.toFixed(2);
         return fixedMoney;
       };
+      const formatMoney = money => {
+        let formatedValue = money
+          .toString()
+          .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        return formatedValue;
+      };
+      const basic = moneyFix(employeePayslip.basic);
+      const gross = moneyFix(employeePayslip.grossEarning);
+      const net = moneyFix(employeePayslip.netPay);
+      const deductions = moneyFix(employeePayslip.totalDeductions);
+      const pension = moneyFix(employeePayslip.pension);
+      const tax = moneyFix(employeePayslip.tax)
 
       //Begin insertion of earnings
       let payBonus = employeePayslip.bonuses;
@@ -468,7 +480,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
 
       let bodyData = [
         ["Earnings", "Amount"],
-        ["Basic", `${moneyFix(employeePayslip.basic)}`]
+        ["Basic", `${formatMoney(basic)}`]
       ];
 
       //Insert payslip bonuses into rows
@@ -476,7 +488,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
         let dataRow = [];
 
         dataRow.push(bonus.name);
-        dataRow.push(bonus.amount);
+        dataRow.push(formatMoney(bonus.amount));
 
         bodyData.push(dataRow);
 
@@ -484,7 +496,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
           let earningRow = [];
           if (otherEarning.costType === "income") {
             earningRow.push(otherEarning.name);
-            earningRow.push(otherEarning.amount);
+            earningRow.push(formatMoney(otherEarning.amount));
 
             bodyData.push(earningRow);
           }
@@ -498,8 +510,8 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
 
       let bodyData1 = [
         ["Deductions", "Amount"],
-        ["Tax", `${moneyFix(employeePayslip.tax)}`],
-        ["Pension", `${moneyFix(employeePayslip.pension)}`]
+        ["Tax", `${formatMoney(tax)}`],
+        ["Pension", `${formatMoney(pension)}`]
       ];
 
       //Insert payslip deduction into rows
@@ -507,7 +519,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
         let dataRow = [];
 
         dataRow.push(deduction.name);
-        dataRow.push(deduction.amount);
+        dataRow.push(formatMoney(deduction.amount));
 
         bodyData1.push(dataRow);
 
@@ -515,7 +527,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
           let earningRow = [];
           if (otherEarning.costType === "deduction") {
             earningRow.push(otherEarning.name);
-            earningRow.push(otherEarning.amount);
+            earningRow.push(formatMoney(otherEarning.amount));
 
             bodyData1.push(earningRow);
           }
@@ -584,18 +596,18 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
                   }
                 ],
                 [
-                  `Gross Earnings:            ${moneyFix(
-                    employeePayslip.grossEarning
+                  `Gross Earnings:            ${formatMoney(
+                    gross
                   )}`,
                   ""
                 ],
                 [
-                  `Total Deduction:            ${moneyFix(
-                    employeePayslip.totalDeductions
+                  `Total Deduction:            ${formatMoney(
+                    deductions
                   )}`,
                   ""
                 ],
-                [`Net Pay:            ${moneyFix(employeePayslip.netPay)}`, ""]
+                [`Net Pay:            ${formatMoney(net)}`, ""]
               ]
             }
           }
