@@ -1,5 +1,9 @@
 import axios from "axios";
-import { VIEW_PAYROLL, PAYROLL_LOADING, GET_ERRORS } from "./types";
+import {
+  VIEW_PAYROLL,
+  PAYROLL_LOADING,
+  GET_ERRORS
+} from "./types";
 
 //View single payroll
 export const getPayroll = id => dispatch => {

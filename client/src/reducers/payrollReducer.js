@@ -16,6 +16,7 @@ export default function(state = initialState, action) {
         payroll: action.payload,
         loading: false
       };
+
     case PAYROLL_LOADING:
       return {
         ...state,

@@ -156,7 +156,7 @@ module.exports = userDetails => {
                           </td>
                         </tr>
                         <tr>
-                          <td class="headline">Your payroll is ready!</td>
+                          <td class="headline">Your payslip is ready!</td>
                         </tr>
                         <tr>
                           <td>

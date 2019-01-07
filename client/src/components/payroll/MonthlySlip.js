@@ -11,8 +11,14 @@ import PayslipTable from "./PayslipTable";
 import { toast } from "react-toastify";
 import ReactToPrint from "react-to-print";
 import { PDFExport } from "@progress/kendo-react-pdf";
+import axios from 'axios';
 
 class MonthlySlip extends PureComponent {
+  constructor(props){
+    super();
+
+    this.sendEmail = this.sendEmail.bind(this);
+  }
   componentDidMount = () => {
     this.props
       .getPayroll(this.props.match.params.id)
@@ -30,6 +36,27 @@ class MonthlySlip extends PureComponent {
   exportPDF = () => {
     this.resume.save();
   };
+  
+
+  sendEmail(e){
+
+    let d = document.querySelector('.sendE');
+    d.disabled = true;
+    d.innerHTML = 'Sending...'
+
+    axios.post(`/api/tax/singleslip/send/${this.props.match.params.id}`)
+    .then(res => {
+      toast.success('Employee payroll successfully sent!')
+      d.disabled = false;
+      d.innerHTML = 'Send to employee'
+    })
+    .catch(err => {
+      toast.error('Error sending email, resend')
+      d.disabled = false;
+      d.innerHTML = 'Send to employee'
+    })
+
+  }
 
   render() {
     const { payroll, loading } = this.props.payroll;
@@ -79,6 +106,13 @@ class MonthlySlip extends PureComponent {
                 onClick={this.exportPDF}
               >
                 Download payslip Pdf
+              </button>
+
+              <button
+                className="btn btn-lg btn-primary ml-3 sendE"
+                onClick={this.sendEmail}
+              >
+                Send to employee
               </button>
             </div>
           </div>

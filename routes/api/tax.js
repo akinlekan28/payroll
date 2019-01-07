@@ -3,18 +3,18 @@ const router = express.Router();
 const passport = require("passport");
 const protect = passport.authenticate("jwt", { session: false });
 const keys = require("../../config/keys");
-const email = require('emailjs')
-const pdfMakePrinter = require('pdfmake/src/printer');
-const path = require('path');
-const fs = require('fs');
-const emailTemplate = require('../../emailTemplates/emailTemplate');
+const pdfMakePrinter = require("pdfmake/src/printer");
+const path = require("path");
+const fs = require("fs");
+const emailTemplate = require("../../emailTemplates/emailTemplate");
+const nodemailer = require("nodemailer");
 
 //Load models
 const Level = require("../../models/Level");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
-const IndividualCost = require('../../models/Individualcost');
-const Payslip = require('../../models/Payslip');
+const IndividualCost = require("../../models/Individualcost");
+const Payslip = require("../../models/Payslip");
 
 //@route  Get api/singleslip/:id
 //@desc Get Employee payslip route
@@ -26,9 +26,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
   if (salaryDay > 21) {
     Employee.findOne({ _id: req.params.id })
       .then(employeeDetails => {
-
         const employeeId = employeeDetails._id;
-        const tag = employeeDetails.tag
+        const tag = employeeDetails.tag;
         const name = employeeDetails.name;
         const department = employeeDetails.department;
         const employeeEmail = employeeDetails.email;
@@ -37,9 +36,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
         //Get employee level
         Level.findOne({ _id: employeeDetails.level })
           .then(level => {
-
             const bonuses = level.bonuses;
-            const deductables = level.deductables
+            const deductables = level.deductables;
 
             //Get Employee bonuses and deduction and sum total
             let levelBonus = level.bonuses,
@@ -54,324 +52,389 @@ router.get("/singleslip/:id", protect, (req, res) => {
             });
 
             //Check if employee has individual cost
-            IndividualCost.find({employee: employeeDetails._id})
-            .then(individualcost => {
-              let individualIncomeSum = 0,
-              individualDeductionSum = 0;
+            IndividualCost.find({ employee: employeeDetails._id })
+              .then(individualcost => {
+                let individualIncomeSum = 0,
+                  individualDeductionSum = 0;
 
-              individualcost.forEach(individualcostItem => {
-                if(individualcostItem.costType === 'income'){
-                  individualIncomeSum += individualcostItem.amount
-                }else {
-                  individualDeductionSum += individualcostItem.amount
-                }
-              })
-
-              //Check if employee has a salary exception
-              Exception.findOne({ employee: employeeDetails._id })
-              .then(employeeException => {
-                if (employeeException) {
-                  let basic = employeeException.amount,
-                    grossEarning = bonusSum + basic + individualIncomeSum,
-                    annualGrossEarning = grossEarning * 12,
-                    annualBonuses = (bonusSum + individualIncomeSum) * 12,
-                    annualDeductables = (deductableSum + individualDeductionSum ) * 12;
-
-                  if (annualGrossEarning > 300000) {
-                    let annualConsolidationRelief =
-                        annualGrossEarning * 0.2 + 200000,
-                      annualPension = annualGrossEarning * 0.08,
-                      pension = annualPension / 12,
-                      consolidationRelief = annualConsolidationRelief / 12,
-                      annualTaxableGrossIncome =
-                        annualGrossEarning +
-                        annualBonuses -
-                        annualPension -
-                        annualConsolidationRelief -
-                        annualDeductables;
-                    let annualTax = taxCalculation(annualTaxableGrossIncome);
-                    let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
-                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
-
-                    //Payslip variables for frontend
-                    const salarySlip = {
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductable,
-                      netPay,
-                      employeeDetails,
-                      level,
-                      individualcost,
-                      employeeException
-                    };
-
-                    //payslip variables for server side further processing
-
-                    const payslipDetails = {
-                      tag,
-                      name,
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductions: totalDeductable,
-                      netPay,
-                      email: employeeEmail,
-                      designation,
-                      employee: employeeId,
-                      bonuses,
-                      deductables,
-                      individualcost
-                    }
-
-                    //Saves employee payslip details to db
-                    Payslip.findOne({employee: employeeDetails._id})
-                    .then(payslipFound => {
-                      if(payslipFound){
-                        Payslip.findOneAndUpdate(
-                          {employee: employeeId },
-                          {$set: payslipDetails},
-                          {new: true}
-                        )
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
-                      } else {
-                        new Payslip(payslipDetails)
-                        .save()
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
-                      }
-                    })
-                    .catch(err => console.log(err))
-                    return res.status(200).json(salarySlip);
+                individualcost.forEach(individualcostItem => {
+                  if (individualcostItem.costType === "income") {
+                    individualIncomeSum += individualcostItem.amount;
                   } else {
-                    let annualConsolidationRelief = annualGrossEarning * 0.01,
-                      annualPension = annualGrossEarning * 0.08,
-                      pension = annualPension / 12,
-                      consolidationRelief = annualConsolidationRelief / 12,
-                      annualTaxableGrossIncome =
-                        annualGrossEarning +
-                        annualBonuses -
-                        annualPension -
-                        annualConsolidationRelief -
-                        annualDeductables;
-                    let annualTax = taxCalculation(annualTaxableGrossIncome);
-                    let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
-                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
-
-                    const salarySlip = {
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductable,
-                      netPay,
-                      employeeDetails,
-                      individualcost,
-                      level,
-                      employeeException
-                    };
-
-                    const payslipDetails = {
-                      tag,
-                      name,
-                      department,
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductions: totalDeductable,
-                      netPay,
-                      email: employeeEmail,
-                      designation,
-                      employee: employeeId,
-                      bonuses,
-                      deductables,
-                      individualcost
-                    }
-
-                    Payslip.findOne({employee: employeeDetails._id})
-                    .then(payslipFound => {
-                      if(payslipFound){
-                        Payslip.findOneAndUpdate(
-                          {employee: employeeId },
-                          {$set: payslipDetails},
-                          {new: true}
-                        )
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
-                      } else {
-                        new Payslip(payslipDetails)
-                        .save()
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
-                      }
-                    })
-                    .catch(err => console.log(err))
-
-                    return res.status(200).json(salarySlip);
+                    individualDeductionSum += individualcostItem.amount;
                   }
-                } else {
-                  let basic = level.basic,
-                  grossEarning = bonusSum + basic + individualIncomeSum,
-                  annualGrossEarning = grossEarning * 12,
-                  annualBonuses = (bonusSum + individualIncomeSum) * 12,
-                  annualDeductables = (deductableSum + individualDeductionSum ) * 12;
+                });
 
-                  if (annualGrossEarning > 300000) {
-                    let annualConsolidationRelief =
-                        annualGrossEarning * 0.2 + 200000,
-                      annualPension = annualGrossEarning * 0.08,
-                      pension = annualPension / 12,
-                      consolidationRelief = annualConsolidationRelief / 12,
-                      annualTaxableGrossIncome =
-                        annualGrossEarning +
-                        annualBonuses -
-                        annualPension -
-                        annualConsolidationRelief -
-                        annualDeductables;
-                    let annualTax = taxCalculation(annualTaxableGrossIncome);
-                    let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
-                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
+                //Check if employee has a salary exception
+                Exception.findOne({ employee: employeeDetails._id })
+                  .then(employeeException => {
+                    if (employeeException) {
+                      let basic = employeeException.amount,
+                        grossEarning = bonusSum + basic + individualIncomeSum,
+                        annualGrossEarning = grossEarning * 12,
+                        annualBonuses = (bonusSum + individualIncomeSum) * 12,
+                        annualDeductables =
+                          (deductableSum + individualDeductionSum) * 12;
 
-                    const salarySlip = {
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductable,
-                      netPay,
-                      employeeDetails,
-                      individualcost,
-                      level
-                    };
+                      if (annualGrossEarning > 300000) {
+                        let annualConsolidationRelief =
+                            annualGrossEarning * 0.2 + 200000,
+                          annualPension = annualGrossEarning * 0.08,
+                          pension = annualPension / 12,
+                          consolidationRelief = annualConsolidationRelief / 12,
+                          annualTaxableGrossIncome =
+                            annualGrossEarning +
+                            annualBonuses -
+                            annualPension -
+                            annualConsolidationRelief -
+                            annualDeductables;
+                        let annualTax = taxCalculation(
+                          annualTaxableGrossIncome
+                        );
+                        let tax = annualTax / 12,
+                          netPay =
+                            grossEarning -
+                            tax -
+                            pension -
+                            deductableSum -
+                            individualDeductionSum;
+                        let totalDeductable =
+                          tax +
+                          pension +
+                          deductableSum +
+                          individualDeductionSum;
 
-                    const payslipDetails = {
-                      tag,
-                      name,
-                      department,
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductions: totalDeductable,
-                      netPay,
-                      email: employeeEmail,
-                      designation,
-                      employee: employeeId,
-                      bonuses,
-                      deductables,
-                      individualcost
-                    }
+                        //Payslip variables for frontend
+                        const salarySlip = {
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductable,
+                          netPay,
+                          employeeDetails,
+                          level,
+                          individualcost,
+                          employeeException
+                        };
 
-                    Payslip.findOne({employee: employeeDetails._id})
-                    .then(payslipFound => {
-                      if(payslipFound){
-                        Payslip.findOneAndUpdate(
-                          {employee: employeeId },
-                          {$set: payslipDetails},
-                          {new: true}
-                        )
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
+                        //payslip variables for server side further processing
+
+                        const payslipDetails = {
+                          tag,
+                          name,
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductions: totalDeductable,
+                          netPay,
+                          email: employeeEmail,
+                          designation,
+                          employee: employeeId,
+                          bonuses,
+                          deductables,
+                          individualcost
+                        };
+
+                        //Saves employee payslip details to db
+                        Payslip.findOne({ employee: employeeDetails._id })
+                          .then(payslipFound => {
+                            if (payslipFound) {
+                              Payslip.findOneAndUpdate(
+                                { employee: employeeId },
+                                { $set: payslipDetails },
+                                { new: true }
+                              )
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            } else {
+                              new Payslip(payslipDetails)
+                                .save()
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            }
+                          })
+                          .catch(err => console.log(err));
+                        return res.status(200).json(salarySlip);
                       } else {
-                        new Payslip(payslipDetails)
-                        .save()
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
+                        let annualConsolidationRelief =
+                            annualGrossEarning * 0.01,
+                          annualPension = annualGrossEarning * 0.08,
+                          pension = annualPension / 12,
+                          consolidationRelief = annualConsolidationRelief / 12,
+                          annualTaxableGrossIncome =
+                            annualGrossEarning +
+                            annualBonuses -
+                            annualPension -
+                            annualConsolidationRelief -
+                            annualDeductables;
+                        let annualTax = taxCalculation(
+                          annualTaxableGrossIncome
+                        );
+                        let tax = annualTax / 12,
+                          netPay =
+                            grossEarning -
+                            tax -
+                            pension -
+                            deductableSum -
+                            individualDeductionSum;
+                        let totalDeductable =
+                          tax +
+                          pension +
+                          deductableSum +
+                          individualDeductionSum;
+
+                        const salarySlip = {
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductable,
+                          netPay,
+                          employeeDetails,
+                          individualcost,
+                          level,
+                          employeeException
+                        };
+
+                        const payslipDetails = {
+                          tag,
+                          name,
+                          department,
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductions: totalDeductable,
+                          netPay,
+                          email: employeeEmail,
+                          designation,
+                          employee: employeeId,
+                          bonuses,
+                          deductables,
+                          individualcost
+                        };
+
+                        Payslip.findOne({ employee: employeeDetails._id })
+                          .then(payslipFound => {
+                            if (payslipFound) {
+                              Payslip.findOneAndUpdate(
+                                { employee: employeeId },
+                                { $set: payslipDetails },
+                                { new: true }
+                              )
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            } else {
+                              new Payslip(payslipDetails)
+                                .save()
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            }
+                          })
+                          .catch(err => console.log(err));
+
+                        return res.status(200).json(salarySlip);
                       }
-                    })
-                    .catch(err => console.log(err))
+                    } else {
+                      let basic = level.basic,
+                        grossEarning = bonusSum + basic + individualIncomeSum,
+                        annualGrossEarning = grossEarning * 12,
+                        annualBonuses = (bonusSum + individualIncomeSum) * 12,
+                        annualDeductables =
+                          (deductableSum + individualDeductionSum) * 12;
 
-                    return res.status(200).json(salarySlip);
-                  } else {
-                    let annualConsolidationRelief = annualGrossEarning * 0.01,
-                      annualPension = annualGrossEarning * 0.08,
-                      pension = annualPension / 12,
-                      consolidationRelief = annualConsolidationRelief / 12,
-                      annualTaxableGrossIncome =
-                        annualGrossEarning +
-                        annualBonuses -
-                        annualPension -
-                        annualConsolidationRelief -
-                        annualDeductables;
-                    let annualTax = taxCalculation(annualTaxableGrossIncome);
-                    let tax = annualTax / 12,
-                      netPay = grossEarning - tax - pension - deductableSum - individualDeductionSum;
-                    let totalDeductable = tax + pension + deductableSum + individualDeductionSum;
+                      if (annualGrossEarning > 300000) {
+                        let annualConsolidationRelief =
+                            annualGrossEarning * 0.2 + 200000,
+                          annualPension = annualGrossEarning * 0.08,
+                          pension = annualPension / 12,
+                          consolidationRelief = annualConsolidationRelief / 12,
+                          annualTaxableGrossIncome =
+                            annualGrossEarning +
+                            annualBonuses -
+                            annualPension -
+                            annualConsolidationRelief -
+                            annualDeductables;
+                        let annualTax = taxCalculation(
+                          annualTaxableGrossIncome
+                        );
+                        let tax = annualTax / 12,
+                          netPay =
+                            grossEarning -
+                            tax -
+                            pension -
+                            deductableSum -
+                            individualDeductionSum;
+                        let totalDeductable =
+                          tax +
+                          pension +
+                          deductableSum +
+                          individualDeductionSum;
 
-                    const salarySlip = {
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductable,
-                      netPay,
-                      employeeDetails,
-                      individualcost,
-                      level
-                    };
+                        const salarySlip = {
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductable,
+                          netPay,
+                          employeeDetails,
+                          individualcost,
+                          level
+                        };
 
-                    const payslipDetails = {
-                      tag,
-                      name,
-                      department,
-                      basic,
-                      grossEarning,
-                      tax,
-                      pension,
-                      consolidationRelief,
-                      totalDeductions: totalDeductable,
-                      netPay,
-                      email: employeeEmail,
-                      designation,
-                      employee: employeeId,
-                      bonuses,
-                      deductables,
-                      individualcost
-                    }
+                        const payslipDetails = {
+                          tag,
+                          name,
+                          department,
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductions: totalDeductable,
+                          netPay,
+                          email: employeeEmail,
+                          designation,
+                          employee: employeeId,
+                          bonuses,
+                          deductables,
+                          individualcost
+                        };
 
-                    Payslip.findOne({employee: employeeDetails._id})
-                    .then(payslipFound => {
-                      if(payslipFound){
-                        Payslip.findOneAndUpdate(
-                          {employee: employeeId },
-                          {$set: payslipDetails},
-                          {new: true}
-                        )
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
+                        Payslip.findOne({ employee: employeeDetails._id })
+                          .then(payslipFound => {
+                            if (payslipFound) {
+                              Payslip.findOneAndUpdate(
+                                { employee: employeeId },
+                                { $set: payslipDetails },
+                                { new: true }
+                              )
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            } else {
+                              new Payslip(payslipDetails)
+                                .save()
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            }
+                          })
+                          .catch(err => console.log(err));
+
+                        return res.status(200).json(salarySlip);
                       } else {
-                        new Payslip(payslipDetails)
-                        .save()
-                        .then(newlySavedPayslip => console.log('Saved!'))
-                        .catch(err => console.log(err))
-                      }
-                    })
-                    .catch(err => console.log(err))
-                    
-                    return res.status(200).json(salarySlip);
+                        let annualConsolidationRelief =
+                            annualGrossEarning * 0.01,
+                          annualPension = annualGrossEarning * 0.08,
+                          pension = annualPension / 12,
+                          consolidationRelief = annualConsolidationRelief / 12,
+                          annualTaxableGrossIncome =
+                            annualGrossEarning +
+                            annualBonuses -
+                            annualPension -
+                            annualConsolidationRelief -
+                            annualDeductables;
+                        let annualTax = taxCalculation(
+                          annualTaxableGrossIncome
+                        );
+                        let tax = annualTax / 12,
+                          netPay =
+                            grossEarning -
+                            tax -
+                            pension -
+                            deductableSum -
+                            individualDeductionSum;
+                        let totalDeductable =
+                          tax +
+                          pension +
+                          deductableSum +
+                          individualDeductionSum;
 
-                  }
-                }
+                        const salarySlip = {
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductable,
+                          netPay,
+                          employeeDetails,
+                          individualcost,
+                          level
+                        };
+
+                        const payslipDetails = {
+                          tag,
+                          name,
+                          department,
+                          basic,
+                          grossEarning,
+                          tax,
+                          pension,
+                          consolidationRelief,
+                          totalDeductions: totalDeductable,
+                          netPay,
+                          email: employeeEmail,
+                          designation,
+                          employee: employeeId,
+                          bonuses,
+                          deductables,
+                          individualcost
+                        };
+
+                        Payslip.findOne({ employee: employeeDetails._id })
+                          .then(payslipFound => {
+                            if (payslipFound) {
+                              Payslip.findOneAndUpdate(
+                                { employee: employeeId },
+                                { $set: payslipDetails },
+                                { new: true }
+                              )
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            } else {
+                              new Payslip(payslipDetails)
+                                .save()
+                                .then(newlySavedPayslip =>
+                                  console.log("Saved!")
+                                )
+                                .catch(err => console.log(err));
+                            }
+                          })
+                          .catch(err => console.log(err));
+
+                        return res.status(200).json(salarySlip);
+                      }
+                    }
+                  })
+                  .catch(err => console.log(err));
               })
-              .catch(err => console.log(err));
-
-
-            })
-            .catch(err => res.status(404).json({message: "Error fetching other exception"}))
+              .catch(err =>
+                res
+                  .status(404)
+                  .json({ message: "Error fetching other exception" })
+              );
           })
           .catch(err =>
             res.status(404).json({ message: "User grade level not found" })
@@ -385,204 +448,233 @@ router.get("/singleslip/:id", protect, (req, res) => {
   }
 });
 
-
-//@route  Get api/singleslip/send/:id
+//@route  Post api/singleslip/send/:id
 //@desc Send Employee payslip pdf as email route
 //@access Private
-router.get('/singleslip/send/:id', (req, res) => {
+router.post("/singleslip/send/:id", protect, (req, res) => {
+  const errors = {};
+  const date = new Date();
 
-const errors = {}
-const date = new Date();
+  Payslip.findOne({ employee: req.params.id })
+    .then(employeePayslip => {
+      let moneyFix = money => {
+        let fixedMoney = money.toFixed(2);
+        return fixedMoney;
+      };
 
-  Payslip.findOne({employee: req.params.id})
-  .then(employeePayslip => {
+      //Begin insertion of earnings
+      let payBonus = employeePayslip.bonuses;
+      let otherEarnings = employeePayslip.individualcost;
 
-    let moneyFix = money => {
-      let fixedMoney = money.toFixed(2);
-      return fixedMoney;
-    }
+      let bodyData = [
+        ["Earnings", "Amount"],
+        ["Basic", `${moneyFix(employeePayslip.basic)}`]
+      ];
 
-    //Begin insertion of earnings
-    let payBonus = employeePayslip.bonuses;
-    let otherEarnings = employeePayslip.individualcost;
+      //Insert payslip bonuses into rows
+      payBonus.forEach(bonus => {
+        let dataRow = [];
 
-    let bodyData = [
-      ['Earnings', 'Amount'],
-      ['Basic', `${moneyFix(employeePayslip.basic)}`],
-    ];
+        dataRow.push(bonus.name);
+        dataRow.push(bonus.amount);
 
-    //Insert payslip bonuses into rows
-    payBonus.forEach(bonus => {
-      let dataRow = [];
+        bodyData.push(dataRow);
 
-      dataRow.push(bonus.name)
-      dataRow.push(bonus.amount)
+        otherEarnings.forEach(otherEarning => {
+          let earningRow = [];
+          if (otherEarning.costType === "income") {
+            earningRow.push(otherEarning.name);
+            earningRow.push(otherEarning.amount);
 
-      bodyData.push(dataRow)
-
-      otherEarnings.forEach(otherEarning => {
-      let earningRow = []
-      if(otherEarning.costType === 'income'){
-        earningRow.push(otherEarning.name)
-        earningRow.push(otherEarning.amount)
-
-        bodyData.push(earningRow)
-      }
-    })
-  })
-
-  //End insertion of earnings
-
-
-   //Begin insertion of earnings
-   let payDeduction = employeePayslip.deductables;
-
-   let bodyData1 = [
-     ['Deductions', 'Amount'],
-     ['Tax', `${moneyFix(employeePayslip.tax)}`],
-     ['Pension', `${moneyFix(employeePayslip.pension)}`],
-   ];
-
-   //Insert payslip deduction into rows
-   payDeduction.forEach(deduction => {
-     let dataRow = [];
-
-     dataRow.push(deduction.name)
-     dataRow.push(deduction.amount)
-
-     bodyData1.push(dataRow)
-
-     otherEarnings.forEach(otherEarning => {
-      let earningRow = []
-      if(otherEarning.costType === 'deduction'){
-        earningRow.push(otherEarning.name)
-        earningRow.push(otherEarning.amount)
-
-        bodyData1.push(earningRow)
-      }
-    })
- })
-
- //End insertion of deductions
-
-
-  //Write payslip data to pdf
-    const docDefinition = {
-      content: [
-
-        {text: ' '},
-        {text: `${employeePayslip.name} payslip`, style: 'header', alignment: 'center'},
-        {text: ' '},
-        {text: ' '},
-        {text: ' '},
-        {
-          style: 'tableExample',
-          table: {
-            widths: [268, 250],
-            heights: 50,
-            alignment: 'center',
-            body: [
-              [`Employee Name:  ${employeePayslip.name}`, `Tax year:    ${date.getFullYear()}`],
-              [`Emplyee Tag: 	${employeePayslip.tag}`, `Pay period:   ${date.toLocaleString('en-us', {month: 'long'})}`],
-              [`Designation:  ${employeePayslip.designation}`, `Department:   ${employeePayslip.department}`],
-              [
-                {
-                  table: {
-                    widths: [133, 117],
-                    alignment: 'center',
-                    body: bodyData
-                  },
-                  layout: {
-                    fillColor: function (rowIndex, node, columnIndex) {
-                      return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
-                    }
-                  }
-                },
-                {
-                  table: {
-                    widths: [125, 106],
-                    alignment: 'center',
-                    body: bodyData1
-                  },
-                  layout: {
-                    fillColor: function (rowIndex, node, columnIndex) {
-                      return (rowIndex % 2 === 0) ? '#CCCCCC' : null;
-                    }
-                  }
-                }
-              ],
-              [`Gross Earnings:            ${moneyFix(employeePayslip.grossEarning)}`, ''],
-              [`Total Deduction:            ${moneyFix(employeePayslip.totalDeductions)}`, ''],  
-              [`Net Pay:            ${moneyFix(employeePayslip.netPay)}`, ''],
-            ],
+            bodyData.push(earningRow);
           }
-        }
-      ]
-    };
-    
-    generatePdf(docDefinition, (response) => {
-    
-      pdfLocation = path.join(__dirname, '../../', 'docs', '/payroll.pdf')
-    
-      const emailService = email.server.connect({
-        user: keys.username,
-        password: keys.password,
-        host: keys.smtp,
-        ssl: true
-      })
-    
-      const htmlData = emailTemplate(employeePayslip)
-    
-      const message = {
-       from:	"no-reply@payroller.com", 
-       to:		"akinlekan28@yahoo.com",
-       subject:	"Monthly payroll",
-       attachment: 
-       [
-          {data: htmlData, alternative:true},
-          {path:pdfLocation, type:"application/pdf", name:"payroll.pdf"}
-       ]
-      }
-    
-      emailService.send(message, (err, success) => {
-        if(err){
-          return res.status(400).json({message: "Error sending employee payslip"})
-        }
-        return res.json({message: "Payslip successfully sent!"})
-      })
-     
-    });
+        });
+      });
 
-  })
+      //End insertion of earnings
 
+      //Begin insertion of earnings
+      let payDeduction = employeePayslip.deductables;
+
+      let bodyData1 = [
+        ["Deductions", "Amount"],
+        ["Tax", `${moneyFix(employeePayslip.tax)}`],
+        ["Pension", `${moneyFix(employeePayslip.pension)}`]
+      ];
+
+      //Insert payslip deduction into rows
+      payDeduction.forEach(deduction => {
+        let dataRow = [];
+
+        dataRow.push(deduction.name);
+        dataRow.push(deduction.amount);
+
+        bodyData1.push(dataRow);
+
+        otherEarnings.forEach(otherEarning => {
+          let earningRow = [];
+          if (otherEarning.costType === "deduction") {
+            earningRow.push(otherEarning.name);
+            earningRow.push(otherEarning.amount);
+
+            bodyData1.push(earningRow);
+          }
+        });
+      });
+
+      //End insertion of deductions
+
+      //Write payslip data to pdf
+      const docDefinition = {
+        content: [
+          { text: " " },
+          {
+            text: `${employeePayslip.name} payslip`,
+            style: "header",
+            alignment: "center"
+          },
+          { text: " " },
+          { text: " " },
+          { text: " " },
+          {
+            style: "tableExample",
+            table: {
+              widths: [268, 250],
+              heights: 50,
+              alignment: "center",
+              body: [
+                [
+                  `Employee Name:  ${employeePayslip.name}`,
+                  `Tax year:    ${date.getFullYear()}`
+                ],
+                [
+                  `Emplyee Tag: 	${employeePayslip.tag}`,
+                  `Pay period:   ${date.toLocaleString("en-us", {
+                    month: "long"
+                  })}`
+                ],
+                [
+                  `Designation:  ${employeePayslip.designation}`,
+                  `Department:   ${employeePayslip.department}`
+                ],
+                [
+                  {
+                    table: {
+                      widths: [133, 117],
+                      alignment: "center",
+                      body: bodyData
+                    },
+                    layout: {
+                      fillColor: function(rowIndex, node, columnIndex) {
+                        return rowIndex % 2 === 0 ? "#CCCCCC" : null;
+                      }
+                    }
+                  },
+                  {
+                    table: {
+                      widths: [125, 106],
+                      alignment: "center",
+                      body: bodyData1
+                    },
+                    layout: {
+                      fillColor: function(rowIndex, node, columnIndex) {
+                        return rowIndex % 2 === 0 ? "#CCCCCC" : null;
+                      }
+                    }
+                  }
+                ],
+                [
+                  `Gross Earnings:            ${moneyFix(
+                    employeePayslip.grossEarning
+                  )}`,
+                  ""
+                ],
+                [
+                  `Total Deduction:            ${moneyFix(
+                    employeePayslip.totalDeductions
+                  )}`,
+                  ""
+                ],
+                [`Net Pay:            ${moneyFix(employeePayslip.netPay)}`, ""]
+              ]
+            }
+          }
+        ]
+      };
+
+      generatePdf(docDefinition, response => {
+        pdfLocation = path.join(__dirname, "../../", "docs", "/payroll.pdf");
+
+        const transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: keys.username,
+            pass: keys.password,
+            host: keys.smtp
+          }
+        });
+
+        const htmlData = emailTemplate(employeePayslip);
+
+        const options = {
+          from: "no-reply@payroller.com",
+          to: `${employeePayslip.email}`,
+          subject: "Monthly Payroll",
+          html: htmlData,
+          attachments: [
+            {
+              path: pdfLocation,
+              filename: "payroll.pdf"
+            }
+          ]
+        };
+
+        transporter.sendMail(options, (error, info) => {
+          if (error) {
+            return res
+              .status(400)
+              .json({ message: "Error sending employee payslip" });
+          } else {
+            return res.json({ message: "Payslip successfully sent!" });
+          }
+        });
+      });
+    })
+    .catch(err => res.status(404).json({ message: "Error fetching payslip" }));
 });
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
   try {
-    const fontDescriptors = {Roboto: {
-			normal: path.join(__dirname, '../../', 'fonts', '/Roboto-Regular.ttf'),
-			bold: path.join(__dirname, '../../', 'fonts', '/Roboto-Medium.ttf'),
-			italics: path.join(__dirname, '../../', 'fonts', '/Roboto-Italic.ttf'),
-			bolditalics: path.join(__dirname, '../../', 'fonts', '/Roboto-MediumItalic.ttf')
-    }};
-    
+    const fontDescriptors = {
+      Roboto: {
+        normal: path.join(__dirname, "../../", "fonts", "/Roboto-Regular.ttf"),
+        bold: path.join(__dirname, "../../", "fonts", "/Roboto-Medium.ttf"),
+        italics: path.join(__dirname, "../../", "fonts", "/Roboto-Italic.ttf"),
+        bolditalics: path.join(
+          __dirname,
+          "../../",
+          "fonts",
+          "/Roboto-MediumItalic.ttf"
+        )
+      }
+    };
+
     const printer = new pdfMakePrinter(fontDescriptors);
     const doc = printer.createPdfKitDocument(docDefinition);
 
     doc.pipe(
-      fs.createWriteStream('docs/payroll.pdf').on("error", (err) => {
+      fs.createWriteStream("docs/payroll.pdf").on("error", err => {
         errorCallback(err.message);
       })
     );
-  
-    doc.on('end', () => {
+
+    doc.on("end", () => {
       successCallback("PDF successfully created and stored");
     });
-    
+
     doc.end();
-    
-  } catch(err) {
-    throw(err);
+  } catch (err) {
+    throw err;
   }
 };
 
