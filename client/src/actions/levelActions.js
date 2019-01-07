@@ -44,6 +44,33 @@ export const addLevel = levelDetails => dispatch => {
     );
 };
 
+//Get single employee level
+export const getLevel = id => dispatch => {
+  dispatch(setLevelsLoading())
+  axios.get(`/api/level/single/${id}`)
+  .then(res => dispatch({
+    type: VIEW_LEVELS,
+    payload: res.data
+  }))
+  .catch(err => dispatch({
+    type: GET_ERRORS,
+    payload: err.response.data
+  }))
+}
+
+//Edit employee level
+export const editLevel = levelData => dispatch => {
+  return axios.post('/api/level/', levelData)
+  .then(res => dispatch({
+    type: VIEW_LEVELS,
+    payload: res.data
+  }))
+  .catch(err => dispatch({
+    type: GET_ERRORS,
+    payload: err.response.data
+  }))
+}
+
 //Delete employee level
 export const deleteLevel = id => dispatch => {
   return axios

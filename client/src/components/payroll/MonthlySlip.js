@@ -11,10 +11,10 @@ import PayslipTable from "./PayslipTable";
 import { toast } from "react-toastify";
 import ReactToPrint from "react-to-print";
 import { PDFExport } from "@progress/kendo-react-pdf";
-import axios from 'axios';
+import axios from "axios";
 
 class MonthlySlip extends PureComponent {
-  constructor(props){
+  constructor(props) {
     super();
 
     this.sendEmail = this.sendEmail.bind(this);
@@ -36,26 +36,24 @@ class MonthlySlip extends PureComponent {
   exportPDF = () => {
     this.resume.save();
   };
-  
 
-  sendEmail(e){
-
-    let d = document.querySelector('.sendE');
+  sendEmail(e) {
+    let d = document.querySelector(".sendE");
     d.disabled = true;
-    d.innerHTML = 'Sending...'
+    d.innerHTML = "Sending...";
 
-    axios.post(`/api/tax/singleslip/send/${this.props.match.params.id}`)
-    .then(res => {
-      toast.success('Employee payroll successfully sent!')
-      d.disabled = false;
-      d.innerHTML = 'Send to employee'
-    })
-    .catch(err => {
-      toast.error('Error sending email, resend')
-      d.disabled = false;
-      d.innerHTML = 'Send to employee'
-    })
-
+    axios
+      .post(`/api/tax/singleslip/send/${this.props.match.params.id}`)
+      .then(res => {
+        toast.success("Employee payroll successfully sent!");
+        d.disabled = false;
+        d.innerHTML = "Send to employee";
+      })
+      .catch(err => {
+        toast.error("Error sending email, resend");
+        d.disabled = false;
+        d.innerHTML = "Send to employee";
+      });
   }
 
   render() {
@@ -81,14 +79,15 @@ class MonthlySlip extends PureComponent {
                 payroll={payroll}
                 ref={el => (this.componentRef = el)}
                 style={{
-                    height: 792,
-                    width: 612,
-                    padding: 'none',
-                    backgroundColor: 'white',
-                    boxShadow: '5px 5px 5px black',
-                    margin: 'auto',
-                    overflowX: 'hidden',
-                    overflowY: 'hidden'}}
+                  height: 792,
+                  width: 612,
+                  padding: "none",
+                  backgroundColor: "white",
+                  boxShadow: "5px 5px 5px black",
+                  margin: "auto",
+                  overflowX: "hidden",
+                  overflowY: "hidden"
+                }}
               />
             </PDFExport>
             <div className="text-center">

@@ -17,6 +17,7 @@ import AddEmployee from "./components/employee/AddEmployee";
 import ViewEmployee from "./components/employee/ViewEmployee";
 import EditEmployee from "./components/employee/EditEmployee";
 import Level from "./components/level/Level";
+import EditLevel from './components/level/EditLevel';
 import Exception from './components/exception/Exception';
 import MonthlySalary from './components/payroll/MonthlySalary';
 import MonthlySlip from './components/payroll/MonthlySlip';
@@ -75,6 +76,9 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/utilities/level" component={Level} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/utilities/level/editlevel/:id" component={EditLevel} />
             </Switch>
             <Switch>
               <PrivateRoute exact path="/utilities/exception" component={Exception} />

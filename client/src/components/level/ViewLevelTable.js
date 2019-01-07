@@ -55,7 +55,7 @@ class ViewLevelTable extends Component {
             <td>{level.description}</td>
             <td>
               <Link
-                to={`/level/edit/${level._id}`}
+                to={`/utilities/level/editlevel/${level._id}`}
                 className="btn btn-primary btn-sm"
               >
                 Edit
