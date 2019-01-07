@@ -4,7 +4,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const keys = require("../../config/keys");
-const mailer = require("sendgrid").mail;
+const mailer = require('@sendgrid/mail');
+mailer.setApiKey(keys.sendGridKey);
 
 //Load input validation
 const validateRegisterInput = require("../../validation/register");
@@ -144,54 +145,35 @@ router.post("/forgotpassword", (req, res) => {
             { new: true }
           )
             .then(user => {
-              const fromEmail = new mailer.Email("no-reply@payroller.com");
-              const toEmail = new mailer.Email(user.email);
-              const subject = "Password Reset";
-              const content = new mailer.Content(
-                "text/html",
-                `
-                  <html>
-                      <head>
-                        <title>Forget Password Email</title>
-                      </head>
-                   <body>
-                      <div>
-                          <h3>Dear ${user.name},</h3>
-                          <p>You requested for a password reset on Payroller, kindly use this <a href="https://${
-                            req.headers.host
-                          }/resetpassword/${
-                  user.token
-                }">link</a> to reset your password</p>
-                          <br>
-                          <p>Cheers!</p>
-                      </div>
-                   </body>
 
-                  </html>
-              `
-              );
-              const resetMsg = new mailer.Mail(
-                fromEmail,
-                subject,
-                toEmail,
-                content
-              );
-              const sender = require("sendgrid")(keys.sendGridKey);
-              const request = sender.emptyRequest({
-                method: "POST",
-                path: "/v3/mail/send",
-                body: resetMsg.toJSON()
-              });
+              const resetMessage = {
+                to: `${user.email}`,
+                from: 'no-reply@payroller.com',
+                subject: 'Password Reset',
+                html:`<html>
+                        <head>
+                          <title>Forget Password Email</title>
+                        </head>
+                        <body>
+                          <div>
+                            <h3>Dear ${user.name},</h3>
+                            <p>You requested for a password reset on Payroller, kindly use this <a href="https://${req.headers.host}/resetpassword/${user.token}">link</a> to reset your password</p>
+                            <br>
+                            <p>Cheers!</p>
+                          </div>
+                        </body>
+                      </html>`,
+              }
 
-              sender.API(request, (error, response) => {
-                if (error) {
-                  errors.email = "Error sending password reset link";
-                  return res.status(400).json(errors);
-                }
-
+              mailer.send(resetMessage)
+              .then(() => {
                 return res
                   .status(200)
                   .json({ success: "Password link sent successfully!" });
+              })
+              .catch(() => {
+                  errors.email = "Error sending password reset link";
+                  return res.status(400).json(errors);
               });
             })
             .catch(err => console.log(err));

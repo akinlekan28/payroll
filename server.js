@@ -10,6 +10,7 @@ const exception = require('./routes/api/exception');
 const tax = require('./routes/api/tax');
 const dashboard = require('./routes/api/dashboard');
 const individualcost = require('./routes/api/individualcost');
+const oneoffpayment = require('./routes/api/oneoffpayment');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/exception', exception);
 app.use('/api/tax', tax);
 app.use('/api/dashboard', dashboard);
 app.use('/api/individualcost', individualcost);
+app.use('/api/oneoffpayment', oneoffpayment);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`));

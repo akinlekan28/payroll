@@ -14,10 +14,21 @@ const OneoffSchema = new Schema({
     type: String,
     required: true
   },
+  costType: {
+    type: String,
+    required: true
+  },
+  employeeName: {
+    type: String
+  },
   employee: {
     type: Schema.Types.ObjectId,
     ref: "employee"
+  },
+  date_added: {
+    type: Date,
+    default: Date.now()
   }
 });
 
-module.exports = Oneoff = mongoose.model("oneoff", OneoffSchema);
+module.exports = Oneoffpayment = mongoose.model("oneoff", OneoffSchema);
