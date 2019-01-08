@@ -42,7 +42,7 @@ export const getEmployees = () => dispatch => {
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: null
+        payload: err.response.data
       })
     );
 };
@@ -88,7 +88,7 @@ export const editEmployee = (employeeId, employeeData) => dispatch => {
   return axios.put(`/api/employee/${employeeId}`, employeeData)
   .then(res => dispatch({
     type: ADD_EMPLOYEE,
-    payload: res.payload
+    payload: res.data
   }))
   .catch(err => dispatch({
     type: GET_ERRORS,

@@ -45,7 +45,7 @@ class Addoneoffpayment extends Component {
     this.props
       .addOneOffPayment(exceptionDetails)
       .then(res => {
-        if (res.type === "ADD_OTHER_EXCEPTION") {
+        if (res.type === "ADD_ONE_OFF_PAYMENT") {
           toast.success("One off payment successfully added!");
           this.setState({
             name: "",

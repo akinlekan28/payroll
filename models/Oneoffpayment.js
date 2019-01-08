@@ -25,6 +25,10 @@ const OneoffSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "employee"
   },
+  is_delete: {
+    type: Number,
+    default: 0
+  },
   date_added: {
     type: Date,
     default: Date.now()

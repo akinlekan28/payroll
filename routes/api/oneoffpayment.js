@@ -72,7 +72,7 @@ router.post("/", protect, (req, res) => {
 //@access Private
 router.get("/", protect, (req, res) => {
   const errors = {};
-  Oneoffpayment.find()
+  Oneoffpayment.find({is_delete: 0})
     .then(oneOffPaymentItems => {
       if (!oneOffPaymentItems) {
         errors.oneoffpayment = "There are no one off payment records";
@@ -87,7 +87,7 @@ router.get("/", protect, (req, res) => {
 //@desc Delete Employee oneoffpayment exception route
 //@access Private
 router.delete("/:id", protect, (req, res) => {
-  Oneoffpayment.findOneAndRemove({ _id: req.params.id })
+  Oneoffpayment.findOneAndDelete({ _id: req.params.id })
     .then(() => res.json({ success: true }))
     .catch(err => console.log(err));
 });

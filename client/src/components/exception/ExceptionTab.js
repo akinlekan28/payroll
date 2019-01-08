@@ -71,6 +71,19 @@ const ExceptionTab = () => {
             Add Oneoff exceptions
           </a>
         </li>
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            id="viewoneoff-tab4"
+            data-toggle="tab"
+            href="#viewoneoff"
+            role="tab"
+            aria-controls="viewoneoff"
+            aria-selected="false"
+          >
+            View Oneoff exceptions
+          </a>
+        </li>
       </ul>
     </div>
   );

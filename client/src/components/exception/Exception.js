@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getEmployees } from "../../actions/employeeActions";
-import {getExceptions, getOtherExceptions} from '../../actions/exceptionActions';
+import {getExceptions, getOtherExceptions, getOneOffPayments} from '../../actions/exceptionActions';
 import SearchBar from "../dashboard/SearchBar";
 import SideBar from "../dashboard/SideBar";
 import Footer from "../dashboard/Footer";
@@ -13,6 +13,7 @@ import ViewException from './ViewException';
 import AddOtherExceptionForm from './AddOtherExceptionForm';
 import ViewOtherException from './ViewOtherException';
 import Addoneoffpayment from './Addoneoffpayment';
+import Viewoneofpayment from './Viewoneofpayment';
 
 
 class Exception extends Component {
@@ -21,17 +22,19 @@ class Exception extends Component {
       this.props.getEmployees();
       this.props.getExceptions();
       this.props.getOtherExceptions();
+      this.props.getOneOffPayments();
     }
     
   render() {
       const {employees, loading} = this.props.employees
-      const {exceptions, otherexception} = this.props.exceptions
+      const {exceptions, otherexception, oneoffpayment} = this.props.exceptions
 
       let exceptionContainer;
 
-      if(employees === null || exceptions === null || otherexception === null  || loading){
+      if(employees === null || exceptions === null || otherexception === null || oneoffpayment === null || loading){
           exceptionContainer = <Spinner />
       } else {
+        console.log(oneoffpayment)
           exceptionContainer = (
             <div className="tab-content no-padding" id="myTab2Content">
             <div
@@ -74,6 +77,14 @@ class Exception extends Component {
             >
               <Addoneoffpayment employees={employees} />
             </div>
+            <div
+              className="tab-pane fade"
+              id="viewoneoff"
+              role="tabpanel"
+              aria-labelledby="viewoneoff-tab4"
+            >
+            <Viewoneofpayment oneoffpayment={oneoffpayment} />
+            </div>
           </div>
           )
       }
@@ -92,7 +103,7 @@ class Exception extends Component {
                 <div className="card">
                   <div className="card-header">
                     <h4>
-                      From the dropdown navs, you can attach a salary exception to an employee profile
+                      From the sidebar navigation links, you can attach an exception to an employee profile
                     </h4>
                   </div>
                   <div className="card-body">
@@ -117,13 +128,15 @@ class Exception extends Component {
 Exception.propTypes = {
     getEmployees: PropTypes.func.isRequired,
     getExceptions: PropTypes.func.isRequired,
-    getOtherExceptions: PropTypes.func.isRequired
+    getOtherExceptions: PropTypes.func.isRequired,
+    getOneOffPayments: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     employees: state.employees,
     exceptions: state.exceptions,
-    otherexceptions: state.otherexceptions
+    otherexceptions: state.otherexceptions,
+    oneoffpayment: state.oneoffpayment
 })
 
-export default connect(mapStateToProps, {getEmployees, getExceptions, getOtherExceptions})(Exception);
+export default connect(mapStateToProps, {getEmployees, getExceptions, getOtherExceptions, getOneOffPayments})(Exception);

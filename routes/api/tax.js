@@ -15,6 +15,7 @@ const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 const IndividualCost = require("../../models/Individualcost");
 const Payslip = require("../../models/Payslip");
+const OneOffPayment = require('../../models/Oneoffpayment');
 
 //@route  Get api/singleslip/:id
 //@desc Get Employee payslip route

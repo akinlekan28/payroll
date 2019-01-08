@@ -5,14 +5,11 @@ const protect = passport.authenticate("jwt", { session: false });
 
 const EmployeeInput = require("../../validation/employee");
 
-//Load Employee model
+//Load models
 const Employee = require("../../models/Employee");
-
-//Load Salary exception model
 const Exception = require("../../models/Exception");
-
-//Load other exception model
 const OtherException = require("../../models/Individualcost");
+const OneOffPayment = require('../../models/Individualcost');
 
 //@route  Post api/employee
 //@desc Create employee route
@@ -127,20 +124,29 @@ router.get("/single/:id", protect, (req, res) => {
 //@access Private
 router.delete("/:id", protect, (req, res) => {
   let employeeId = req.params.id;
-  Employee.findOneAndRemove({ _id: req.params.id })
+  Employee.findOneAndDelete({ _id: req.params.id })
     .then(() => {
-      Exception.findOneAndRemove({ employee: employeeId })
+      Exception.findOneAndDelete({ employee: employeeId })
         .then(() => {
           OtherException.find({ employee: employeeId })
             .then(exceptiondetails => {
               exceptiondetails.forEach(exceptiondetail => {
                 exceptiondetail
                   .remove()
-                  .then(() => console.log("Deleted"))
+                  .then(() => {
+                    OneOffPayment.findOne({employee: employeeId})
+                      .then(oneOffPaymentItems => {
+                        oneOffPaymentItems.forEach(oneOffPaymentItem => {
+                          oneOffPaymentItem.remove()
+                          .then(() => {})
+                          .catch(err => console.log(err))
+                        });
+                        res.json({ success: true });
+                      })
+                      .catch(err => console.log(err))
+                  })
                   .catch(err => console.log(err));
               });
-
-              res.json({ success: true });
             })
             .catch(err => res.json(err));
         })

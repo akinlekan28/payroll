@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { deleteOtherException } from "../../actions/exceptionActions";
+import { deleteOneOffPayment } from "../../actions/exceptionActions";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 
@@ -9,17 +9,17 @@ class ViewOtherException extends Component {
 
     onDelete(id) {
         confirmAlert({
-          title: "Delete this exception ?",
+          title: "Delete this oneoff payment ?",
           message: "Are you sure to do this",
           buttons: [
             {
-              label: "Yes delete exception!",
+              label: "Yes delete!",
               onClick: () => {
                 this.props
-                  .deleteOtherException(id)
+                  .deleteOneOffPayment(id)
                   .then(res => {
-                    if(res.type === 'DELETE_OTHER_EXCEPTION'){
-                        toast.success("Exception Deleted!")
+                    if(res.type === 'DELETE_ONE_OFF_PAYMENT'){
+                        toast.success("Oneoff payment exception Deleted!")
                     }
                   })
                   .catch(err => console.log(err));
@@ -35,7 +35,7 @@ class ViewOtherException extends Component {
 
   render() {
       
-    const {otherexception} = this.props
+    const {oneoffpayment} = this.props
 
     const formatMoney = money => {
         let formatedValue = money
@@ -44,27 +44,30 @@ class ViewOtherException extends Component {
         return formatedValue;
       };
 
-    const exceptionContainer = otherexception.map(exceptionItem => (
+    const exceptionContainer = oneoffpayment.map(oneoffpaymmentItem => (
         <div
-          key={exceptionItem._id}
+          key={oneoffpaymmentItem._id}
           className="col-md-4 mx-auto card card-primary mt-2 bg-light"
         >
             <p className="mt-2">
-              <strong>Exception name</strong>: {exceptionItem.name}
+              <strong>One off payment name</strong>: {oneoffpaymmentItem.name}
             </p>
             <p className="mt-2">
-              <strong>Employee name</strong>: {exceptionItem.employeeName}
+              <strong>Employee name</strong>: {oneoffpaymmentItem.employeeName}
             </p>
             <p className="mt-2">
-              <strong>Exception type</strong>: {exceptionItem.costType === 'income' ? "Income" : "Deduction"}
+              <strong>Exception type</strong>: {oneoffpaymmentItem.costType === 'income' ? "Income" : "Deduction"}
             </p>
             <p className="mt-2">
-                <strong>Amount</strong> : <span>&#8358;</span> {formatMoney(exceptionItem.amount)}
+                <strong>Amount</strong> : <span>&#8358;</span> {formatMoney(oneoffpaymmentItem.amount)}
+            </p>
+            <p className="mt-2">
+                <strong>Month of payment</strong> : {oneoffpaymmentItem.month}
             </p>
                 <div className="text-center mb-3">
                     <button
                             className="btn btn-sm btn-danger"
-                            onClick={this.onDelete.bind(this, exceptionItem._id, )}
+                            onClick={this.onDelete.bind(this, oneoffpaymmentItem._id, )}
                             >
                             Delete
                     </button>
@@ -82,8 +85,8 @@ class ViewOtherException extends Component {
 }
 
 ViewOtherException.propTypes = {
-    otherexception: PropTypes.array.isRequired,
-    deleteOtherException: PropTypes.func.isRequired
+    oneoffpayment: PropTypes.array.isRequired,
+    deleteOneOffPayment: PropTypes.func.isRequired
 }
 
-export default connect(null, {deleteOtherException})(ViewOtherException);
+export default connect(null, {deleteOneOffPayment})(ViewOtherException);

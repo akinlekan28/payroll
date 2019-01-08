@@ -152,7 +152,7 @@ router.delete("/:id", protect, (req, res) => {
   Employee.findOne({ level: req.params.id })
     .then(employee => {
       if (!employee) {
-        Level.findOneAndRemove({ _id: req.params.id })
+        Level.findOneAndDelete({ _id: req.params.id })
           .then(() => {
             res.json({ success: true });
           })

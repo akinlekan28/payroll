@@ -2,10 +2,13 @@ import axios from "axios";
 import {
   ADD_EXCEPTION,
   ADD_OTHER_EXCEPTION,
+  ADD_ONE_OFF_PAYMENT,
   VIEW_EXCEPTIONS,
   VIEW_OTHER_EXCEPTION,
+  VIEW_ONE_OFF_PAYMENT,
   DELETE_EXCEPTION,
   DELETE_OTHER_EXCEPTION,
+  DELETE_ONE_OFF_PAYMENT,
   EXCEPTION_LOADING,
   CLEAR_ERRORS,
   GET_ERRORS
@@ -130,8 +133,45 @@ export const addOneOffPayment = paymentData => dispatch => {
     .post("/api/oneoffpayment/", paymentData)
     .then(res =>
       dispatch({
-        type: ADD_OTHER_EXCEPTION,
+        type: ADD_ONE_OFF_PAYMENT,
         payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//View one off payment
+export const getOneOffPayments = () => dispatch => {
+  dispatch(setExceptionLoading());
+  axios
+    .get("/api/oneoffpayment/")
+    .then(res =>
+      dispatch({
+        type: VIEW_ONE_OFF_PAYMENT,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Delete one off payment
+export const deleteOneOffPayment = id => dispatch => {
+  return axios
+    .delete(`/api/oneoffpayment/${id}`)
+    .then(res =>
+      dispatch({
+        type: DELETE_ONE_OFF_PAYMENT,
+        payload: id
       })
     )
     .catch(err =>
