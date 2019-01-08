@@ -71,6 +71,19 @@ const PayslipSchema = new Schema({
       }
     }
   ],
+  oneOffPaymentArray: [
+    {
+      name: {
+        type: String
+      },
+      amount: {
+        type: Number
+      },
+      costType: {
+        type: String
+      },
+    }
+  ],
   employee: {
     type: Schema.Types.ObjectId,
     ref: "employee"

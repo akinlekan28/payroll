@@ -16,6 +16,15 @@ class PayslipTable extends PureComponent {
       }
     })
 
+    payroll.oneOffPaymentArray.forEach(oneOff => {
+
+      if(oneOff.costType === 'income'){
+        extraEarning.push(oneOff)
+      } else {
+        extraDeduction.push(oneOff)
+      }
+    })
+
     const formatMoney = money => {
       let formatedValue = money
         .toFixed(2)
