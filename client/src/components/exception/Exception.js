@@ -12,6 +12,7 @@ import AddExceptionForm from './AddExceptionForm';
 import ViewException from './ViewException';
 import AddOtherExceptionForm from './AddOtherExceptionForm';
 import ViewOtherException from './ViewOtherException';
+import Addoneoffpayment from './Addoneoffpayment';
 
 
 class Exception extends Component {
@@ -64,6 +65,14 @@ class Exception extends Component {
               aria-labelledby="viewindividual-tab4"
             >
               <ViewOtherException otherexception={otherexception} />
+            </div>
+            <div
+              className="tab-pane fade"
+              id="addoneoff"
+              role="tabpanel"
+              aria-labelledby="addoneoff-tab4"
+            >
+              <Addoneoffpayment employees={employees} />
             </div>
           </div>
           )

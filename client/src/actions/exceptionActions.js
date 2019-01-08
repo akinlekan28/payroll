@@ -123,6 +123,25 @@ export const getOtherExceptions = () => dispatch => {
     );
 };
 
+//Add one off payment
+export const addOneOffPayment = paymentData => dispatch => {
+  dispatch(clearErrors());
+  return axios
+    .post("/api/oneoffpayment/", paymentData)
+    .then(res =>
+      dispatch({
+        type: ADD_OTHER_EXCEPTION,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Set loding state
 export const setExceptionLoading = () => {
   return {

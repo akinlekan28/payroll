@@ -57,6 +57,20 @@ const ExceptionTab = () => {
             View other exceptions
           </a>
         </li>
+        <div className="dropdown-divider" />
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            id="addoneoff-tab4"
+            data-toggle="tab"
+            href="#addoneoff"
+            role="tab"
+            aria-controls="addoneoff"
+            aria-selected="false"
+          >
+            Add Oneoff exceptions
+          </a>
+        </li>
       </ul>
     </div>
   );
