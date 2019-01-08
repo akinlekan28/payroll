@@ -9,7 +9,7 @@ const EmployeeInput = require("../../validation/employee");
 const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 const OtherException = require("../../models/Individualcost");
-const OneOffPayment = require('../../models/Individualcost');
+const OneOffPayment = require("../../models/Oneoffpayment");
 
 //@route  Post api/employee
 //@desc Create employee route
@@ -133,20 +133,22 @@ router.delete("/:id", protect, (req, res) => {
               exceptiondetails.forEach(exceptiondetail => {
                 exceptiondetail
                   .remove()
-                  .then(() => {
-                    OneOffPayment.findOne({employee: employeeId})
-                      .then(oneOffPaymentItems => {
-                        oneOffPaymentItems.forEach(oneOffPaymentItem => {
-                          oneOffPaymentItem.remove()
-                          .then(() => {})
-                          .catch(err => console.log(err))
-                        });
-                        res.json({ success: true });
-                      })
-                      .catch(err => console.log(err))
-                  })
+                  .then(() => {})
                   .catch(err => console.log(err));
               });
+
+              OneOffPayment.find({ employee: employeeId })
+                .then(oneOff => {
+                  oneOff.forEach(oneOffItem => {
+                    oneOffItem
+                      .remove()
+                      .then(() => {})
+                      .catch(err => console.log(err));
+                  });
+                })
+                .catch(err => console.log(err));
+
+              res.json({ success: true });
             })
             .catch(err => res.json(err));
         })

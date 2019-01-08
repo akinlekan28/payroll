@@ -34,6 +34,12 @@ router.get("/singleslip/:id", protect, (req, res) => {
         const employeeEmail = employeeDetails.email;
         const designation = employeeDetails.designation;
 
+        OneOffPayment.find({employee: employeeId})
+        .then(oneoffPaymentItems => {
+
+        })
+        .catch(err => console.log(err))
+
         //Get employee level
         Level.findOne({ _id: employeeDetails.level })
           .then(level => {

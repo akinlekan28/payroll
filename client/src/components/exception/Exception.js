@@ -34,7 +34,6 @@ class Exception extends Component {
       if(employees === null || exceptions === null || otherexception === null || oneoffpayment === null || loading){
           exceptionContainer = <Spinner />
       } else {
-        console.log(oneoffpayment)
           exceptionContainer = (
             <div className="tab-content no-padding" id="myTab2Content">
             <div
