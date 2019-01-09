@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Link} from 'react-router-dom';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getEmployee, editEmployee } from "../../actions/employeeActions";
@@ -189,6 +190,7 @@ class EditEmployee extends Component {
                         >
                           Edit Employee
                         </button>
+                        <Link to="/employee/all" className="btn btn-lg btn-warning ml-3">Back</Link>
                       </div>
                     </form>
                   </div>

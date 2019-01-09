@@ -103,42 +103,25 @@ router.get("/singleslip/:id", protect, (req, res) => {
                     Exception.findOne({ employee: employeeDetails._id })
                       .then(employeeException => {
                         if (employeeException) {
-                          let basic = employeeException.amount,
-                            grossEarning =
-                              bonusSum +
-                              basic +
-                              individualIncomeSum +
-                              oneOffPaymentIncomeSum,
-                            annualGrossEarning = grossEarning * 12,
-                            annualBonuses =
-                              (bonusSum +
-                                individualIncomeSum +
-                                oneOffPaymentIncomeSum) *
-                              12,
-                            annualDeductables =
-                              (deductableSum +
-                                individualDeductionSum +
-                                oneOffPaymentDeductionSum) *
-                              12;
+                          let basic = employeeException.amount;
+                          let grossEarning = bonusSum + basic + individualIncomeSum + oneOffPaymentIncomeSum;
+                          let annualGrossEarning = grossEarning * 12;
+                          let annualBonuses = (bonusSum + individualIncomeSum + oneOffPaymentIncomeSum) * 12;
+                          let annualDeductables = (deductableSum + individualDeductionSum + oneOffPaymentDeductionSum) * 12;
 
                           if (annualGrossEarning > 300000) {
-                            let annualConsolidationRelief =
-                                annualGrossEarning * 0.2 + 200000,
-                              annualPension = annualGrossEarning * 0.08,
-                              pension = annualPension / 12,
-                              consolidationRelief =
-                                annualConsolidationRelief / 12,
-                              annualTaxableGrossIncome =
-                                annualGrossEarning +
-                                annualBonuses -
-                                annualPension -
-                                annualConsolidationRelief -
-                                annualDeductables;
+                            let annualConsolidationRelief = annualGrossEarning * 0.2 + 200000;
+                            let annualPension = annualGrossEarning * 0.08;
+                            let pension = annualPension / 12;
+                            let consolidationRelief = annualConsolidationRelief / 12;
+                            let annualTaxableGrossIncome = annualGrossEarning + annualBonuses - annualPension - annualConsolidationRelief - annualDeductables;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
-                            let tax = annualTax / 12,
-                              netPay =
+                            let tax = annualTax / 12;
+                            let test = taxCalculation(7055680)
+                            console.log(test)
+                            let netPay =
                                 grossEarning -
                                 tax -
                                 pension -
@@ -555,6 +538,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
       //Begin insertion of earnings
       let payBonus = employeePayslip.bonuses;
       let otherEarnings = employeePayslip.individualcost;
+      let oneOffPayment = employeePayslip.oneOffPaymentArray;
 
       let bodyData = [
         ["Earnings", "Amount"],
@@ -579,6 +563,17 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
             bodyData.push(earningRow);
           }
         });
+
+        oneOffPayment.forEach(otherEarning => {
+          let earningRow = [];
+          if (otherEarning.costType === "income") {
+            earningRow.push(otherEarning.name);
+            earningRow.push(formatMoney(otherEarning.amount));
+
+            bodyData.push(earningRow);
+          }
+        });
+
       });
 
       //End insertion of earnings
@@ -610,6 +605,17 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
             bodyData1.push(earningRow);
           }
         });
+
+        oneOffPayment.forEach(otherEarning => {
+          let earningRow = [];
+          if (otherEarning.costType === "deduction") {
+            earningRow.push(otherEarning.name);
+            earningRow.push(formatMoney(otherEarning.amount));
+
+            bodyData1.push(earningRow);
+          }
+        });
+
       });
 
       //End insertion of deductions
@@ -798,7 +804,9 @@ const taxCalculation = annualTaxableIncome => {
     let tax = taxRateMap.get(lastAnnualIndex) * annualTaxableIncome;
     totalTax += tax;
 
-    return totalTax;
+    let totalFinalTax = (totalTax).toFixed(2)
+
+    return totalFinalTax;
   }
 };
 

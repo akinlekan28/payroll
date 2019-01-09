@@ -148,7 +148,7 @@ class EditLevel extends Component {
                       </button>
                       <Link
                         to="/utilities/level"
-                        className="btn btn-secondary btn-lg ml-3"
+                        className="btn btn-warning btn-lg ml-3"
                       >
                         Back
                       </Link>
