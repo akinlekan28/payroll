@@ -30,14 +30,13 @@ router.get("/single/:id", protect, (req, res) => {
     );
 });
 
-
 //@route  Get api/level/all
 //@desc View Employee level route
 //@access Private
 router.get("/all", protect, (req, res) => {
   const errors = {};
 
-  Level.find()
+  Level.find({ is_delete: 0 })
     .then(levels => {
       if (!levels) {
         errors.nolevel = "There are no levels";
@@ -86,6 +85,46 @@ router.post("/", protect, (req, res) => {
   });
 });
 
+//@route  Post api/level
+//@desc Move Employee level to trash route
+//@access Private
+router.post("/:id", protect, (req, res) => {
+
+  const levelFields = {
+    is_delete: 1
+  };
+
+  levelFields._id = req.params.id;
+
+  Employee.findOne({ level: req.params.id })
+    .where("is_delete")
+    .equals(0)
+    .then(employee => {
+      if (!employee) {
+        Level.findOne({ _id: req.params.id }).then(level => {
+          //Update
+          Level.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: levelFields },
+            { new: true }
+          )
+            .then(() => {
+              res.json({ success: true });
+            })
+            .catch(err =>
+              res
+                .status(404)
+                .json({ message: "Error getting level information" })
+            );
+        });
+      } else {
+        res.status(400).json({
+          message: "Cannot delete level that is attached to an employee!"
+        });
+      }
+    });
+});
+
 //@route  Post api/level/bonus/:id
 //@desc Create Employee bonus route
 //@access Private
@@ -96,24 +135,25 @@ router.post("/bonus", protect, (req, res) => {
     return res.status(400).json(errors);
   }
 
-  Level.findOne({ _id: req.body.level }).then(level => {
-    const newBonus = {
-      name: req.body.name,
-      amount: req.body.amount
-    };
-    level.bonuses.unshift(newBonus);
-    level
-      .save()
-      .then(level => {
-        Level.find()
-        .then(levels => res.json(levels))
-        .catch(err => console.log(err))
-      })
-      .catch(err =>
-        res.status(400).json({ message: "Error saving bonus information" })
-      );
-  })
-  .catch(err => res.status(404).json({message: "Error fetching level"}))
+  Level.findOne({ _id: req.body.level })
+    .then(level => {
+      const newBonus = {
+        name: req.body.name,
+        amount: req.body.amount
+      };
+      level.bonuses.unshift(newBonus);
+      level
+        .save()
+        .then(level => {
+          Level.find()
+            .then(levels => res.json(levels))
+            .catch(err => console.log(err));
+        })
+        .catch(err =>
+          res.status(400).json({ message: "Error saving bonus information" })
+        );
+    })
+    .catch(err => res.status(404).json({ message: "Error fetching level" }));
 });
 
 //@route  Post api/level/deductables/:id
@@ -136,8 +176,8 @@ router.post("/deductable", protect, (req, res) => {
       .save()
       .then(level => {
         Level.find()
-        .then(levels => res.json(levels))
-        .catch(err => console.log(err))
+          .then(levels => res.json(levels))
+          .catch(err => console.log(err));
       })
       .catch(err =>
         res.status(400).json({ message: "Error saving deductable information" })
@@ -160,11 +200,9 @@ router.delete("/:id", protect, (req, res) => {
             res.status(404).json({ message: "Error getting level information" })
           );
       } else {
-        res
-          .status(400)
-          .json({
-            message: "Cannot delete level that is attached to an employee!"
-          });
+        res.status(400).json({
+          message: "Cannot delete level that is attached to an employee!"
+        });
       }
     })
     .catch(err => console.log(err));
@@ -194,8 +232,8 @@ router.delete("/bonus/:id/:bid", protect, (req, res) => {
 
       level.save().then(level => {
         Level.find()
-        .then(levels => res.json(levels))
-        .catch(err => console.log(err))
+          .then(levels => res.json(levels))
+          .catch(err => console.log(err));
       });
     })
     .catch(err => res.status(404).json(err));
@@ -227,8 +265,8 @@ router.delete("/deductable/:id/:did", protect, (req, res) => {
 
       level.save().then(level => {
         Level.find()
-        .then(levels => res.json(levels))
-        .catch(err => console.log(err))
+          .then(levels => res.json(levels))
+          .catch(err => console.log(err));
       });
     })
     .catch(err => res.status(404).json(err));

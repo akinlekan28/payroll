@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getEmployee, editEmployee } from "../../actions/employeeActions";
@@ -79,14 +79,15 @@ class EditEmployee extends Component {
     this.props
       .editEmployee(this.props.match.params.id, employeeData)
       .then(res => {
-        if (res.type === "ADD_EMPLOYEE")
+        if (res.type === "ADD_EMPLOYEE") {
           toast.success("Employee information successfully edited!");
-        this.setState({
-          name: "",
-          email: "",
-          designation: "",
-          department: ""
-        });
+          this.setState({
+            name: "",
+            email: "",
+            designation: "",
+            department: ""
+          });
+        }
       })
       .catch(err => console.log(err));
   }
@@ -190,7 +191,12 @@ class EditEmployee extends Component {
                         >
                           Edit Employee
                         </button>
-                        <Link to="/employee/all" className="btn btn-lg btn-warning ml-3">Back</Link>
+                        <Link
+                          to="/employee/all"
+                          className="btn btn-lg btn-warning ml-3"
+                        >
+                          Back
+                        </Link>
                       </div>
                     </form>
                   </div>

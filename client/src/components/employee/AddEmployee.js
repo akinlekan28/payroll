@@ -167,7 +167,7 @@ class AddEmployee extends Component {
       } else {
         employeeForm = (
           <h4 className="text-danger">
-            There's no previous employee salary level entry! Enter atleast one
+            There's no previous employee salary level entry! Add atleast one
             to proceed
           </h4>
         );

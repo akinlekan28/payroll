@@ -55,7 +55,7 @@ export const getExceptions = () => dispatch => {
 //Delete exception
 export const deleteException = id => dispatch => {
   return axios
-    .delete(`/api/exception/${id}`)
+    .post(`/api/exception/${id}`)
     .then(res =>
       dispatch({
         type: DELETE_EXCEPTION,
@@ -92,7 +92,7 @@ export const addOtherException = otherExceptionDetails => dispatch => {
 //Delete other exception
 export const deleteOtherException = id => dispatch => {
   return axios
-    .delete(`/api/individualcost/${id}`)
+    .post(`/api/individualcost/${id}`)
     .then(res =>
       dispatch({
         type: DELETE_OTHER_EXCEPTION,
@@ -167,7 +167,7 @@ export const getOneOffPayments = () => dispatch => {
 //Delete one off payment
 export const deleteOneOffPayment = id => dispatch => {
   return axios
-    .delete(`/api/oneoffpayment/${id}`)
+    .post(`/api/oneoffpayment/${id}`)
     .then(res =>
       dispatch({
         type: DELETE_ONE_OFF_PAYMENT,

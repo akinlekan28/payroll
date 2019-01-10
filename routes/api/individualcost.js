@@ -71,7 +71,7 @@ router.post("/", protect, (req, res) => {
 //@access Private
 router.get("/", protect, (req, res) => {
   const errors = {};
-  Individualcost.find()
+  Individualcost.find({ is_delete: 0 })
     .then(individualCost => {
       if (!individualCost) {
         errors.individualCost = "There are no levels";
@@ -81,6 +81,29 @@ router.get("/", protect, (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+//@route  Post api/individualcost
+//@desc Move Employee individual exception to trash route
+//@access Private
+router.post('/:id', protect, (req, res) => {
+
+  const individualCostFields = {
+    is_delete: 1
+  };
+
+  Individualcost.findOne({ _id: req.params.id })
+        .then(individualCostItem => {
+            //Update
+            Individualcost.findOneAndUpdate(
+              { _id: req.params.id },
+              { $set: individualCostFields },
+              { new: true }
+            )
+            .then(() => res.json({ success: true }))
+            .catch(err => console.log(err))
+        })
+        .catch(err => res.status(404).json({message: "Error fetching individual exception record"}))
+})
 
 //@route  Delete api/individualcost
 //@desc Delete Employee individual exception route

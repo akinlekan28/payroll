@@ -74,7 +74,7 @@ export const editLevel = levelData => dispatch => {
 //Delete employee level
 export const deleteLevel = id => dispatch => {
   return axios
-    .delete(`/api/level/${id}`)
+    .post(`/api/level/${id}`)
     .then(res =>
       dispatch({
         type: DELETE_LEVEL,

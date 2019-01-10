@@ -119,6 +119,73 @@ router.get("/single/:id", protect, (req, res) => {
     .catch(err => console.log(err));
 });
 
+
+//@route  Get api/employee/:id
+//@desc View single employee route
+//@access Private
+router.post('/:id', protect, (req, res) => {
+  let employeeId = req.params.id;
+
+  const deleteField = {
+    is_delete: 1
+  };
+
+  Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
+  .then(employeeItem => {
+    //Update
+    Employee.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: deleteField },
+      { new: true }
+    )
+    .then(() => {
+      Exception.findOne({employee: employeeId}).where('is_delete').equals(0)
+      .then(() => {
+        Exception.findOneAndUpdate(
+          { employee: employeeId },
+          { $set: deleteField },
+          { new: true }
+        )
+        .then(() => {
+          OtherException.findOne({employee: employeeId}).where('is_delete').equals(0)
+          .then(otherExceptionItems => {
+
+            otherExceptionItems.forEach(item => {
+              OtherException.findByIdAndUpdate(
+                { _id: item._id },
+                { $set: deleteField },
+                { new: true }
+              )
+              .then(() => {})
+              .catch(err => console.log(err))
+            })
+
+            OneOffPayment.findOne({employee: employeeId}).where('is_delete').equals(0)
+            .then(oneOffPaymentItems => {
+              oneOffPaymentItems.forEach(item => {
+                OneOffPayment.findByIdAndUpdate(
+                  { _id: item._id },
+                  { $set: deleteField },
+                  { new: true }
+                )
+                .then(() => {})
+                .catch(err => console.log(err))
+              })
+            })
+            .catch(err => console.log(err))
+
+          })
+          .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
+      }).catch(err => console.log(err))
+    }).catch(err => console.log(err))
+    .catch(err => console.log(err))
+  });
+
+})
+
+
 //@route  Delete api/employee/:id
 //@desc Delete employee route
 //@access Private

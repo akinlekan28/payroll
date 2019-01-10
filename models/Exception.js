@@ -12,7 +12,11 @@ const ExceptionSchema = new Schema({
   },
   name: {
     type: String
-  }
+  },
+  is_delete: {
+    type: Number,
+    default: 0
+  },
 });
 
 module.exports = Exception = mongoose.model("exception", ExceptionSchema);

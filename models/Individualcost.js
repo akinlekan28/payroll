@@ -20,6 +20,10 @@ const IndividualcostSchema = new Schema({
   },
   employeeName: {
     type: String
+  },
+  is_delete: {
+    type: Number,
+    default: 0
   }
 });
 

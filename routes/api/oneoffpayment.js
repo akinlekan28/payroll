@@ -72,7 +72,7 @@ router.post("/", protect, (req, res) => {
 //@access Private
 router.get("/", protect, (req, res) => {
   const errors = {};
-  Oneoffpayment.find({is_delete: 0})
+  Oneoffpayment.find({ is_delete: 0 })
     .then(oneOffPaymentItems => {
       if (!oneOffPaymentItems) {
         errors.oneoffpayment = "There are no one off payment records";
@@ -81,6 +81,30 @@ router.get("/", protect, (req, res) => {
       res.json(oneOffPaymentItems);
     })
     .catch(err => console.log(err));
+});
+
+//@route  Post api/oneoffpayment
+//@desc Move Employee oneoffpayment exception to trash route
+//@access Private
+router.post("/:id", protect, (req, res) => {
+  const oneoffPaymentFields = {
+    is_delete: 1
+  };
+
+  Oneoffpayment.findOne({ _id: req.params.id })
+    .then(oneOffPaymentItem => {
+      //Update
+      Oneoffpayment.findOneAndUpdate(
+        { _id: req.params.id },
+        { $set: oneoffPaymentFields },
+        { new: true }
+      )
+        .then(() => res.json({ success: true }))
+        .catch(err => console.log(err));
+    })
+    .catch(err =>
+      res.status(404).json({ message: "Error fetching oneoff payment record" })
+    );
 });
 
 //@route  Delete api/oneoffpayment

@@ -80,7 +80,7 @@ router.post("/login", (req, res) => {
           const payload = { id: user.id, name: user.name }; //Create JWT Payload
 
           //Sign token
-          jwt.sign(payload, keys.secretKey, { expiresIn: 3600 }, (e, token) => {
+          jwt.sign(payload, keys.secretKey, { expiresIn: 7200 }, (e, token) => {
             res.json({
               success: true,
               token: "Bearer " + token

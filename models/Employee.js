@@ -29,6 +29,10 @@ const EmployeeSchema = new Schema({
   date_added: {
     type: Date,
     default: Date.now()
+  },
+  is_delete: {
+    type: Number,
+    default: 0
   }
 });
 

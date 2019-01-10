@@ -37,7 +37,11 @@ const LevelSchema = new Schema({
                 required: true
             }
         }
-    ]
+    ],
+    is_delete: {
+        type: Number,
+        default: 0
+    }
 });
 
 module.exports = Level = mongoose.model("level", LevelSchema);

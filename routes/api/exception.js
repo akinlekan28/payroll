@@ -10,7 +10,7 @@ const Employee = require("../../models/Employee");
 //@desc View All Employee salary exception route
 //@access Private
 router.get("/", protect, (req, res) => {
-  Exception.find()
+  Exception.find({is_delete: 0})
     .then(exception => {
       if (!exception) {
         errors.noexception = "There are no exceptions";
@@ -40,7 +40,7 @@ router.get("/:id", protect, (req, res) => {
     );
 });
 
-//@route  Post api/exception/:id
+//@route  Post api/exception
 //@desc Create Employee salary exception route
 //@access Private
 router.post("/", protect, (req, res) => {
@@ -62,7 +62,7 @@ router.post("/", protect, (req, res) => {
     return res.status(400).json(errors);
   }
 
-  Exception.findOne({ employee: req.body.employee })
+  Exception.findOne({ employee: req.body.employee }).where('is_delete').equals(0)
     .then(employee => {
       if (employee) {
         errors.exception = "Employee salary exception already exist!";
@@ -94,6 +94,29 @@ router.post("/", protect, (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+//@route  Post api/exception/:id
+//@desc Move Employee salary exception to trash route
+//@access Private
+router.post('/:id', protect, (req, res) => {
+
+  const exceptionFields = {
+    is_delete: 1
+  };
+
+  Exception.findOne({ _id: req.params.id }).where('is_delete').equals(0)
+        .then(exceptionItem => {
+            //Update
+            Exception.findOneAndUpdate(
+              { _id: req.params.id },
+              { $set: exceptionFields },
+              { new: true }
+            )
+            .then(() => res.json({ success: true }))
+            .catch(err => console.log(err))
+        })
+        .catch(err => res.status(404).json({message: "Error fetching individual exception record"}))
+})
 
 //@route  Put api/exception/:id
 //@desc Edit Employee salary exception route
