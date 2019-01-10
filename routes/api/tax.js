@@ -721,7 +721,12 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
               .status(400)
               .json({ message: "Error sending employee payslip" });
           } else {
-            return res.json({ message: "Payslip successfully sent!" });
+            fs.unlink(pdfLocation, err => {
+              if(err){
+                console.log(err)
+              } 
+              return res.json({ message: "Payslip successfully sent!" });
+            })
           }
         });
       });
