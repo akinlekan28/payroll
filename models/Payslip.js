@@ -87,6 +87,9 @@ const PayslipSchema = new Schema({
   employee: {
     type: Schema.Types.ObjectId,
     ref: "employee"
+  },
+  presentMonth: {
+    type: String
   }
 });
 

@@ -90,7 +90,7 @@ router.put("/:id", protect, (req, res) => {
 router.get("/", protect, (req, res) => {
   const errors = {};
 
-  Employee.find()
+  Employee.find().where('is_delete').equals(0)
     .then(employee => {
       if (!employee) {
         errors.noemployee = "There are no employees";

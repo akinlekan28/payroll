@@ -74,10 +74,10 @@ router.get("/singleslip/:id", protect, (req, res) => {
                 const deductables = level.deductables;
 
                 //Get Employee bonuses and deduction and sum total
-                let levelBonus = level.bonuses,
-                  levelDeductable = level.deductables,
-                  deductableSum = 0,
-                  bonusSum = 0;
+                let levelBonus = level.bonuses;
+                let levelDeductable = level.deductables;
+                let deductableSum = 0;
+                let bonusSum = 0;
                 levelBonus.forEach(bonus => {
                   bonusSum += bonus.amount;
                 });
@@ -88,8 +88,8 @@ router.get("/singleslip/:id", protect, (req, res) => {
                 //Check if employee has individual cost
                 IndividualCost.find({ employee: employeeDetails._id })
                   .then(individualcost => {
-                    let individualIncomeSum = 0,
-                      individualDeductionSum = 0;
+                    let individualIncomeSum = 0;
+                    let individualDeductionSum = 0;
 
                     individualcost.forEach(individualcostItem => {
                       if (individualcostItem.costType === "income") {
@@ -104,30 +104,47 @@ router.get("/singleslip/:id", protect, (req, res) => {
                       .then(employeeException => {
                         if (employeeException) {
                           let basic = employeeException.amount;
-                          let grossEarning = bonusSum + basic + individualIncomeSum + oneOffPaymentIncomeSum;
+                          let grossEarning =
+                            bonusSum +
+                            basic +
+                            individualIncomeSum +
+                            oneOffPaymentIncomeSum;
                           let annualGrossEarning = grossEarning * 12;
-                          let annualBonuses = (bonusSum + individualIncomeSum + oneOffPaymentIncomeSum) * 12;
-                          let annualDeductables = (deductableSum + individualDeductionSum + oneOffPaymentDeductionSum) * 12;
+                          let annualBonuses =
+                            (bonusSum +
+                              individualIncomeSum +
+                              oneOffPaymentIncomeSum) *
+                            12;
+                          let annualDeductables =
+                            (deductableSum +
+                              individualDeductionSum +
+                              oneOffPaymentDeductionSum) *
+                            12;
 
                           if (annualGrossEarning > 300000) {
-                            let annualConsolidationRelief = annualGrossEarning * 0.2 + 200000;
+                            let annualConsolidationRelief =
+                              annualGrossEarning * 0.2 + 200000;
                             let annualPension = annualGrossEarning * 0.08;
                             let pension = annualPension / 12;
-                            let consolidationRelief = annualConsolidationRelief / 12;
-                            let annualTaxableGrossIncome = annualGrossEarning + annualBonuses - annualPension - annualConsolidationRelief - annualDeductables;
+                            let consolidationRelief =
+                              annualConsolidationRelief / 12;
+                            let annualTaxableGrossIncome =
+                              annualGrossEarning +
+                              annualBonuses -
+                              annualPension -
+                              annualConsolidationRelief -
+                              annualDeductables;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
                             let tax = annualTax / 12;
-                            let test = taxCalculation(7055680)
-                            console.log(test)
                             let netPay =
-                                grossEarning -
-                                tax -
-                                pension -
-                                deductableSum -
-                                individualDeductionSum -
-                                oneOffPaymentDeductionSum;
+                              grossEarning -
+                              tax -
+                              pension -
+                              deductableSum -
+                              individualDeductionSum -
+                              oneOffPaymentDeductionSum;
                             let totalDeductable =
                               tax +
                               pension +
@@ -169,11 +186,14 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               bonuses,
                               deductables,
                               individualcost,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              presentMonth
                             };
 
                             //Saves employee payslip details to db
                             Payslip.findOne({ employee: employeeDetails._id })
+                              .where("presentMonth")
+                              .equals(presentMonth)
                               .then(payslipFound => {
                                 if (payslipFound) {
                                   Payslip.findOneAndUpdate(
@@ -181,16 +201,12 @@ router.get("/singleslip/:id", protect, (req, res) => {
                                     { $set: payslipDetails },
                                     { new: true }
                                   )
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 } else {
                                   new Payslip(payslipDetails)
                                     .save()
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 }
                               })
@@ -198,28 +214,28 @@ router.get("/singleslip/:id", protect, (req, res) => {
                             return res.status(200).json(salarySlip);
                           } else {
                             let annualConsolidationRelief =
-                                annualGrossEarning * 0.01,
-                              annualPension = annualGrossEarning * 0.08,
-                              pension = annualPension / 12,
-                              consolidationRelief =
-                                annualConsolidationRelief / 12,
-                              annualTaxableGrossIncome =
-                                annualGrossEarning +
-                                annualBonuses -
-                                annualPension -
-                                annualConsolidationRelief -
-                                annualDeductables;
+                              annualGrossEarning * 0.01;
+                            let annualPension = annualGrossEarning * 0.08;
+                            let pension = annualPension / 12;
+                            let consolidationRelief =
+                              annualConsolidationRelief / 12;
+                            let annualTaxableGrossIncome =
+                              annualGrossEarning +
+                              annualBonuses -
+                              annualPension -
+                              annualConsolidationRelief -
+                              annualDeductables;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
-                            let tax = annualTax / 12,
-                              netPay =
-                                grossEarning -
-                                tax -
-                                pension -
-                                deductableSum -
-                                individualDeductionSum -
-                                oneOffPaymentDeductionSum;
+                            let tax = annualTax / 12;
+                            let netPay =
+                              grossEarning -
+                              tax -
+                              pension -
+                              deductableSum -
+                              individualDeductionSum -
+                              oneOffPaymentDeductionSum;
                             let totalDeductable =
                               tax +
                               pension +
@@ -259,10 +275,13 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               bonuses,
                               deductables,
                               individualcost,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              presentMonth
                             };
 
                             Payslip.findOne({ employee: employeeDetails._id })
+                              .where("presentMonth")
+                              .equals(presentMonth)
                               .then(payslipFound => {
                                 if (payslipFound) {
                                   Payslip.findOneAndUpdate(
@@ -270,16 +289,12 @@ router.get("/singleslip/:id", protect, (req, res) => {
                                     { $set: payslipDetails },
                                     { new: true }
                                   )
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 } else {
                                   new Payslip(payslipDetails)
                                     .save()
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 }
                               })
@@ -288,48 +303,48 @@ router.get("/singleslip/:id", protect, (req, res) => {
                             return res.status(200).json(salarySlip);
                           }
                         } else {
-                          let basic = level.basic,
-                            grossEarning =
-                              bonusSum +
-                              basic +
+                          let basic = level.basic;
+                          let grossEarning =
+                            bonusSum +
+                            basic +
+                            individualIncomeSum +
+                            oneOffPaymentIncomeSum;
+                          let annualGrossEarning = grossEarning * 12;
+                          let annualBonuses =
+                            (bonusSum +
                               individualIncomeSum +
-                              oneOffPaymentIncomeSum,
-                            annualGrossEarning = grossEarning * 12,
-                            annualBonuses =
-                              (bonusSum +
-                                individualIncomeSum +
-                                oneOffPaymentIncomeSum) *
-                              12,
-                            annualDeductables =
-                              (deductableSum +
-                                individualDeductionSum +
-                                oneOffPaymentDeductionSum) *
-                              12;
+                              oneOffPaymentIncomeSum) *
+                            12;
+                          let annualDeductables =
+                            (deductableSum +
+                              individualDeductionSum +
+                              oneOffPaymentDeductionSum) *
+                            12;
 
                           if (annualGrossEarning > 300000) {
                             let annualConsolidationRelief =
-                                annualGrossEarning * 0.2 + 200000,
-                              annualPension = annualGrossEarning * 0.08,
-                              pension = annualPension / 12,
-                              consolidationRelief =
-                                annualConsolidationRelief / 12,
-                              annualTaxableGrossIncome =
-                                annualGrossEarning +
-                                annualBonuses -
-                                annualPension -
-                                annualConsolidationRelief -
-                                annualDeductables;
+                              annualGrossEarning * 0.2 + 200000;
+                            let annualPension = annualGrossEarning * 0.08;
+                            let pension = annualPension / 12;
+                            let consolidationRelief =
+                              annualConsolidationRelief / 12;
+                            let annualTaxableGrossIncome =
+                              annualGrossEarning +
+                              annualBonuses -
+                              annualPension -
+                              annualConsolidationRelief -
+                              annualDeductables;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
-                            let tax = annualTax / 12,
-                              netPay =
-                                grossEarning -
-                                tax -
-                                pension -
-                                deductableSum -
-                                individualDeductionSum -
-                                oneOffPaymentDeductionSum;
+                            let tax = annualTax / 12;
+                            let netPay =
+                              grossEarning -
+                              tax -
+                              pension -
+                              deductableSum -
+                              individualDeductionSum -
+                              oneOffPaymentDeductionSum;
                             let totalDeductable =
                               tax +
                               pension +
@@ -368,10 +383,13 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               bonuses,
                               deductables,
                               individualcost,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              presentMonth
                             };
 
                             Payslip.findOne({ employee: employeeDetails._id })
+                              .where("presentMonth")
+                              .equals(presentMonth)
                               .then(payslipFound => {
                                 if (payslipFound) {
                                   Payslip.findOneAndUpdate(
@@ -379,16 +397,12 @@ router.get("/singleslip/:id", protect, (req, res) => {
                                     { $set: payslipDetails },
                                     { new: true }
                                   )
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 } else {
                                   new Payslip(payslipDetails)
                                     .save()
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 }
                               })
@@ -397,28 +411,28 @@ router.get("/singleslip/:id", protect, (req, res) => {
                             return res.status(200).json(salarySlip);
                           } else {
                             let annualConsolidationRelief =
-                                annualGrossEarning * 0.01,
-                              annualPension = annualGrossEarning * 0.08,
-                              pension = annualPension / 12,
-                              consolidationRelief =
-                                annualConsolidationRelief / 12,
-                              annualTaxableGrossIncome =
-                                annualGrossEarning +
-                                annualBonuses -
-                                annualPension -
-                                annualConsolidationRelief -
-                                annualDeductables;
+                              annualGrossEarning * 0.01;
+                            let annualPension = annualGrossEarning * 0.08;
+                            let pension = annualPension / 12;
+                            let consolidationRelief =
+                              annualConsolidationRelief / 12;
+                            let annualTaxableGrossIncome =
+                              annualGrossEarning +
+                              annualBonuses -
+                              annualPension -
+                              annualConsolidationRelief -
+                              annualDeductables;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
-                            let tax = annualTax / 12,
-                              netPay =
-                                grossEarning -
-                                tax -
-                                pension -
-                                deductableSum -
-                                individualDeductionSum -
-                                oneOffPaymentDeductionSum;
+                            let tax = annualTax / 12;
+                            let netPay =
+                              grossEarning -
+                              tax -
+                              pension -
+                              deductableSum -
+                              individualDeductionSum -
+                              oneOffPaymentDeductionSum;
                             let totalDeductable =
                               tax +
                               pension +
@@ -457,10 +471,13 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               bonuses,
                               deductables,
                               individualcost,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              presentMonth
                             };
 
                             Payslip.findOne({ employee: employeeDetails._id })
+                              .where("presentMonth")
+                              .equals(presentMonth)
                               .then(payslipFound => {
                                 if (payslipFound) {
                                   Payslip.findOneAndUpdate(
@@ -468,16 +485,12 @@ router.get("/singleslip/:id", protect, (req, res) => {
                                     { $set: payslipDetails },
                                     { new: true }
                                   )
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 } else {
                                   new Payslip(payslipDetails)
                                     .save()
-                                    .then(newlySavedPayslip =>
-                                      console.log("Saved!")
-                                    )
+                                    .then(() => {})
                                     .catch(err => console.log(err));
                                 }
                               })
@@ -573,7 +586,6 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
             bodyData.push(earningRow);
           }
         });
-
       });
 
       //End insertion of earnings
@@ -615,7 +627,6 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
             bodyData1.push(earningRow);
           }
         });
-
       });
 
       //End insertion of deductions
@@ -722,11 +733,11 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
               .json({ message: "Error sending employee payslip" });
           } else {
             fs.unlink(pdfLocation, err => {
-              if(err){
-                console.log(err)
-              } 
+              if (err) {
+                console.log(err);
+              }
               return res.json({ message: "Payslip successfully sent!" });
-            })
+            });
           }
         });
       });
@@ -805,13 +816,14 @@ const taxCalculation = annualTaxableIncome => {
         lastAnnualIndex = i;
       } else break;
     }
-    ++lastAnnualIndex;
+    if (lastAnnualIndex !== 6) {
+      ++lastAnnualIndex;
+    }
     let tax = taxRateMap.get(lastAnnualIndex) * annualTaxableIncome;
+
     totalTax += tax;
 
-    let totalFinalTax = (totalTax).toFixed(2)
-
-    return totalFinalTax;
+    return totalTax;
   }
 };
 
