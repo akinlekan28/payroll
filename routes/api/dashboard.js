@@ -9,15 +9,15 @@ const Exception = require('../../models/Exception');
 const User = require('../../models/User');
 
 router.get('/analytics', protect, (req, res) => {
-    Employee.countDocuments()
+    Employee.countDocuments().where('is_delete').equals(0)
     .then(employeeCount => {
-        Level.countDocuments()
+        Level.countDocuments().where('is_delete').equals(0)
         .then(levelCount => {
-            Exception.countDocuments()
+            Exception.countDocuments().where('is_delete').equals(0)
             .then(exceptionCount => {
-                User.countDocuments()
+                User.countDocuments().where('is_delete').equals(0)
                 .then(adminCount => {
-                    Employee.find()
+                    Employee.find().where('is_delete').equals(0)
                     .limit(5)
                     .sort({date: -1})
                     .then(employee => {

@@ -745,6 +745,20 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
     .catch(err => res.status(404).json({ message: "Error fetching payslip" }));
 });
 
+//@route  GET api/mothlyslip
+//@desc Get all Employees payslip route
+//@access Private
+router.get('/monthlyslip', protect, (req, res) => {
+
+  let date = new Date;
+
+  const presentMonth = date.toLocaleString("en-us", { month: "long" });
+
+  Payslip.find().where('presentMonth').equals(presentMonth)
+  .then(payslip => res.json(payslip))
+  .catch(err => console.log(err))
+})
+
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
   try {
     const fontDescriptors = {

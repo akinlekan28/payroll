@@ -21,6 +21,8 @@ import EditLevel from './components/level/EditLevel';
 import Exception from './components/exception/Exception';
 import MonthlySalary from './components/payroll/MonthlySalary';
 import MonthlySlip from './components/payroll/MonthlySlip';
+import MonthlyDashboard from './components/payroll/all/MonthlyDashboard';
+import WithPension from './components/payroll/all/WithPension';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -88,6 +90,12 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/payroll/monthly/viewslip/:id" component={MonthlySlip} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/all" component={MonthlyDashboard} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/all/withpension" component={WithPension} />
             </Switch>
           </div>
         </Router>
