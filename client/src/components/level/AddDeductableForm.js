@@ -43,7 +43,7 @@ class AddDeductableForm extends Component {
     };
 
     this.props
-      .addDeductable(deductableDetails)
+      .addDeductable(deductableDetails, this.state.level)
       .then(res => {
         if (res.type === 'VIEW_LEVELS') {
           toast.success("Deductable successfully added!");

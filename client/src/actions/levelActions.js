@@ -90,10 +90,10 @@ export const deleteLevel = id => dispatch => {
 };
 
 //Add bonus to level
-export const addBonus = bonusDetails => dispatch => {
+export const addBonus = (bonusDetails, id) => dispatch => {
   dispatch(clearErrors());
   return axios
-    .post("/api/level/bonus", bonusDetails)
+    .post(`/api/level/bonus/${id}`, bonusDetails)
     .then(res => dispatch({
       type: VIEW_LEVELS,
       payload: res.data
@@ -123,10 +123,10 @@ export const deleteBonus = (levelId, bonusId) => dispatch => {
 };
 
 //Add deductable to level
-export const addDeductable = deductableDetails => dispatch => {
+export const addDeductable = (deductableDetails, id) => dispatch => {
   dispatch(clearErrors());
   return axios
-    .post("/api/level/deductable", deductableDetails)
+    .post(`/api/level/deductable/${id}`, deductableDetails)
     .then(res => dispatch({
       type: VIEW_LEVELS,
       payload: res.data

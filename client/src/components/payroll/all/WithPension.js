@@ -16,6 +16,7 @@ class WithPension extends PureComponent {
     }
     
   render() {
+
     const {payrolls, loading} = this.props.payroll;
 
     const formatMoney = money => {
@@ -31,7 +32,6 @@ class WithPension extends PureComponent {
         payrollContainer = <Spinner />
     } else {
         if(Object.keys(payrolls).length > 0){
-            console.log(payrolls)
 
             payrollContainer = (
             <div className="card-body">
@@ -96,24 +96,22 @@ class WithPension extends PureComponent {
         }
     }
     return (
-        <div>
         <div id="app">
-        <div className="main-wrapper">
-          <div className="navbar-bg" />
-          <SearchBar />
-          <SideBar />
-          <div className="main-content">
-            <section className="section">
-              <div className="section-header">
-                <h1>Aggregate payroll report</h1>
-              </div>
-              {payrollContainer}
-            </section>
+          <div className="main-wrapper">
+            <div className="navbar-bg" />
+              <SearchBar />
+              <SideBar />
+              <div className="main-content">
+                <section className="section">
+                  <div className="section-header">
+                    <h1>Aggregate payroll report</h1>
+                  </div>
+                  {payrollContainer}
+                </section>
+            </div>
+            <Footer />
           </div>
-          <Footer />
         </div>
-      </div>
-      </div>
     )
   }
 }

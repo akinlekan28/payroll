@@ -43,9 +43,9 @@ class AddBonusForm extends Component {
     };
 
     this.props
-      .addBonus(bonusDetails)
+      .addBonus(bonusDetails, this.state.level)
       .then(res => {
-        if(res.type === 'GETBONUSDEDUCTABLE'){
+        if(res.type === 'VIEW_LEVELS'){
           toast.success("Bonus successfully added!");
           this.setState({
             name: '',

@@ -23,6 +23,7 @@ import MonthlySalary from './components/payroll/MonthlySalary';
 import MonthlySlip from './components/payroll/MonthlySlip';
 import MonthlyDashboard from './components/payroll/all/MonthlyDashboard';
 import WithPension from './components/payroll/all/WithPension';
+import Contribution from './components/payroll/all/Contribution';
 
 //check for token
 if (localStorage.jwtToken) {
@@ -96,6 +97,9 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/payroll/all/withpension" component={WithPension} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/all/contribution" component={Contribution} />
             </Switch>
           </div>
         </Router>

@@ -17,7 +17,7 @@ const Employee = require("../../models/Employee");
 //@access Private
 router.get("/single/:id", protect, (req, res) => {
   const errors = {};
-  Level.findOne({ _id: req.params.id })
+  Level.findOne({ _id: req.params.id }).where('is_delete').equals(0)
     .then(level => {
       if (!level) {
         errors.nolevel = "There is no grade level with this record";
@@ -36,7 +36,7 @@ router.get("/single/:id", protect, (req, res) => {
 router.get("/all", protect, (req, res) => {
   const errors = {};
 
-  Level.find({ is_delete: 0 })
+  Level.find().where('is_delete').equals(0)
     .then(levels => {
       if (!levels) {
         errors.nolevel = "There are no levels";
@@ -65,7 +65,8 @@ router.post("/", protect, (req, res) => {
   if (req.body.description) levelFields.description = req.body.description;
   if (req.body.basic) levelFields.basic = req.body.basic;
 
-  Level.findOne({ _id: req.body.id }).then(level => {
+  Level.findOne({ _id: req.body.id }).where('is_delete').equals(0)
+  .then(level => {
     if (level) {
       //Update
       Level.findOneAndUpdate(
@@ -128,14 +129,14 @@ router.post("/:id", protect, (req, res) => {
 //@route  Post api/level/bonus/:id
 //@desc Create Employee bonus route
 //@access Private
-router.post("/bonus", protect, (req, res) => {
+router.post("/bonus/:id", protect, (req, res) => {
   const { errors, isValid } = bonusInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  Level.findOne({ _id: req.body.level })
+  Level.findOne({ _id: req.body.level }).where('is_delete').equals(0)
     .then(level => {
       const newBonus = {
         name: req.body.name,
@@ -145,7 +146,7 @@ router.post("/bonus", protect, (req, res) => {
       level
         .save()
         .then(level => {
-          Level.find()
+          Level.find().where('is_delete').equals(0)
             .then(levels => res.json(levels))
             .catch(err => console.log(err));
         })
@@ -159,23 +160,26 @@ router.post("/bonus", protect, (req, res) => {
 //@route  Post api/level/deductables/:id
 //@desc Create Employee deductable route
 //@access Private
-router.post("/deductable", protect, (req, res) => {
+router.post("/deductable/:id", protect, (req, res) => {
   const { errors, isValid } = deductableInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  Level.findOne({ _id: req.body.level }).then(level => {
+  Level.findOne({ _id: req.params.id }).where('is_delete').equals(0)
+  .then(level => {
+
     const newDeductable = {
       name: req.body.name,
       amount: req.body.amount
     };
+
     level.deductables.unshift(newDeductable);
     level
       .save()
       .then(level => {
-        Level.find()
+        Level.find().where('is_delete').equals(0)
           .then(levels => res.json(levels))
           .catch(err => console.log(err));
       })
@@ -213,7 +217,7 @@ router.delete("/:id", protect, (req, res) => {
 //@desc Delete Employee bonus route
 //@access Private
 router.delete("/bonus/:id/:bid", protect, (req, res) => {
-  Level.findOne({ _id: req.params.id })
+  Level.findOne({ _id: req.params.id }).where('is_delete').equals(0)
     .then(level => {
       //Check if Bonus exist
       if (
@@ -232,7 +236,7 @@ router.delete("/bonus/:id/:bid", protect, (req, res) => {
       level.bonuses.splice(removeIndex, 1);
 
       level.save().then(level => {
-        Level.find()
+        Level.find().where('is_delete').equals(0)
           .then(levels => res.json(levels))
           .catch(err => console.log(err));
       });
@@ -244,7 +248,7 @@ router.delete("/bonus/:id/:bid", protect, (req, res) => {
 //@desc Delete Employee deductable route
 //@access Private
 router.delete("/deductable/:id/:did", protect, (req, res) => {
-  Level.findOne({ _id: req.params.id })
+  Level.findOne({ _id: req.params.id }).where('is_delete').equals(0)
     .then(level => {
       //Check if Deductable exist
       if (
@@ -265,7 +269,7 @@ router.delete("/deductable/:id/:did", protect, (req, res) => {
       level.deductables.splice(removeIndex, 1);
 
       level.save().then(level => {
-        Level.find()
+        Level.find().where('is_delete').equals(0)
           .then(levels => res.json(levels))
           .catch(err => console.log(err));
       });
