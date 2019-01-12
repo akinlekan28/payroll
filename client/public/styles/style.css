@@ -87,8 +87,11 @@
   background-size: cover;
   background-position: center;
   height: 100vh;
-  margin-top: -50px;
-  margin-bottom: -50px;
+}
+
+.login-refix{
+  width: 80% !important;
+  margin: auto;
 }
 
 .btn:focus,

@@ -27,7 +27,7 @@ class MonthlyDashboard extends PureComponent {
                 <div className="card">
                   <div className="card-body">
                     <Link to="/payroll/all/withpension" className="btn btn-lg btn-primary">Payroll with pension</Link>
-                    <Link to="/payroll/all/contribution" className="btn btn-lg btn-primary ml-5">Employee contribution</Link>
+                    <Link to="/payroll/all/pension" className="btn btn-lg btn-primary ml-5">Employees pension</Link>
                   </div>
                 </div>
               </div> 

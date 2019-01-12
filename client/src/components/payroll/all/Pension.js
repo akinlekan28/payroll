@@ -9,7 +9,7 @@ import Footer from '../../dashboard/Footer';
 import Spinner from '../../common/Spinner';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
-class Contribution extends PureComponent {
+class Pension extends PureComponent {
 
     componentDidMount = () => {
       this.props.getMonthly()
@@ -97,7 +97,7 @@ class Contribution extends PureComponent {
   }
 }
 
-Contribution.propTypes = {
+Pension.propTypes = {
     getMonthly: PropTypes.func.isRequired
 }
 
@@ -105,4 +105,4 @@ const mapStateToProps = state => ({
     payroll: state.payroll
 })
 
-export default connect(mapStateToProps, {getMonthly})(Contribution);
+export default connect(mapStateToProps, {getMonthly})(Pension);
