@@ -25,9 +25,11 @@ class MonthlyDashboard extends PureComponent {
               <h4 className="text-center">Payroll Report for the month of {presentMonth}</h4>
               <div className="col-12 mt-5">
                 <div className="card">
-                  <div className="card-body">
-                    <Link to="/payroll/all/withpension" className="btn btn-lg btn-primary">Payroll with pension</Link>
-                    <Link to="/payroll/all/pension" className="btn btn-lg btn-primary ml-5">Employees pension</Link>
+                  <div className="card-body mx-auto">
+                    <Link to="/payroll/all/withpension" className="btn btn-lg btn-primary ml-5 mt-5 mb-5">Payroll with pension</Link>
+                    <Link to="/payroll/all/pension" className="btn btn-lg btn-primary ml-5 mt-5 mb-5">Employees pension</Link>
+                    <Link to="/payroll/all/contribution" className="btn btn-lg btn-primary disabled ml-5 mt-5 mb-5">Employees contribution</Link>
+                    <Link to="/payroll/all/tax" className="btn btn-lg btn-primary ml-5 mt-5 mb-5">Employees Tax</Link>
                   </div>
                 </div>
               </div> 

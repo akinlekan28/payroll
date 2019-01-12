@@ -25,6 +25,7 @@ import MonthlyDashboard from './components/payroll/all/MonthlyDashboard';
 import WithPension from './components/payroll/all/WithPension';
 import Contribution from './components/payroll/all/Contribution';
 import Pension from './components/payroll/all/Pension';
+import Tax from "./components/payroll/all/Tax";
 
 //check for token
 if (localStorage.jwtToken) {
@@ -104,6 +105,9 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/payroll/all/pension" component={Pension} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/all/tax" component={Tax} />
             </Switch>
           </div>
         </Router>

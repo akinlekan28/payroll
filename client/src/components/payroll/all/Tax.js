@@ -9,7 +9,7 @@ import Footer from '../../dashboard/Footer';
 import Spinner from '../../common/Spinner';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
-class Contribution extends PureComponent {
+class Tax extends PureComponent {
 
     componentDidMount = () => {
       this.props.getMonthly()
@@ -33,10 +33,6 @@ class Contribution extends PureComponent {
   } else {
     if(Object.keys(payrolls).length > 0){
 
-      payrolls.payslip.forEach(singlepayslip => {
-        console.log(singlepayslip.deductables)
-      })
-
       payrollContainer = (
         <div className="card-body">
         <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">Back</Link>
@@ -44,18 +40,18 @@ class Contribution extends PureComponent {
                     id="test-table-xls-button"
                     className="download-table-xls-button btn btn-lg btn-primary mb-4 ml-3"
                     table="table-to-xls"
-                    filename="payroll_pension"
-                    sheet="employee pension"
+                    filename="payroll_tax"
+                    sheet="employee tax"
                     buttonText="Download excel"/>
 
-            <h4 className="text-center mb-5">Employees Pension</h4>
+            <h4 className="text-center mb-5">Employees Tax</h4>
             <div className="table-responsive">
               <table className="table table-stripped" id="table-to-xls">
                 <thead>
                   <tr>
                     <th>Name</th>
                     <th>Designation</th>
-                    <th>Pension Contribution</th>
+                    <th>Tax</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,13 +59,13 @@ class Contribution extends PureComponent {
                         <tr key={payrollItem._id}>
                             <td>{payrollItem.name}</td>
                             <td>{payrollItem.designation}</td>
-                            <td><span>&#8358;</span>{formatMoney(payrollItem.pension.toFixed(2))}</td>
+                            <td><span>&#8358;</span>{formatMoney(payrollItem.tax.toFixed(2))}</td>
                         </tr>
                     ))}
                     <tr>
                         <td><strong>Total Sum</strong></td>
                         <td><strong>---</strong></td>
-                        <td><strong><span>&#8358;</span>{formatMoney(payrolls.pensionSum.toFixed(2))}</strong></td>
+                        <td><strong><span>&#8358;</span>{formatMoney(payrolls.taxSum.toFixed(2))}</strong></td>
                     </tr>
                 </tbody>
               </table>
@@ -102,7 +98,7 @@ class Contribution extends PureComponent {
   }
 }
 
-Contribution.propTypes = {
+Tax.propTypes = {
     getMonthly: PropTypes.func.isRequired
 }
 
@@ -110,4 +106,4 @@ const mapStateToProps = state => ({
     payroll: state.payroll
 })
 
-export default connect(mapStateToProps, {getMonthly})(Contribution);
+export default connect(mapStateToProps, {getMonthly})(Tax);
