@@ -59,8 +59,6 @@ class MonthlySlip extends PureComponent {
   render() {
     const { payroll, loading } = this.props.payroll;
 
-    console.log(payroll)
-
     let payslipTable;
 
     if (payroll === null || loading) {

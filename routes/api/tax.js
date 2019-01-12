@@ -17,7 +17,7 @@ const IndividualCost = require("../../models/Individualcost");
 const Payslip = require("../../models/Payslip");
 const OneOffPayment = require("../../models/Oneoffpayment");
 
-//@route  Get api/singleslip/:id
+//@route  Get api/tax/singleslip/:id
 //@desc Get Employee payslip route
 //@access Private
 router.get("/singleslip/:id", protect, (req, res) => {
@@ -134,6 +134,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               annualPension -
                               annualConsolidationRelief -
                               annualDeductables;
+                            let taxableIncome = annualTaxableGrossIncome / 12 ;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
@@ -187,6 +188,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               deductables,
                               individualcost,
                               oneOffPaymentArray,
+                              taxableIncome,
                               presentMonth
                             };
 
@@ -225,6 +227,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               annualPension -
                               annualConsolidationRelief -
                               annualDeductables;
+                            let taxableIncome = annualTaxableGrossIncome / 12 ;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
@@ -276,6 +279,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               deductables,
                               individualcost,
                               oneOffPaymentArray,
+                              taxableIncome,
                               presentMonth
                             };
 
@@ -334,6 +338,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               annualPension -
                               annualConsolidationRelief -
                               annualDeductables;
+                            let taxableIncome = annualTaxableGrossIncome / 12 ;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
@@ -384,6 +389,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               deductables,
                               individualcost,
                               oneOffPaymentArray,
+                              taxableIncome,
                               presentMonth
                             };
 
@@ -422,6 +428,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               annualPension -
                               annualConsolidationRelief -
                               annualDeductables;
+                            let taxableIncome = annualTaxableGrossIncome / 12 ;
                             let annualTax = taxCalculation(
                               annualTaxableGrossIncome
                             );
@@ -472,6 +479,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               deductables,
                               individualcost,
                               oneOffPaymentArray,
+                              taxableIncome,
                               presentMonth
                             };
 
@@ -522,7 +530,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
   }
 });
 
-//@route  Post api/singleslip/send/:id
+//@route  Post api/tax/singleslip/send/:id
 //@desc Send Employee payslip pdf as email route
 //@access Private
 router.post("/singleslip/send/:id", protect, (req, res) => {
@@ -745,17 +753,53 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
     .catch(err => res.status(404).json({ message: "Error fetching payslip" }));
 });
 
-//@route  GET api/mothlyslip
+//@route  GET api/tax/mothlyslip
 //@desc Get all Employees payslip route
 //@access Private
-router.get('/monthlyslip', protect, (req, res) => {
+router.get('/monthlyslip', (req, res) => {
 
   let date = new Date;
 
   const presentMonth = date.toLocaleString("en-us", { month: "long" });
 
+  let basicSum = 0, grossSum = 0, consolidationReliefSum = 0, pensionSum = 0, taxableIncomeSum = 0, taxSum = 0, netSum = 0;
+
   Payslip.find().where('presentMonth').equals(presentMonth)
-  .then(payslip => res.json(payslip))
+  .then(payslip => {
+
+    payslip.forEach(payslipItem => {
+      basicSum += payslipItem.basic
+      grossSum += payslipItem.grossEarning
+      consolidationReliefSum += payslipItem.consolidationRelief
+      pensionSum += payslipItem.pension
+      taxableIncomeSum += payslipItem.taxableIncome
+      taxSum += payslipItem.tax
+      netSum += payslipItem.netPay
+    })
+
+    const payrollDetails = {
+      basicSum,
+      grossSum,
+      consolidationReliefSum,
+      pensionSum,
+      taxableIncomeSum,
+      taxSum,
+      netSum,
+      payslip
+    }
+
+    res.json(payrollDetails)
+
+  })
+  .catch(err => console.log(err))
+})
+
+//@route  Delete api/tax/:id
+//@desc Get all Employees payslip route
+//@access Private
+router.delete('/:id', protect, (req, res) => {
+  Payslip.findOneAndRemove({_id: req.params.id})
+  .then(() => res.json({message:'payslip removed'}))
   .catch(err => console.log(err))
 })
 

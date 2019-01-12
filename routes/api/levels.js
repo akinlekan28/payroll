@@ -182,7 +182,8 @@ router.post("/deductable", protect, (req, res) => {
       .catch(err =>
         res.status(400).json({ message: "Error saving deductable information" })
       );
-  });
+  })
+  .catch(err => console.log(err))
 });
 
 //@route  Delete api/level/:id

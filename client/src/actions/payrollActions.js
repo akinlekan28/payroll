@@ -1,5 +1,5 @@
 import axios from "axios";
-import { VIEW_PAYROLL, PAYROLL_LOADING, GET_ERRORS } from "./types";
+import { VIEW_PAYROLL, VIEW_MONTHLY_PAYROLL, PAYROLL_LOADING, GET_ERRORS } from "./types";
 
 //View single payroll
 export const getPayroll = id => dispatch => {
@@ -27,7 +27,7 @@ export const getMonthly = () => dispatch => {
     .get("/api/tax/monthlyslip")
     .then(res =>
       dispatch({
-        type: VIEW_PAYROLL,
+        type: VIEW_MONTHLY_PAYROLL,
         payload: res.data
       })
     )
