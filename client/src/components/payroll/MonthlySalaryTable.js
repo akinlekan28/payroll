@@ -1,13 +1,38 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class MonthlySalaryTable extends Component {
+
+  constructor(props){
+    super(props)
+
+    this.state = {
+      search: ''
+    }
+
+    this.onChange = this.onChange.bind(this)
+  }
+
+  onChange(e){
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      let text = this.state.search.toLowerCase()
+      document.querySelectorAll('#search-item').forEach(table => {
+        const item = table.firstChild.textContent;
+        if(item.toLowerCase().indexOf(text) !== -1){
+          table.style.display = 'table-row'
+        } else {
+          table.style.display = 'none';
+        }
+      })
+    });
+  }
+
   render() {
     const { employees } = this.props;
 
     let employeeDetails = employees.map(employee => (
-      <tr key={employee._id}>
-        <td>{employee.tag}</td>
+      <tr key={employee._id} id="search-item">
         <td>{employee.name}</td>
         <td>{employee.department}</td>
         <td>{employee.designation}</td>
@@ -30,11 +55,22 @@ class MonthlySalaryTable extends Component {
               <h4 className="text-center">View to generate/export individual employee payslip</h4>
             </div>
             <div className="card-body">
+            <div className="live-search">
+            <TextFieldGroup
+                type="text"
+                name="search"
+                label="Search employee"
+                placeholder="Enter name"
+                value={this.state.search}
+                onChange={this.onChange}
+                tabindex="1"
+                className="live-search"
+              />
+           </div>
               <div className="table-responsive">
-                <table className="table table-stripped" id="table-1">
+                <table className="table table-stripped">
                   <thead>
                     <tr>
-                      <th>Tag</th>
                       <th>Name</th>
                       <th>Department</th>
                       <th>Designation</th>

@@ -248,6 +248,10 @@ select.form-control:not([size]):not([multiple]),
   height: 42px;
 }
 
+.live-search {
+  width: 20% !important;
+}
+
 textarea.form-control {
   height: 64px !important;
 }

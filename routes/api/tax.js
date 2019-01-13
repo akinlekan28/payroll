@@ -22,8 +22,8 @@ const OneOffPayment = require("../../models/Oneoffpayment");
 //@access Private
 router.get("/singleslip/:id", protect, (req, res) => {
   let date = new Date();
-  // let salaryDay = date.getDate();
-  let salaryDay = 23;
+  let salaryDay = date.getDate();
+  // let salaryDay = 23;
   const presentMonth = date.toLocaleString("en-us", { month: "long" });
 
   if (salaryDay > 21) {

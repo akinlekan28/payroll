@@ -11,6 +11,7 @@ import axios from 'axios';
 import { toast } from "react-toastify";
 
 class MonthlySalary extends Component {
+
   componentDidMount() {
     this.props.getEmployees();
   }
@@ -51,8 +52,6 @@ class MonthlySalary extends Component {
         if(salaryDay > 21){
           generateBtn = <button className="btn btn-lg btn-success mb-4" onClick={this.generateAll.bind(this, employees)}>Bulk generate</button>
         }
-
-        generateBtn = '';
         
       } else {
         employeeTable = <h4>No previous employee entries!</h4>;

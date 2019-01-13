@@ -8,8 +8,33 @@ import SideBar from '../../dashboard/SideBar';
 import Footer from '../../dashboard/Footer';
 import Spinner from '../../common/Spinner';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import TextFieldGroup from '../../common/TextFieldGroup';
 
 class Tax extends PureComponent {
+
+  constructor(props){
+    super(props)
+
+    this.state = {
+      search: ''
+    }
+
+    this.onChange = this.onChange.bind(this)
+  }
+
+  onChange(e){
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      let text = this.state.search.toLowerCase()
+      document.querySelectorAll('#search-item').forEach(employee => {
+        const item = employee.firstChild.textContent;
+        if(item.toLowerCase().indexOf(text) !== -1){
+          employee.style.display = 'table-row'
+        } else {
+          employee.style.display = 'none';
+        }
+      })
+    });
+  }
 
     componentDidMount = () => {
       this.props.getMonthly()
@@ -44,6 +69,18 @@ class Tax extends PureComponent {
                     buttonText="Download excel"/>
 
             <h4 className="text-center mb-5">Employees Tax</h4>
+            <div className="live-search">
+            <TextFieldGroup
+                type="text"
+                name="search"
+                label="Search employee"
+                placeholder="Enter name"
+                value={this.state.search}
+                onChange={this.onChange}
+                tabindex="1"
+                className="live-search"
+              />
+           </div>
             <div className="table-responsive">
               <table className="table table-stripped" id="table-to-xls">
                 <thead>
@@ -55,7 +92,7 @@ class Tax extends PureComponent {
                 </thead>
                 <tbody>
                     {payrolls.payslip.map(payrollItem => (
-                        <tr key={payrollItem._id}>
+                        <tr key={payrollItem._id} id="search-item">
                             <td>{payrollItem.name}</td>
                             <td>{payrollItem.designation}</td>
                             <td><span>&#8358;</span>{formatMoney(payrollItem.tax.toFixed(2))}</td>
