@@ -32,7 +32,6 @@ class Tax extends PureComponent {
       payrollContainer = <Spinner />
   } else {
     if(Object.keys(payrolls).length > 0){
-
       payrollContainer = (
         <div className="card-body">
         <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">Back</Link>

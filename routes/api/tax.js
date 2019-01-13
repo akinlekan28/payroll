@@ -526,7 +526,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
   } else {
     res
       .status(400)
-      .json({ message: "Salary report can only be generated after 21 days" });
+      .json({ message: "Salary report can only be generated after 21 days of a month!" });
   }
 });
 
@@ -756,7 +756,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
 //@route  GET api/tax/mothlyslip
 //@desc Get all Employees payslip route
 //@access Private
-router.get('/monthlyslip', (req, res) => {
+router.get('/monthlyslip', protect, (req, res) => {
 
   let date = new Date;
 
@@ -792,6 +792,15 @@ router.get('/monthlyslip', (req, res) => {
 
   })
   .catch(err => console.log(err))
+})
+
+//@route  GET api/tax/
+//@desc Get all Employees payslip route
+//@access Private
+router.get('/', protect, (req, res) => {
+  Payslip.find()
+  .then(payslips => res.json(payslips))
+  .catch(err => console.log(payslips))
 })
 
 //@route  Delete api/tax/:id
