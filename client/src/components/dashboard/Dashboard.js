@@ -5,12 +5,12 @@ import Footer from "./Footer";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAnalytics } from "../../actions/dashActions";
-import Spinner from '../common/Spinner';
-import EmployeeRow from './EmployeeRow';
-import AdminCard from './AdminCard';
-import EmployeeCard from './EmployeeCard';
-import LevelCard from './LevelCard';
-import ExceptionCard from './ExceptionCard';
+import Spinner from "../common/Spinner";
+import EmployeeRow from "./EmployeeRow";
+import AdminCard from "./AdminCard";
+import EmployeeCard from "./EmployeeCard";
+import LevelCard from "./LevelCard";
+import ExceptionCard from "./ExceptionCard";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -22,23 +22,23 @@ class Dashboard extends Component {
 
     let dashboardContent;
 
-    if(dashboard === undefined || loading){
-      dashboardContent = <Spinner />
+    if (dashboard === undefined || loading) {
+      dashboardContent = <Spinner />;
     } else {
-      if(Object.keys(dashboard).length > 0){
+      if (Object.keys(dashboard).length > 0) {
         dashboardContent = (
-        <React.Fragment>
-          <div className="row">
-            <AdminCard dashboard={dashboard} />
-            <EmployeeCard dashboard={dashboard} />
-            <LevelCard dashboard={dashboard} />
-            <ExceptionCard dashboard={dashboard} />
-          </div>
-          <EmployeeRow employeeDetails={dashboard.employee} />
-        </React.Fragment>
-        )
+          <React.Fragment>
+            <div className="row">
+              <AdminCard dashboard={dashboard} />
+              <EmployeeCard dashboard={dashboard} />
+              <LevelCard dashboard={dashboard} />
+              <ExceptionCard dashboard={dashboard} />
+            </div>
+            <EmployeeRow employeeDetails={dashboard.employee} />
+          </React.Fragment>
+        );
       } else {
-        dashboardContent = <h4>No employees in system...</h4>
+        dashboardContent = <h4>No employees in system...</h4>;
       }
     }
 

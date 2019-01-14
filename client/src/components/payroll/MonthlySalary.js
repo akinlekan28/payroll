@@ -28,6 +28,8 @@ class MonthlySalary extends Component {
           }
           if(completeGeneration === totalEmployees){
             toast.success('Aggregate payroll generation successfull!')
+          } else {
+            toast.warn('Could not complete generation, try again!')
           }
         })
         .catch(err => console.log(err))
@@ -49,7 +51,7 @@ class MonthlySalary extends Component {
 
         employeeTable = <MonthlySalaryTable employees={employees} />;
 
-        if(salaryDay > 21){
+        if(salaryDay){
           generateBtn = <button className="btn btn-lg btn-success mb-4" onClick={this.generateAll.bind(this, employees)}>Bulk generate</button>
         }
         

@@ -33,10 +33,6 @@ class Contribution extends PureComponent {
   } else {
     if(Object.keys(payrolls).length > 0){
 
-      payrolls.payslip.forEach(singlepayslip => {
-        console.log(singlepayslip.deductables)
-      })
-
       payrollContainer = (
         <div className="card-body">
         <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">Back</Link>
