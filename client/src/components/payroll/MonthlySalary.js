@@ -51,7 +51,7 @@ class MonthlySalary extends Component {
 
         employeeTable = <MonthlySalaryTable employees={employees} />;
 
-        if(salaryDay){
+        if(salaryDay >= 21){
           generateBtn = <button className="btn btn-lg btn-success mb-4" onClick={this.generateAll.bind(this, employees)}>Bulk generate</button>
         }
         

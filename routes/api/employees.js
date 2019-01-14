@@ -10,6 +10,7 @@ const Employee = require("../../models/Employee");
 const Exception = require("../../models/Exception");
 const OtherException = require("../../models/Individualcost");
 const OneOffPayment = require("../../models/Oneoffpayment");
+const Level = require('../../models/Level');
 
 //@route  Post api/employee
 //@desc Create employee route
@@ -108,7 +109,7 @@ router.get("/", protect, (req, res) => {
 //@access Private
 router.get("/single/:id", protect, (req, res) => {
   const errors = {};
-  Employee.findOne({ _id: req.params.id })
+  Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
     .then(employee => {
       if (!employee) {
         errors.noemployee = "There is no employee with this record";

@@ -68,7 +68,7 @@ const LevelTab = () => {
             aria-controls="deductable"
             aria-selected="false"
           >
-            Add Deductable
+            Add Deduction
           </a>
         </li>
         <li className="nav-item">
@@ -81,7 +81,7 @@ const LevelTab = () => {
             aria-controls="viewdeductable"
             aria-selected="false"
           >
-            View Deductables
+            View Deductions
           </a>
         </li>
       </ul>

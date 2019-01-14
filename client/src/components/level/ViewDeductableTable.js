@@ -52,10 +52,10 @@ class ViewDeductableTable extends Component {
           </p>
           {level.deductables.length > 0 ?  (
               <div>
-              <h5 className="text-center">Deductable</h5>
+              <h5 className="text-center">Deduction</h5>
               {level.deductables.map(deductable => (
                 <div key={deductable._id} className="text-center mb-3">
-                  <p>Deductable name: {deductable.name}</p>
+                  <p>Deduction name: {deductable.name}</p>
                   <p>Amount: <span>&#8358;</span> {formatMoney(deductable.amount)}</p>
                   <div>
                     <button
