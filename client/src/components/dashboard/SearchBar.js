@@ -31,7 +31,7 @@ class SearchBar extends Component {
               </li>
               <li>
                 <a
-                  href=""
+                  href="#"
                   data-toggle="search"
                   className="nav-link nav-link-lg d-sm-none"
                 >
