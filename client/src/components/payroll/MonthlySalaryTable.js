@@ -34,6 +34,7 @@ class MonthlySalaryTable extends Component {
     let employeeDetails = employees.map(employee => (
       <tr key={employee._id} id="search-item">
         <td>{employee.name}</td>
+        <td>{employee.levelName}</td>
         <td>{employee.department}</td>
         <td>{employee.designation}</td>
         <td>
@@ -72,6 +73,7 @@ class MonthlySalaryTable extends Component {
                   <thead>
                     <tr>
                       <th>Name</th>
+                      <th>Level</th>
                       <th>Department</th>
                       <th>Designation</th>
                       <th>Action</th>

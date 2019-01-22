@@ -11,6 +11,8 @@ import AdminCard from "./AdminCard";
 import EmployeeCard from "./EmployeeCard";
 import LevelCard from "./LevelCard";
 import ExceptionCard from "./ExceptionCard";
+import PayslipCard from './PayslipCard';
+import OneoffCard from './OneoffCard';
 import DeletedEmployeeCard from './DeletedEmployeeCard';
 
 class Dashboard extends Component {
@@ -36,6 +38,8 @@ class Dashboard extends Component {
               <ExceptionCard dashboard={dashboard} />
             </div>
             <div className="row">
+              <PayslipCard dashboard={dashboard} />
+              <OneoffCard dashboard={dashboard} />
               <DeletedEmployeeCard dashboard={dashboard} />
             </div>
             <EmployeeRow employeeDetails={dashboard.employee} />

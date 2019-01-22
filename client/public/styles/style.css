@@ -625,7 +625,15 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .bg-cyan {
-  background-color: rgb(33, 231, 231);
+  background-color: rgb(62, 202, 202);
+}
+
+.bg-lt-b {
+  background-color: #757575;
+}
+
+.bg-lt-one {
+  background-color: #757575;
 }
 
 .card.card-mt {
