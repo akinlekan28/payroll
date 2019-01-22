@@ -50,7 +50,7 @@ export const getEmployees = () => dispatch => {
 //Delete employee
 export const deleteEmployee = employeeId => dispatch => {
   return axios
-    .delete(`/api/employee/${employeeId}`)
+    .post(`/api/employee/${employeeId}`)
     .then(res =>
       dispatch({
         type: DELETE_EMPLOYEE,

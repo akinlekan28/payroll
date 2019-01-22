@@ -19,17 +19,21 @@ class MonthlySalary extends Component {
   generateAll(employees){
     let totalEmployees = employees.length
     let completeGeneration = 0;
+    let failedGeneration = 0;
 
     employees.forEach(employee => {
       axios.get(`/api/tax/singleslip/${employee._id}`)
         .then(res => {
           if(res.status === 200){
             completeGeneration++;
+          } else {
+            failedGeneration++;
           }
           if(completeGeneration === totalEmployees){
             toast.success('Aggregate payroll generation successfull!')
-          } else {
-            toast.warn('Could not complete generation, try again!')
+          }
+          if(failedGeneration !== 0){
+            toast.warn(`Could not generate ${failedGeneration} payroll of ${totalEmployees}`)
           }
         })
         .catch(err => console.log(err))

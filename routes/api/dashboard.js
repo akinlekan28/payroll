@@ -17,21 +17,26 @@ router.get('/analytics', protect, (req, res) => {
             .then(exceptionCount => {
                 User.countDocuments().where('is_delete').equals(0)
                 .then(adminCount => {
-                    Employee.find().where('is_delete').equals(0)
-                    .limit(5)
-                    .sort({date: -1})
-                    .then(employee => {
+                    Employee.countDocuments().where('is_delete').equals(1)
+                    .then(deletedEmployees => {
+                        Employee.find().where('is_delete').equals(0)
+                        .limit(5)
+                        .sort({date: -1})
+                        .then(employee => {
 
-                        const totalCount = {
-                            employee,
-                            adminCount,
-                            employeeCount,
-                            levelCount,
-                            exceptionCount
-                        }
-                        return res.json(totalCount);
+                            const totalCount = {
+                                employee,
+                                adminCount,
+                                employeeCount,
+                                levelCount,
+                                exceptionCount,
+                                deletedEmployees
+                            }
+                            return res.json(totalCount);
+                        })
+                        .catch(err => res.status(404).json({message: "Employees not found"}))
                     })
-                    .catch(err => res.status(404).json({message: "Employees not found"}))
+                    .catch(err => console.log(err))
                 })
                 .catch(err => console.log(err))
             })

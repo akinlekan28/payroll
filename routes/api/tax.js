@@ -27,7 +27,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
   const presentMonth = date.toLocaleString("en-us", { month: "long" });
 
   if (salaryDay > 21) {
-    Employee.findOne({ _id: req.params.id })
+    Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
       .then(employeeDetails => {
         const employeeId = employeeDetails._id;
         const tag = employeeDetails.tag;
@@ -68,7 +68,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
             });
 
             //Get employee level
-            Level.findOne({ _id: employeeDetails.level })
+            Level.findOne({ _id: employeeDetails.level }).where('is_delete').equals(0)
               .then(level => {
                 const bonuses = level.bonuses;
                 const deductables = level.deductables;
@@ -86,7 +86,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                 });
 
                 //Check if employee has individual cost
-                IndividualCost.find({ employee: employeeDetails._id })
+                IndividualCost.find({ employee: employeeDetails._id }).where('is_delete').equals(0)
                   .then(individualcost => {
                     let individualIncomeSum = 0;
                     let individualDeductionSum = 0;
@@ -100,7 +100,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                     });
 
                     //Check if employee has a salary exception
-                    Exception.findOne({ employee: employeeDetails._id })
+                    Exception.findOne({ employee: employeeDetails._id }).where('is_delete').equals(0)
                       .then(employeeException => {
                         if (employeeException) {
                           let basic = employeeException.amount;
@@ -189,11 +189,12 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
-                              presentMonth
+                              presentMonth,
+                              is_delete: 0
                             };
 
                             //Saves employee payslip details to db
-                            Payslip.findOne({ employee: employeeDetails._id })
+                            Payslip.findOne({ employee: employeeDetails._id }, { is_delete: 0 })
                               .where("presentMonth")
                               .equals(presentMonth)
                               .then(payslipFound => {
@@ -280,10 +281,11 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
-                              presentMonth
+                              presentMonth,
+                              is_delete: 0
                             };
 
-                            Payslip.findOne({ employee: employeeDetails._id })
+                            Payslip.findOne({ employee: employeeDetails._id } ,{ is_delete: 0 })
                               .where("presentMonth")
                               .equals(presentMonth)
                               .then(payslipFound => {
@@ -390,10 +392,11 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
-                              presentMonth
+                              presentMonth,
+                              is_delete: 0
                             };
 
-                            Payslip.findOne({ employee: employeeDetails._id })
+                            Payslip.findOne({ employee: employeeDetails._id }, { is_delete: 0 })
                               .where("presentMonth")
                               .equals(presentMonth)
                               .then(payslipFound => {
@@ -480,10 +483,11 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
-                              presentMonth
+                              presentMonth,
+                              is_delete: 0
                             };
 
-                            Payslip.findOne({ employee: employeeDetails._id })
+                            Payslip.findOne({ employee: employeeDetails._id }, { is_delete: 0 })
                               .where("presentMonth")
                               .equals(presentMonth)
                               .then(payslipFound => {
@@ -536,8 +540,9 @@ router.get("/singleslip/:id", protect, (req, res) => {
 router.post("/singleslip/send/:id", protect, (req, res) => {
   const errors = {};
   const date = new Date();
+  const presentMonth = date.toLocaleString("en-us", { month: "long" });
 
-  Payslip.findOne({ employee: req.params.id })
+  Payslip.findOne({ employee: req.params.id }, { is_delete: 0 }).where('presentMonth').equals(presentMonth)
     .then(employeePayslip => {
       let moneyFix = money => {
         let fixedMoney = money.toFixed(2);
@@ -764,7 +769,7 @@ router.get('/monthlyslip', protect, (req, res) => {
 
   let basicSum = 0, grossSum = 0, consolidationReliefSum = 0, pensionSum = 0, taxableIncomeSum = 0, taxSum = 0, netSum = 0;
 
-  Payslip.find().where('presentMonth').equals(presentMonth)
+  Payslip.find({is_delete: 0}).where('presentMonth').equals(presentMonth)
   .then(payslip => {
 
     payslip.forEach(payslipItem => {

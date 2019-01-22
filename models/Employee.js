@@ -26,6 +26,9 @@ const EmployeeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "level"
   },
+  levelName: {
+    type: String
+  },
   date_added: {
     type: Date,
     default: Date.now()

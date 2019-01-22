@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -28,6 +28,7 @@ class EditEmployee extends Component {
       designation: "",
       department: "",
       level: "",
+      levelName: "",
       errors: {}
     };
 
@@ -51,12 +52,16 @@ class EditEmployee extends Component {
       employee.department = !isEmpty(employee.department)
         ? employee.department
         : "";
+      employee.levelName = !isEmpty(employee.levelName)
+        ? employee.levelName
+        : "";
 
       this.setState({
         name: employee.name,
         email: employee.email,
         designation: employee.designation,
-        department: employee.department
+        department: employee.department,
+        levelName: employee.levelName
       });
     }
   }
@@ -106,7 +111,9 @@ class EditEmployee extends Component {
     } else {
       if (Object.keys(levels).length > 0) {
         levelContainer = (
-          <SelectListGroup
+          <Fragment>
+            <strong className="text-warning">Current level is {this.state.levelName}</strong>
+            <SelectListGroup
             label="Employee level"
             placeholder="Select employee level"
             name="level"
@@ -114,7 +121,8 @@ class EditEmployee extends Component {
             onChange={this.onChange}
             error={errors.level}
             options={levels}
-          />
+            />
+          </Fragment>
         );
       } else {
         levelContainer = <option>No level found</option>;

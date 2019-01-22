@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 
-class EmployeeCard extends Component {
+class DeletedEmployeeCard extends Component {
   render() {
       const {dashboard} = this.props;
     return (
         <div className="col-lg-3 col-md-6 col-sm-6 col-12">
             <div className="card card-statistic-1">
-            <div className="card-icon bg-danger">
-                <i className="fas fa-briefcase" />
+            <div className="card-icon bg-cyan">
+                <i className="fas fa-trash" />
             </div>
             <div className="card-wrap">
                 <div className="card-header">
-                <h4>Active Employees</h4>
+                <h4>Deleted Employees</h4>
                 </div>
-                <div className="card-body">{dashboard.employeeCount}</div>
+                <div className="card-body">{dashboard.deletedEmployees}</div>
             </div>
             </div>
         </div>
@@ -21,4 +21,4 @@ class EmployeeCard extends Component {
   }
 }
 
-export default EmployeeCard;
+export default DeletedEmployeeCard;

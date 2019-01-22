@@ -23,8 +23,11 @@ const UserSchema = new Schema({
   },
   expiry: {
     type: Date
+  },
+  is_delete: {
+    type: Number,
+    default: 0
   }
-
 });
 
 module.exports = User = mongoose.model('users', UserSchema);

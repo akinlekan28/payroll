@@ -623,6 +623,11 @@ select.form-control:not([size]):not([multiple]) {
   background-color: transparent;
   border: none;
 }
+
+.bg-cyan {
+  background-color: rgb(33, 231, 231);
+}
+
 .card.card-mt {
   margin-top: 30px;
 }

@@ -11,6 +11,7 @@ import AdminCard from "./AdminCard";
 import EmployeeCard from "./EmployeeCard";
 import LevelCard from "./LevelCard";
 import ExceptionCard from "./ExceptionCard";
+import DeletedEmployeeCard from './DeletedEmployeeCard';
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -33,6 +34,9 @@ class Dashboard extends Component {
               <EmployeeCard dashboard={dashboard} />
               <LevelCard dashboard={dashboard} />
               <ExceptionCard dashboard={dashboard} />
+            </div>
+            <div className="row">
+              <DeletedEmployeeCard dashboard={dashboard} />
             </div>
             <EmployeeRow employeeDetails={dashboard.employee} />
           </React.Fragment>

@@ -11,6 +11,7 @@ const Exception = require("../../models/Exception");
 const OtherException = require("../../models/Individualcost");
 const OneOffPayment = require("../../models/Oneoffpayment");
 const Level = require('../../models/Level');
+const Payslip = require('../../models/Payslip');
 
 //@route  Post api/employee
 //@desc Create employee route
@@ -31,19 +32,26 @@ router.post("/", protect, (req, res) => {
       .substring(2, 4);
   let tag = "EMP" + fTag;
 
-  const newEmployee = new Employee({
-    tag,
-    name: req.body.name,
-    email: req.body.email,
-    designation: req.body.designation,
-    department: req.body.department,
-    level: req.body.level
-  });
-
-  newEmployee
-    .save()
-    .then(employee => res.json(employee))
-    .catch(err => res.status(400).json(err));
+  Level.findOne({_id: req.body.level}).where('is_delete').equals(0)
+  .then(levelDetail => {
+    const levelName = levelDetail.name;
+    
+    const newEmployee = new Employee({
+      tag,
+      name: req.body.name,
+      email: req.body.email,
+      designation: req.body.designation,
+      department: req.body.department,
+      level: req.body.level,
+      levelName
+    });
+  
+    newEmployee
+      .save()
+      .then(employee => res.json(employee))
+      .catch(err => res.status(400).json(err));
+  })
+  .catch(err => console.log(err));
 });
 
 //@route  Put api/employee/:id
@@ -56,33 +64,40 @@ router.put("/:id", protect, (req, res) => {
     return res.status(400).json(errors);
   }
 
-  employeeFields = {
-    name: req.body.name,
-    email: req.body.email,
-    designation: req.body.designation,
-    department: req.body.department,
-    level: req.body.level
-  };
+  Level.findOne({_id: req.body.level}).where('is_delete').equals(0)
+  .then(levelDetail => {
+    const levelName = levelDetail.name;
 
-  Employee.findOne({ _id: req.params.id })
-    .then(employee => {
-      if (employee) {
-        Employee.findByIdAndUpdate(
-          { _id: req.params.id },
-          { $set: employeeFields },
-          { new: true }
-        )
-          .then(employee => res.json(employee))
-          .catch(err =>
-            res
-              .status(400)
-              .json({ message: "Error saving employee information" })
-          );
-      }
-    })
-    .catch(err =>
-      res.status(400).json({ message: "Error getting employee information" })
-    );
+    employeeFields = {
+      name: req.body.name,
+      email: req.body.email,
+      designation: req.body.designation,
+      department: req.body.department,
+      level: req.body.level,
+      levelName
+    };
+  
+    Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
+      .then(employee => {
+        if (employee) {
+          Employee.findByIdAndUpdate(
+            { _id: req.params.id },
+            { $set: employeeFields },
+            { new: true }
+          )
+            .then(employee => res.json(employee))
+            .catch(err =>
+              res
+                .status(400)
+                .json({ message: "Error saving employee information" })
+            );
+        }
+      })
+      .catch(err =>
+        res.status(400).json({ message: "Error getting employee information" })
+      );
+  })
+  .catch(err => console.log(err))
 });
 
 //@route  Get api/employee
@@ -121,8 +136,8 @@ router.get("/single/:id", protect, (req, res) => {
 });
 
 
-//@route  Get api/employee/:id
-//@desc View single employee route
+//@route  Post api/employee/:id
+//@desc Move single employee to trash route
 //@access Private
 router.post('/:id', protect, (req, res) => {
   let employeeId = req.params.id;
@@ -151,20 +166,10 @@ router.post('/:id', protect, (req, res) => {
           OtherException.findOne({employee: employeeId}).where('is_delete').equals(0)
           .then(otherExceptionItems => {
 
-            otherExceptionItems.forEach(item => {
-              OtherException.findByIdAndUpdate(
-                { _id: item._id },
-                { $set: deleteField },
-                { new: true }
-              )
-              .then(() => {})
-              .catch(err => console.log(err))
-            })
-
-            OneOffPayment.findOne({employee: employeeId}).where('is_delete').equals(0)
-            .then(oneOffPaymentItems => {
-              oneOffPaymentItems.forEach(item => {
-                OneOffPayment.findByIdAndUpdate(
+            if(otherExceptionItems){
+              //Move employee otherexception payment to trash upon employee deletion
+              otherExceptionItems.forEach(item => {
+                OtherException.findByIdAndUpdate(
                   { _id: item._id },
                   { $set: deleteField },
                   { new: true }
@@ -172,6 +177,43 @@ router.post('/:id', protect, (req, res) => {
                 .then(() => {})
                 .catch(err => console.log(err))
               })
+            }
+
+            OneOffPayment.findOne({employee: employeeId}).where('is_delete').equals(0)
+            .then(oneOffPaymentItems => {
+
+              if(oneOffPaymentItems){
+                //Move employee one-off payment to trash upon employee deletion
+                oneOffPaymentItems.forEach(item => {
+                  OneOffPayment.findByIdAndUpdate(
+                    { _id: item._id },
+                    { $set: deleteField },
+                    { new: true }
+                  )
+                  .then(() => {})
+                  .catch(err => console.log(err))
+                })
+              }
+
+              //Move employee slip to trash upon employee deletion
+              let date = new Date();
+              const presentMonth = date.toLocaleString("en-us", { month: "long" });
+              Payslip.find({employee: employeeId}, {is_delete: 0}).where('presentMonth').equals(presentMonth)
+              .then(employeePayslip => {
+                employeePayslip.forEach(employeePayslipItem => {
+                  Payslip.findOneAndUpdate(
+                    { _id: employeePayslipItem._id },
+                    { $set: deleteField },
+                    { new: true }
+                  )
+                  .then(() => {})
+                  .catch(err => console.log(err))
+                })
+              })
+              .catch(err => console.log(err))
+
+              res.json({success: 'true'})
+
             })
             .catch(err => console.log(err))
 
