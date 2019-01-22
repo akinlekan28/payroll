@@ -633,7 +633,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .bg-lt-one {
-  background-color: #757575;
+  background-color: rgb(238, 238, 24);
 }
 
 .card.card-mt {
