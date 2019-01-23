@@ -94,6 +94,9 @@ const PayslipSchema = new Schema({
   presentMonth: {
     type: String
   },
+  presentYear: {
+    type: Number
+  },
   is_delete: {
     type: Number,
     default: 0
