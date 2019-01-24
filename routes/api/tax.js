@@ -820,8 +820,7 @@ router.get('/allslip/:id', protect, (req, res) => {
     res.json(payslip)
   })
   .catch(err => console.log(error))
-})
-
+});
 
 //@route  GET api/tax/
 //@desc Get all Employees payslip route

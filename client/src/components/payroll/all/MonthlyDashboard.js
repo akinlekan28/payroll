@@ -1,14 +1,17 @@
 import React, { PureComponent } from 'react'
-import {Link} from 'react-router-dom';
 import SearchBar from '../../dashboard/SearchBar';
 import SideBar from '../../dashboard/SideBar';
 import Footer from '../../dashboard/Footer';
+import MonthlyPayroll from './links/MonthlyPayroll';
+import MonthlyPension from './links/MonthlyPension';
+import MonthlyTax from './links/MonthlyTax';
 
 class MonthlyDashboard extends PureComponent {
   render() {
 
     let date = new Date();
     const presentMonth = date.toLocaleString("en-us", { month: "long" });
+    const year = date.getFullYear();
 
     return (
       <div>
@@ -19,20 +22,21 @@ class MonthlyDashboard extends PureComponent {
           <SideBar />
           <div className="main-content">
             <section className="section">
+
               <div className="section-header">
                 <h1>Aggregate payroll report</h1>
               </div>
-              <h4 className="text-center">Payroll Report for the month of {presentMonth}</h4>
-              <div className="col-12 mt-5">
-                <div className="card">
-                  <div className="card-body mx-auto">
-                    <Link to="/payroll/all/withpension" className="btn btn-lg btn-primary ml-5 mt-5 mb-5">Payroll with pension</Link>
-                    <Link to="/payroll/all/pension" className="btn btn-lg btn-primary ml-5 mt-5 mb-5">Employees pension</Link>
-                    {/* <Link to="/payroll/all/contribution" className="btn btn-lg btn-primary disabled ml-5 mt-5 mb-5">Employees contribution</Link> */}
-                    <Link to="/payroll/all/tax" className="btn btn-lg btn-primary ml-5 mt-5 mb-5">Employees Tax</Link>
-                  </div>
+              <h4 className="text-center">Payroll Report for the month of {presentMonth}</h4>  
+                <div className="row mt-5">
+                  <MonthlyPayroll />
+                  <MonthlyPension />
+                  <MonthlyTax />
                 </div>
-              </div> 
+
+              <h4 className="text-center mt-4">Payroll Report for the year {year}</h4> 
+                <div className="row mt-5">
+                </div>
+
             </section>
           </div>
           <Footer />
