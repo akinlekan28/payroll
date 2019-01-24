@@ -11,7 +11,7 @@ class AdminCard extends Component {
           </div>
           <div className="card-wrap">
             <div className="card-header">
-              <h4>Admins</h4>
+              <h4>Active Admins</h4>
             </div>
             <div className="card-body">{dashboard.adminCount}</div>
           </div>

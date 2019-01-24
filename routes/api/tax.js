@@ -18,8 +18,9 @@ const Payslip = require("../../models/Payslip");
 const OneOffPayment = require("../../models/Oneoffpayment");
 
 const date = new Date();
-const presentMonth = date.toLocaleString("en-us", { month: "long" });
-const presentYear = date.getFullYear();
+let presentMonth = date.toLocaleString("en-us", { month: "long" });
+// let presentMonth = 'February';
+let presentYear = date.getFullYear();
 
 //@route  Get api/tax/singleslip/:id
 //@desc Get Employee payslip route
@@ -29,7 +30,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
   let salaryDay = date.getDate();
   // let salaryDay = 23;
 
-  if (salaryDay > 21) {
+  if (salaryDay >= 21) {
     Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
       .then(employeeDetails => {
         const employeeId = employeeDetails._id;
@@ -769,7 +770,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
 });
 
 //@route  GET api/tax/mothlyslip
-//@desc Get all Employees payslip route
+//@desc Get all Employees monthly payslip route
 //@access Private
 router.get('/monthlyslip', protect, (req, res) => {
 
@@ -804,6 +805,23 @@ router.get('/monthlyslip', protect, (req, res) => {
   })
   .catch(err => console.log(err))
 })
+
+//@route  GET api/tax/allslip
+//@desc Get single Employee all yearly payslip route
+//@access Private
+router.get('/allslip/:id', protect, (req, res) => {
+  const errors = {}
+  Payslip.find({employee: req.params.id}, {is_delete: 0}).where('presentYear').equals(presentYear)
+  .then(payslip => {
+    if (!payslip) {
+      errors.payslip = "There are no employee payslip";
+      return res.status(404).json(errors);
+    }
+    res.json(payslip)
+  })
+  .catch(err => console.log(error))
+})
+
 
 //@route  GET api/tax/
 //@desc Get all Employees payslip route

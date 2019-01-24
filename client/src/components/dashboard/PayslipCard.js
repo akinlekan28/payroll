@@ -11,7 +11,7 @@ class PayslipCard extends Component {
             </div>
             <div className="card-wrap">
                 <div className="card-header">
-                <h4>Generated Payslip</h4>
+                <h4>Monthly Generated Payslip</h4>
                 </div>
                 <div className="card-body">{dashboard.payslipCount}</div>
             </div>
