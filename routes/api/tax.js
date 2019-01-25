@@ -811,6 +811,11 @@ router.get('/monthlyslip', protect, (req, res) => {
 //@access Private
 router.get('/allslip/:id', protect, (req, res) => {
   const errors = {}
+  if(req.params.id === ''){
+    errors.employee = 'Please select an employee';
+    return res.status(400).json(errors);
+  }
+  
   Payslip.find({employee: req.params.id}, {is_delete: 0}).where('presentYear').equals(presentYear)
   .then(payslip => {
     if (!payslip) {

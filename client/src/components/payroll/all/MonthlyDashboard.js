@@ -5,6 +5,7 @@ import Footer from '../../dashboard/Footer';
 import MonthlyPayroll from './links/MonthlyPayroll';
 import MonthlyPension from './links/MonthlyPension';
 import MonthlyTax from './links/MonthlyTax';
+import YearlySingleEmployee from './links/YearlySingleEmployee';
 
 class MonthlyDashboard extends PureComponent {
   render() {
@@ -35,6 +36,7 @@ class MonthlyDashboard extends PureComponent {
 
               <h4 className="text-center mt-4">Payroll Report for the year {year}</h4> 
                 <div className="row mt-5">
+                  <YearlySingleEmployee />
                 </div>
 
             </section>
