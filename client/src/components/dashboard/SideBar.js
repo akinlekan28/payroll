@@ -18,7 +18,7 @@ render() {
     <div className="main-sidebar">
      <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
-            <Link to="/dashboard">Payroller</Link>
+            <Link to="/dashboard">Payeroll</Link>
         </div>
         <div className="sidebar-brand sidebar-brand-sm">
             <Link to="/dashboard">PR</Link>
@@ -31,7 +31,7 @@ render() {
             <li><Link to="/employee" className="nav-link"><i className="fas fa-briefcase"></i> <span>Create profile</span></Link></li>
             <li><Link to="/employee/all" className="nav-link"><i className="fas fa-archive"></i> <span>View profiles</span></Link></li>
 
-            <li className="menu-header">Payroll</li>
+            <li className="menu-header">Payeroll</li>
             <li><Link to="/payroll/monthly" className="nav-link"><i className="fas fa-calendar-alt"></i> <span>Monthly report</span></Link></li>
             <li><Link to="/payroll/all" className="nav-link"><i className="fas fa-paperclip"></i> <span>All report</span></Link></li>
 

@@ -7,95 +7,113 @@ import SelectListGroup from "../../../common/SelectListGroup";
 import SearchBar from "../../../dashboard/SearchBar";
 import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
+import { toast } from "react-toastify";
+import SingleEmployeeTable from "./SingleEmployeeTable";
 
 class SingleEmployee extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props){
-        super(props);
+    this.state = {
+      employee: ""
+    };
 
-        this.state = {
-            employee: '',
-            errors: {}
-        };
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
 
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
+  componentDidMount() {
+    this.props.getEmployees();
+  }
 
-    componentDidMount() {
-      this.props.getEmployees();
-    }
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.errors) {
-          return {
-            errors: nextProps.errors
-          };
+  onSubmit(e) {
+    e.preventDefault();
+
+    this.props
+      .getEmployeeYearlySlip(this.state.employee)
+      .then(res => {
+        if (
+          res.type === "VIEW_PAYROLL_RECORDS" &&
+          Object.keys(res.payload).length === 0
+        ) {
+          toast.warn("Payslip record not found");
         }
-        return null;
-      }
-    
-    onChange(e) {
-        this.setState({ [e.target.name]: e.target.value });
-    }
 
-    onSubmit(e){
+        if (res.type === "GET_ERRORS" && typeof res.payload === "string") {
+          toast.error("Please select an employee");
+        }
+      })
+      .catch(err => console.log(err));
+  }
 
-        e.preventDefault();
-
-        this.props.getEmployeeYearlySlip(this.state.employee)
-    }
-    
   render() {
-
     let date = new Date();
     const year = date.getFullYear();
 
     const { employees, loading } = this.props.employees;
     const { payrollRecords } = this.props.payrollRecords;
-    const { errors } = this.state;
-    let searchContainer;
-    console.log(payrollRecords)
+    let searchContainer, payslipTableContainer;
 
-    if(employees === null || loading){
-        searchContainer = <Spinner />
+    if (employees === null || loading) {
+      searchContainer = <Spinner />;
     } else {
-        if(Object.keys(employees).length > 0){
-            searchContainer = (
-                <div>
-                    <div className="row justify-content-center">
-                        <div className="col-md-7 card">
-                            <div className="card-header">
-                                <h4 className="justify-content-center text-danger">
-                                *All fields are required
-                                </h4>
-                            </div>
-                            <div className="card-body">
-                                <form onSubmit={this.onSubmit}>
-                                    <SelectListGroup
-                                        label="Employee"
-                                        placeholder="Select employee level"
-                                        name="employee"
-                                        value={this.state.employee}
-                                        onChange={this.onChange}
-                                        error={errors.employee}
-                                        options={employees}
-                                    />
-
-                                    <div className="text-center">
-                                        <button type="submit" className="btn btn-primary btn-lg" tabIndex="4">
-                                            Get payslips
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+      if (Object.keys(employees).length > 0) {
+        searchContainer = (
+          <div>
+            <div className="row">
+              <div className="col-md-7">
+                <div className="card-body">
+                  <form onSubmit={this.onSubmit} className="form-inline">
+                    <div className="col-md-5">
+                      <SelectListGroup
+                        placeholder="Select employee level"
+                        name="employee"
+                        value={this.state.employee}
+                        onChange={this.onChange}
+                        options={employees}
+                      />
                     </div>
+                    <div className="col-md-2">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-lg"
+                        tabIndex="4"
+                      >
+                        Get payslips
+                      </button>
+                    </div>
+                  </form>
                 </div>
-            )
-        } else{
-            searchContainer = <h4>No previous employee entries in the system</h4>
+              </div>
+            </div>
+          </div>
+        );
+
+        if (payrollRecords === null || this.props.payrollRecords.loading) {
+          payslipTableContainer = <Spinner />;
+        } else {
+          if (Object.keys(payrollRecords).length > 0) {
+            payslipTableContainer = (
+              <div className="col-md-12 card">
+                <div className="card-header justify-content-center">
+                  <h3 className="mt-4">Payslip record</h3>
+                </div>
+                <div className="card-body">
+                  <SingleEmployeeTable payrollRecords={payrollRecords} />
+                </div>
+              </div>
+            );
+          } else {
+            payslipTableContainer = "";
+          }
         }
+      } else {
+        searchContainer = <h4>No previous employee entries in the system</h4>;
+      }
     }
 
     return (
@@ -114,6 +132,7 @@ class SingleEmployee extends Component {
                 Generated employee payslips for the year {year}
               </h4>
               {searchContainer}
+              {payslipTableContainer}
             </section>
           </div>
         </div>
@@ -123,13 +142,16 @@ class SingleEmployee extends Component {
 }
 
 SingleEmployee.propTypes = {
-    getEmployees: PropTypes.func.isRequired,
-    employees: PropTypes.object.isRequired
-}
+  getEmployees: PropTypes.func.isRequired,
+  employees: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
-    employees: state.employees,
-    payrollRecords: state.payroll
-})
+  employees: state.employees,
+  payrollRecords: state.payroll
+});
 
-export default connect(mapStateToProps, {getEmployees, getEmployeeYearlySlip})(SingleEmployee);
+export default connect(
+  mapStateToProps,
+  { getEmployees, getEmployeeYearlySlip }
+)(SingleEmployee);
