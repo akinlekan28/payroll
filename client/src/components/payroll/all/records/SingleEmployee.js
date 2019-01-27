@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import {Link} from 'react-router-dom';
 import { connect } from "react-redux";
 import { getEmployees } from "../../../../actions/employeeActions";
 import { getEmployeeYearlySlip } from "../../../../actions/payrollActions";
@@ -65,10 +66,10 @@ class SingleEmployee extends Component {
         searchContainer = (
           <div>
             <div className="row">
-              <div className="col-md-7">
+              <div className="col-md-9">
                 <div className="card-body">
                   <form onSubmit={this.onSubmit} className="form-inline">
-                    <div className="col-md-5">
+                    <div className="col-md-4">
                       <SelectListGroup
                         placeholder="Select employee level"
                         name="employee"
@@ -77,7 +78,7 @@ class SingleEmployee extends Component {
                         options={employees}
                       />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-3">
                       <button
                         type="submit"
                         className="btn btn-primary btn-lg"
@@ -85,6 +86,9 @@ class SingleEmployee extends Component {
                       >
                         Get payslips
                       </button>
+                    </div>
+                    <div className="col-md-2">
+                    <Link to="/payroll/all" className="btn btn-lg btn-warning">Back</Link>
                     </div>
                   </form>
                 </div>
@@ -97,16 +101,7 @@ class SingleEmployee extends Component {
           payslipTableContainer = <Spinner />;
         } else {
           if (Object.keys(payrollRecords).length > 0) {
-            payslipTableContainer = (
-              <div className="col-md-12 card">
-                <div className="card-header justify-content-center">
-                  <h3 className="mt-4">Payslip record</h3>
-                </div>
-                <div className="card-body">
-                  <SingleEmployeeTable payrollRecords={payrollRecords} />
-                </div>
-              </div>
-            );
+            payslipTableContainer = <SingleEmployeeTable payrollRecords={payrollRecords} />;    
           } else {
             payslipTableContainer = "";
           }
