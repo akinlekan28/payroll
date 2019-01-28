@@ -6,6 +6,8 @@ import MonthlyPayroll from './links/MonthlyPayroll';
 import MonthlyPension from './links/MonthlyPension';
 import MonthlyTax from './links/MonthlyTax';
 import YearlySingleEmployee from './links/YearlySingleEmployee';
+import YearlyAllEmployee from './links/YearlyAllEmployee';
+import YearlyMonthlyslip from './links/YearlyMonthlyslip';
 
 class MonthlyDashboard extends PureComponent {
   render() {
@@ -25,7 +27,7 @@ class MonthlyDashboard extends PureComponent {
             <section className="section">
 
               <div className="section-header">
-                <h1>Aggregate payroll report</h1>
+                <h1>Payroll report</h1>
               </div>
               <h4 className="text-center">Payroll Report for the month of {presentMonth}</h4>  
                 <div className="row mt-5">
@@ -34,9 +36,11 @@ class MonthlyDashboard extends PureComponent {
                   <MonthlyTax />
                 </div>
 
-              <h4 className="text-center mt-4">Payroll Report for the year {year}</h4> 
+              <h4 className="text-center mt-5">Payroll Report for the year {year}</h4> 
                 <div className="row mt-5">
+                  <YearlyMonthlyslip />
                   <YearlySingleEmployee />
+                  <YearlyAllEmployee />
                 </div>
 
             </section>

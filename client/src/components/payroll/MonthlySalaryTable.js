@@ -40,7 +40,7 @@ class MonthlySalaryTable extends Component {
         <td>
           <Link
             to={`/payroll/monthly/viewslip/${employee._id}`}
-            className="btn btn-success btn-sm"
+            className="btn btn-info btn-sm"
           >
             View 
           </Link>

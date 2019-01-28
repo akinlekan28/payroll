@@ -43,7 +43,7 @@ class MonthlySlip extends PureComponent {
     d.innerHTML = "Sending...";
 
     axios
-      .post(`/api/tax/singleslip/send/${this.props.match.params.id}`)
+      .post(`/api/payslip/singleslip/send/${this.props.match.params.id}`)
       .then(res => {
         toast.success("Employee payroll successfully sent!");
         d.disabled = false;

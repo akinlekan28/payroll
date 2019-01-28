@@ -11,7 +11,7 @@ import {
 export const getPayroll = id => dispatch => {
   dispatch(setPayrollLoading());
   return axios
-    .get(`/api/tax/singleslip/${id}`)
+    .get(`/api/payslip/singleslip/${id}`)
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL,
@@ -30,7 +30,7 @@ export const getPayroll = id => dispatch => {
 export const getMonthly = () => dispatch => {
   dispatch(setPayrollLoading());
   axios
-    .get("/api/tax/monthlyslip")
+    .get("/api/payslip/monthlyslip")
     .then(res =>
       dispatch({
         type: VIEW_MONTHLY_PAYROLL,
@@ -48,7 +48,7 @@ export const getMonthly = () => dispatch => {
 export const getEmployeeYearlySlip = id => dispatch => {
   dispatch(setPayrollLoading());
   return axios
-    .get(`/api/tax/allslip/${id}`)
+    .get(`/api/payslip/allslip/${id}`)
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL_RECORDS,

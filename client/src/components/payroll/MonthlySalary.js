@@ -22,7 +22,7 @@ class MonthlySalary extends Component {
     let failedGeneration = 0;
 
     employees.forEach(employee => {
-      axios.get(`/api/tax/singleslip/${employee._id}`)
+      axios.get(`/api/payslip/singleslip/${employee._id}`)
         .then(res => {
           if(res.status === 200){
             completeGeneration++;
@@ -56,7 +56,7 @@ class MonthlySalary extends Component {
         employeeTable = <MonthlySalaryTable employees={employees} />;
 
         if(salaryDay >= 21){
-          generateBtn = <button className="btn btn-lg btn-success mb-4" onClick={this.generateAll.bind(this, employees)}>Bulk generate</button>
+          generateBtn = <button className="btn btn-lg btn-info mb-4" onClick={this.generateAll.bind(this, employees)}>Generate All Payslips</button>
         }
         
       } else {

@@ -22,7 +22,7 @@ let presentMonth = date.toLocaleString("en-us", { month: "long" });
 // let presentMonth = 'February';
 let presentYear = date.getFullYear();
 
-//@route  Get api/tax/singleslip/:id
+//@route  Get api/payslip/singleslip/:id
 //@desc Get Employee payslip route
 //@access Private
 router.get("/singleslip/:id", protect, (req, res) => {
@@ -546,7 +546,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
   }
 });
 
-//@route  Post api/tax/singleslip/send/:id
+//@route  Post api/payslip/singleslip/send/:id
 //@desc Send Employee payslip pdf as email route
 //@access Private
 router.post("/singleslip/send/:id", protect, (req, res) => {
@@ -769,7 +769,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
     .catch(err => res.status(404).json({ message: "Error fetching payslip" }));
 });
 
-//@route  GET api/tax/mothlyslip
+//@route  GET api/payslip/mothlyslip
 //@desc Get all Employees monthly payslip route
 //@access Private
 router.get('/monthlyslip', protect, (req, res) => {
@@ -806,7 +806,7 @@ router.get('/monthlyslip', protect, (req, res) => {
   .catch(err => console.log(err))
 })
 
-//@route  GET api/tax/allslip
+//@route  GET api/payslip/allslip/:id
 //@desc Get single Employee all yearly payslip route
 //@access Private
 router.get('/allslip/:id', protect, (req, res) => {
@@ -823,23 +823,25 @@ router.get('/allslip/:id', protect, (req, res) => {
   .catch(err => console.log(error))
 });
 
-//@route  GET api/tax/
-//@desc Get all Employees payslip route
+//@route  GET api/payslip/allyear
+//@desc Get all Employees yearly payslips route
 //@access Private
-router.get('/', protect, (req, res) => {
-  Payslip.find()
-  .then(payslips => res.json(payslips))
-  .catch(err => console.log(payslips))
-})
+router.get('/allyear', protect, (req, res) => {
+  const errors = {}
 
-//@route  Delete api/tax/:id
-//@desc Get all Employees payslip route
-//@access Private
-router.delete('/:id', protect, (req, res) => {
-  Payslip.findOneAndRemove({_id: req.params.id})
-  .then(() => res.json({message:'payslip removed'}))
+  Payslip.find( {is_delete: 0} ).where('presentYear').equals(presentYear)
+  .then(payslips => {
+
+    if(!payslips){
+      errors.payslips = 'Payslips not found'
+      return res.status(404).json(errors)
+    }
+    res.json(payslips)
+  })
   .catch(err => console.log(err))
-})
+});
+
+
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
   try {
@@ -861,7 +863,7 @@ const generatePdf = (docDefinition, successCallback, errorCallback) => {
     const doc = printer.createPdfKitDocument(docDefinition);
 
     doc.pipe(
-      fs.createWriteStream("docs/payroll.pdf").on("error", err => {
+      fs.createWriteStream("docs/payslip.pdf").on("error", err => {
         errorCallback(err.message);
       })
     );

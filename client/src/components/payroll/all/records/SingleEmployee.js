@@ -81,7 +81,7 @@ class SingleEmployee extends Component {
                     <div className="col-md-3">
                       <button
                         type="submit"
-                        className="btn btn-primary btn-lg"
+                        className="btn btn-info btn-lg"
                         tabIndex="4"
                       >
                         Get payslips
