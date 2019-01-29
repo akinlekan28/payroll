@@ -3,6 +3,7 @@ import {
   VIEW_PAYROLL,
   VIEW_MONTHLY_PAYROLL,
   VIEW_PAYROLL_RECORDS,
+  VIEW_PAYROLL_RECORDS_YEARLY,
   PAYROLL_LOADING,
   GET_ERRORS
 } from "./types";
@@ -45,6 +46,7 @@ export const getMonthly = () => dispatch => {
     );
 };
 
+//Get employee payslip within a calendar year
 export const getEmployeeYearlySlip = id => dispatch => {
   dispatch(setPayrollLoading());
   return axios
@@ -52,6 +54,25 @@ export const getEmployeeYearlySlip = id => dispatch => {
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL_RECORDS,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+//Get all employee payslip within a calendar year
+export const getAllYearlyPayslip = () => dispatch => {
+  dispatch(setPayrollLoading());
+  return axios
+    .get("/api/payslip/allyear")
+    .then(res =>
+      dispatch({
+        type: VIEW_PAYROLL_RECORDS_YEARLY,
         payload: res.data
       })
     )

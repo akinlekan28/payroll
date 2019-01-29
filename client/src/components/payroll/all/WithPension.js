@@ -59,29 +59,34 @@ class WithPension extends PureComponent {
         if(Object.keys(payrolls).length > 0){
 
             payrollContainer = (
-            <div className="card-body">
-            <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">Back</Link>
-            <ReactHTMLTableToExcel
+            <div className="card">
+            <div className="card-header justify-content-center">
+              <h3>Employees payslips with pension</h3>
+            </div>
+            <div className="live-search ml-4">
+                <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">
+                    Back
+                </Link>
+                <ReactHTMLTableToExcel
                     id="test-table-xls-button"
                     className="download-table-xls-button btn btn-lg btn-primary mb-4 ml-3"
                     table="table-to-xls"
                     filename="payroll"
                     sheet="Payroll with pension"
-                    buttonText="Download excel"/>
-
-            <h4 className="text-center mb-5">Employees payslips with pension</h4>
-            <div className="live-search">
-            <TextFieldGroup
-                type="text"
-                name="search"
-                label="Search employee"
-                placeholder="Enter name"
-                value={this.state.search}
-                onChange={this.onChange}
-                tabindex="1"
-                className="live-search"
-              />
-           </div>
+                    buttonText="Download excel"
+                />
+                <TextFieldGroup
+                    type="text"
+                    name="search"
+                    label="Search employee"
+                    placeholder="Enter name"
+                    value={this.state.search}
+                    onChange={this.onChange}
+                    tabindex="1"
+                    className="live-search"
+                  />
+              </div>
+            <div className="card-body">
             <div className="table-responsive">
               <table className="table table-stripped" id="table-to-xls">
                 <thead>
@@ -90,7 +95,7 @@ class WithPension extends PureComponent {
                     <th>Designation</th>
                     <th>Basic Salary</th>
                     <th>Gross</th>
-                    <th>Consolidation Relief Allowance</th>
+                    <th>Consolidation Relief</th>
                     <th>Pension Contribution</th>
                     <th>Taxable Income</th>
                     <th>Tax Payable</th>
@@ -126,6 +131,7 @@ class WithPension extends PureComponent {
               </table>
             </div>
           </div>
+          </div>
           );
 
         } else {
@@ -141,7 +147,7 @@ class WithPension extends PureComponent {
               <div className="main-content">
                 <section className="section">
                   <div className="section-header">
-                    <h1>Aggregate payroll report</h1>
+                    <h1>Payroll report</h1>
                   </div>
                   {payrollContainer}
                 </section>

@@ -67,7 +67,7 @@ class SingleEmployee extends Component {
           <div>
             <div className="row">
               <div className="col-md-9">
-                <div className="card-body">
+                <div className="card-body mt-4">
                   <form onSubmit={this.onSubmit} className="form-inline">
                     <div className="col-md-4">
                       <SelectListGroup
@@ -120,7 +120,7 @@ class SingleEmployee extends Component {
           <div className="main-content">
             <section className="section">
               <div className="section-header">
-                <h1>Aggregate payroll report</h1>
+                <h1>Payroll report</h1>
               </div>
 
               <h4 className="text-center mt-4">

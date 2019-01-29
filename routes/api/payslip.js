@@ -830,6 +830,7 @@ router.get('/allyear', protect, (req, res) => {
   const errors = {}
 
   Payslip.find( {is_delete: 0} ).where('presentYear').equals(presentYear)
+  .sort({name: 1})
   .then(payslips => {
 
     if(!payslips){
@@ -840,7 +841,6 @@ router.get('/allyear', protect, (req, res) => {
   })
   .catch(err => console.log(err))
 });
-
 
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {

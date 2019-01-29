@@ -86,7 +86,7 @@ class Contribution extends PureComponent {
               <div className="main-content">
                 <section className="section">
                   <div className="section-header">
-                    <h1>Aggregate payroll report</h1>
+                    <h1>Payroll report</h1>
                   </div>
                   {payrollContainer}
                 </section>

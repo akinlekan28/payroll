@@ -2,6 +2,7 @@ import {
   VIEW_PAYROLL,
   VIEW_MONTHLY_PAYROLL,
   VIEW_PAYROLL_RECORDS,
+  VIEW_PAYROLL_RECORDS_YEARLY,
   PAYROLL_LOADING
 } from "../actions/types";
 
@@ -9,6 +10,7 @@ const initialState = {
   payroll: [],
   payrolls: [],
   payrollRecords: [],
+  payrollRecordsYearly: [],
   loading: false
 };
 
@@ -35,7 +37,12 @@ export default function(state = initialState, action) {
         payrollRecords: action.payload,
         loading: false
       };
-
+    case VIEW_PAYROLL_RECORDS_YEARLY:
+      return {
+        ...state,
+        payrollRecordsYearly: action.payload,
+        loading: false
+      };
     case PAYROLL_LOADING:
       return {
         ...state,
