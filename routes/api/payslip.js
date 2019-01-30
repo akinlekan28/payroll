@@ -17,9 +17,11 @@ const IndividualCost = require("../../models/Individualcost");
 const Payslip = require("../../models/Payslip");
 const OneOffPayment = require("../../models/Oneoffpayment");
 
+//Montly record validation rules
+const monthlyRecord = require('../../validation/monthlyrecord');
+
 const date = new Date();
 let presentMonth = date.toLocaleString("en-us", { month: "long" });
-// let presentMonth = 'February';
 let presentYear = date.getFullYear();
 
 //@route  Get api/payslip/singleslip/:id
@@ -841,6 +843,31 @@ router.get('/allyear', protect, (req, res) => {
   })
   .catch(err => console.log(err))
 });
+
+//@route  GET api/monthly/singleslip
+//@desc Get Employee payslip monthly record route
+//@access Private
+router.post('/monthly/singleslip', (req, res) => {
+
+    const { errors, isValid } = monthlyRecord(req.body)
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    Payslip.findOne({employee: req.body.employee}, {is_delete: 0})
+    .where('presentMonth').equals(req.body.month)
+    .then(monthlySlip => {
+      if(!monthlySlip){
+        errors.monthlyslip = 'Payslip not found';
+        return res.status(404).json(errors)
+      }
+      res.json(monthlySlip)
+    })
+    .catch(err => console.log(err))
+
+});
+
 
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
