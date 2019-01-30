@@ -3,9 +3,11 @@ import {
   VIEW_PAYROLL,
   VIEW_MONTHLY_PAYROLL,
   VIEW_PAYROLL_RECORDS,
+  VIEW_PAYROLL_RECORDS_MONTHLY,
   VIEW_PAYROLL_RECORDS_YEARLY,
   PAYROLL_LOADING,
-  GET_ERRORS
+  GET_ERRORS,
+  CLEAR_ERRORS
 } from "./types";
 
 //View single payroll
@@ -84,9 +86,35 @@ export const getAllYearlyPayslip = () => dispatch => {
     );
 };
 
+//Get monthly employee payslip within a calendar year
+export const getMonthlyPayslip = payslipData => dispatch => {
+  dispatch(clearErrors());
+  return axios
+    .post("/api/payslip/monthly/singleslip", payslipData)
+    .then(res =>
+      dispatch({
+        type: VIEW_PAYROLL_RECORDS_MONTHLY,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 //Set loding state
 export const setPayrollLoading = () => {
   return {
     type: PAYROLL_LOADING
+  };
+};
+
+//Clear errors
+const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
   };
 };

@@ -71,6 +71,7 @@ class SingleEmployee extends Component {
                   <form onSubmit={this.onSubmit} className="form-inline">
                     <div className="col-md-4">
                       <SelectListGroup
+                        label="Employee&nbsp;"
                         placeholder="Select employee level"
                         name="employee"
                         value={this.state.employee}
@@ -124,7 +125,7 @@ class SingleEmployee extends Component {
               </div>
 
               <h4 className="text-center mt-4">
-                Generated employee payslips for the year {year}
+                Search generated employee payslips for the year {year}
               </h4>
               {searchContainer}
               {payslipTableContainer}

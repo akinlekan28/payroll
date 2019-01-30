@@ -189,6 +189,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               netPay,
                               email: employeeEmail,
                               designation,
+                              department,
                               employee: employeeId,
                               bonuses,
                               deductables,
@@ -273,7 +274,6 @@ router.get("/singleslip/:id", protect, (req, res) => {
                             const payslipDetails = {
                               tag,
                               name,
-                              department,
                               basic,
                               grossEarning,
                               tax,
@@ -283,6 +283,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               netPay,
                               email: employeeEmail,
                               designation,
+                              department,
                               employee: employeeId,
                               bonuses,
                               deductables,
@@ -386,7 +387,6 @@ router.get("/singleslip/:id", protect, (req, res) => {
                             const payslipDetails = {
                               tag,
                               name,
-                              department,
                               basic,
                               grossEarning,
                               tax,
@@ -396,6 +396,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               netPay,
                               email: employeeEmail,
                               designation,
+                              department,
                               employee: employeeId,
                               bonuses,
                               deductables,
@@ -479,7 +480,6 @@ router.get("/singleslip/:id", protect, (req, res) => {
                             const payslipDetails = {
                               tag,
                               name,
-                              department,
                               basic,
                               grossEarning,
                               tax,
@@ -489,6 +489,7 @@ router.get("/singleslip/:id", protect, (req, res) => {
                               netPay,
                               email: employeeEmail,
                               designation,
+                              department,
                               employee: employeeId,
                               bonuses,
                               deductables,
@@ -847,7 +848,7 @@ router.get('/allyear', protect, (req, res) => {
 //@route  GET api/monthly/singleslip
 //@desc Get Employee payslip monthly record route
 //@access Private
-router.post('/monthly/singleslip', (req, res) => {
+router.post('/monthly/singleslip', protect, (req, res) => {
 
     const { errors, isValid } = monthlyRecord(req.body)
 
@@ -859,7 +860,7 @@ router.post('/monthly/singleslip', (req, res) => {
     .where('presentMonth').equals(req.body.month)
     .then(monthlySlip => {
       if(!monthlySlip){
-        errors.monthlyslip = 'Payslip not found';
+        errors.monthlyslip = 'Payslip not found or hasn\'t been generated';
         return res.status(404).json(errors)
       }
       res.json(monthlySlip)
