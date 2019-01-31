@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 const MonthlySlipRecordTable = (props) => {
     
@@ -237,6 +238,10 @@ const MonthlySlipRecordTable = (props) => {
     </div>
   </div>
   )
+}
+
+MonthlySlipRecordTable.propTypes = {
+    payroll: PropTypes.object.isRequired
 }
 
 export default MonthlySlipRecordTable;

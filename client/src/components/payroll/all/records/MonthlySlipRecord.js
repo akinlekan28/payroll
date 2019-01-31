@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent, Fragment } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -10,8 +10,10 @@ import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
 import { toast } from "react-toastify";
 import MonthlySlipRecordTable from "./MonthlySlipRecordTable";
+import ReactToPrint from "react-to-print";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
-export class MonthlySlipRecord extends Component {
+export class MonthlySlipRecord extends PureComponent {
   static propTypes = {
     getEmployees: PropTypes.func.isRequired,
     employees: PropTypes.object.isRequired,
@@ -66,6 +68,10 @@ export class MonthlySlipRecord extends Component {
       })
       .catch(err => console.log(err));
   }
+
+  exportPDF = () => {
+    this.resume.save();
+  };
 
   render() {
     let date = new Date();
@@ -147,11 +153,52 @@ export class MonthlySlipRecord extends Component {
           </div>
         );
 
-        if (payrollRecordsMonthly === null || this.props.payrollRecordsMonthly.loading) {
+        if (
+          payrollRecordsMonthly === null ||
+          this.props.payrollRecordsMonthly.loading
+        ) {
           monthlyPayslipContainer = <Spinner />;
         } else {
           if (Object.keys(payrollRecordsMonthly).length > 0) {
-            monthlyPayslipContainer = <MonthlySlipRecordTable payroll={payrollRecordsMonthly} />;
+            monthlyPayslipContainer = (
+              <Fragment>
+                <PDFExport
+                  paperSize={"Letter"}
+                  fileName={
+                    payrollRecordsMonthly.name +
+                    " payslip_" +
+                    payrollRecordsMonthly.presentMonth
+                  }
+                  title={
+                    payrollRecordsMonthly.name +
+                    " payslip_" +
+                    payrollRecordsMonthly.presentMonth
+                  }
+                  subject=""
+                  keywords=""
+                  ref={r => (this.resume = r)}
+                >
+                  <MonthlySlipRecordTable payroll={payrollRecordsMonthly} />
+                </PDFExport>
+                <div className="text-center mb-5">
+                  {/* <ReactToPrint
+                    trigger={() => (
+                      <Link to="#" className="btn btn-lg btn-info">
+                        Print payslip
+                      </Link>
+                    )}
+                    content={() => this.componentRef}
+                  /> */}
+
+                  <button
+                    className="btn btn-lg btn-success ml-3"
+                    onClick={this.exportPDF}
+                  >
+                    Download payslip Pdf
+                  </button>
+                </div>
+              </Fragment>
+            );
           } else {
             monthlyPayslipContainer = "";
           }

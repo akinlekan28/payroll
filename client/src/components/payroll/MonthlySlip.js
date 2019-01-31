@@ -15,7 +15,7 @@ import axios from "axios";
 
 class MonthlySlip extends PureComponent {
   constructor(props) {
-    super();
+    super(props);
 
     this.sendEmail = this.sendEmail.bind(this);
   }
@@ -93,7 +93,7 @@ class MonthlySlip extends PureComponent {
             <div className="text-center">
               <ReactToPrint
                 trigger={() => (
-                  <Link to="#" className="btn btn-lg btn-warning">
+                  <Link to="#" className="btn btn-lg btn-info">
                     Print payslip
                   </Link>
                 )}
@@ -113,6 +113,9 @@ class MonthlySlip extends PureComponent {
               >
                 Send to employee
               </button>
+              <Link to="/payroll/monthly" className="btn btn-lg btn-warning ml-3">
+                Back
+              </Link>
             </div>
           </div>
         );
