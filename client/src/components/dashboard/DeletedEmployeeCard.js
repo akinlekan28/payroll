@@ -4,7 +4,7 @@ class DeletedEmployeeCard extends Component {
   render() {
       const {dashboard} = this.props;
     return (
-        <div className="col-lg-4 col-md-6 col-sm-6 col-12">
+        <div className="col-lg-3 col-md-6 col-sm-6 col-12">
             <div className="card card-statistic-1">
             <div className="card-icon bg-cyan">
                 <i className="fas fa-trash" />

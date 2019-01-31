@@ -4,43 +4,40 @@ import SideBar from "./SideBar";
 import Footer from "./Footer";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getAnalytics } from "../../actions/dashActions";
+import { getAnalytics, getNet } from "../../actions/dashActions";
 import Spinner from "../common/Spinner";
 import EmployeeRow from "./EmployeeRow";
-import AdminCard from "./AdminCard";
 import EmployeeCard from "./EmployeeCard";
 import LevelCard from "./LevelCard";
 import ExceptionCard from "./ExceptionCard";
-import PayslipCard from './PayslipCard';
-import OneoffCard from './OneoffCard';
-import DeletedEmployeeCard from './DeletedEmployeeCard';
+import DeletedEmployeeCard from "./DeletedEmployeeCard";
+import Netpay from "./Netpay";
 
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getAnalytics();
+    this.props.getNet();
   }
 
   render() {
-    const { dashboard, loading } = this.props.dashboard;
+    const { dashboard, net, loading } = this.props.dashboard;
 
     let dashboardContent;
 
     if (dashboard === undefined || loading) {
       dashboardContent = <Spinner />;
     } else {
-      if (Object.keys(dashboard).length > 0) {
+      if (Object.keys(dashboard).length > 0 && Object.keys(net).length > 0) {
         dashboardContent = (
           <React.Fragment>
             <div className="row">
-              <AdminCard dashboard={dashboard} />
               <EmployeeCard dashboard={dashboard} />
               <LevelCard dashboard={dashboard} />
               <ExceptionCard dashboard={dashboard} />
+              <DeletedEmployeeCard dashboard={dashboard} />
             </div>
             <div className="row">
-              <PayslipCard dashboard={dashboard} />
-              <OneoffCard dashboard={dashboard} />
-              <DeletedEmployeeCard dashboard={dashboard} />
+              <Netpay net={net} />
             </div>
             <EmployeeRow employeeDetails={dashboard.employee} />
           </React.Fragment>
@@ -72,7 +69,9 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  getAnalytics: PropTypes.func.isRequired
+  getAnalytics: PropTypes.func.isRequired,
+  getNet: PropTypes.func.isRequired,
+  dashboard: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -81,5 +80,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getAnalytics }
+  { getAnalytics, getNet }
 )(Dashboard);

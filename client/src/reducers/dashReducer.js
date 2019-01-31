@@ -1,8 +1,9 @@
-import { VIEW_ANALYTICS, ANALYTICS_LOADING } from "../actions/types";
+import { VIEW_ANALYTICS, ANALYTICS_LOADING, VIEW_NET } from "../actions/types";
 
 const initialState = {
   dashboard: {},
-  loading: false,
+  net: {},
+  loading: false
 };
 
 export default function(state = initialState, action) {
@@ -14,10 +15,17 @@ export default function(state = initialState, action) {
         loading: false
       };
 
+    case VIEW_NET:
+      return {
+        ...state,
+        net: action.payload,
+        loading: false
+      };
+
     case ANALYTICS_LOADING:
       return {
-          ...state,
-          loading: true
+        ...state,
+        loading: true
       };
 
     default:
