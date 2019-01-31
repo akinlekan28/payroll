@@ -9,6 +9,7 @@ import SearchBar from "../../../dashboard/SearchBar";
 import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
 import { toast } from "react-toastify";
+import MonthlySlipRecordTable from "./MonthlySlipRecordTable";
 
 export class MonthlySlipRecord extends Component {
   static propTypes = {
@@ -150,7 +151,7 @@ export class MonthlySlipRecord extends Component {
           monthlyPayslipContainer = <Spinner />;
         } else {
           if (Object.keys(payrollRecordsMonthly).length > 0) {
-            monthlyPayslipContainer = <h4>Payslip loaded!</h4>;
+            monthlyPayslipContainer = <MonthlySlipRecordTable payroll={payrollRecordsMonthly} />;
           } else {
             monthlyPayslipContainer = "";
           }
