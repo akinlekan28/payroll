@@ -24,21 +24,21 @@ const Netpay = props => {
       {
         label: "Monthly Net Pay",
         data: [
-          net.january,
-          net.february,
-          net.march,
-          net.april,
+          net.jan,
+          net.feb,
+          net.mar,
+          net.apr,
           net.may,
-          net.june,
-          net.july,
-          net.august,
-          net.september,
-          net.october,
-          net.november,
-          net.december
+          net.jun,
+          net.jul,
+          net.aug,
+          net.sep,
+          net.oct,
+          net.nov,
+          net.dec
         ],
         backgroundColor: "rgb(62, 202, 202)",
-        pointRadius: 5,
+        pointRadius: 5
       }
     ]
   };
@@ -47,9 +47,7 @@ const Netpay = props => {
     <div className="col-md-12">
       <div className="card">
         <div className="card-body">
-          <Line data={data} height={90} options={{
-
-          }} />
+          <Line data={data} height={90} />
         </div>
       </div>
     </div>

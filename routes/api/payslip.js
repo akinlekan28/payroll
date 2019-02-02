@@ -730,7 +730,7 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
         pdfLocation = path.join(__dirname, "../../", "docs", "/payroll.pdf");
 
         const transporter = nodemailer.createTransport({
-          service: "Gmail",
+          service: keys.service,
           auth: {
             user: keys.username,
             pass: keys.password,
@@ -755,6 +755,11 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
 
         transporter.sendMail(options, (error, info) => {
           if (error) {
+            fs.unlink(pdfLocation, err => {
+              if(err){
+                console.log(err)
+              }
+            })
             return res
               .status(400)
               .json({ message: "Error sending employee payslip" });
