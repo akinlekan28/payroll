@@ -12,6 +12,8 @@ import LevelCard from "./LevelCard";
 import ExceptionCard from "./ExceptionCard";
 import DeletedEmployeeCard from "./DeletedEmployeeCard";
 import Netpay from "./Netpay";
+import OtherPays from "./OtherPays";
+import SalaryPay from "./SalaryPay";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -36,8 +38,21 @@ class Dashboard extends Component {
               <ExceptionCard dashboard={dashboard} />
               <DeletedEmployeeCard dashboard={dashboard} />
             </div>
+            <h4 className="text-center mb-3">Yearly Analytics</h4>
             <div className="row">
               <Netpay net={net} />
+            </div>
+            <div className="row">
+              <SalaryPay
+                net={net.netPay}
+                cra={net.totalCra}
+                bonus={net.totalBonus}
+              />
+              <OtherPays
+                tax={net.totalTax}
+                pension={net.totalPension}
+                deduction={net.totalDeduction}
+              />
             </div>
             <EmployeeRow employeeDetails={dashboard.employee} />
           </React.Fragment>

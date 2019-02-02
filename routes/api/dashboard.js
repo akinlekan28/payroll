@@ -79,6 +79,15 @@ router.get('/payoverview', protect, (req, res) => {
         let oct = 0;
         let nov = 0;
         let dec = 0;
+        let net = 0;
+        let tax = 0;
+        let pension = 0;
+        let consolidationRelief = 0;
+        let bonus1 = 0;
+        let bonus2 = 0;
+        let bonus3 = 0;
+        let totalBonus = 0;
+        let otherDeduction = 0;
 
         payslips.forEach(payslipItem => {
             switch(payslipItem.presentMonth){
@@ -120,6 +129,36 @@ router.get('/payoverview', protect, (req, res) => {
                     break;
                 default: 1+1;
             }
+
+            let bonusItemSum = 0;
+            payslipItem.bonuses.forEach(bonusItem => {
+                bonusItemSum += bonusItem.amount;
+            })
+
+            let individualcostItemSum = 0;
+            payslipItem.individualcost.forEach(individualcostItem => {
+                if(individualcostItem.costType === 'income'){
+                    individualcostItemSum += individualcostItem.amount;
+                }
+            })
+
+            let oneOffItemSum = 0;
+            payslipItem.oneOffPaymentArray.forEach(oneOffItem => {
+                if(oneOffItem.costType === 'income'){
+                    oneOffItemSum += oneOffItem.amount;
+                }
+            })
+            
+            net += payslipItem.netPay
+            employeeDeduction = payslipItem.totalDeductions - payslipItem.tax - payslipItem.pension
+ 
+            tax += payslipItem.tax;
+            pension += payslipItem.pension;
+            consolidationRelief += payslipItem.consolidationRelief;
+            bonus1 += bonusItemSum;
+            bonus2 += individualcostItemSum;
+            bonus3 += oneOffItemSum;
+            otherDeduction += employeeDeduction;
         })
 
         january = jan.toFixed(2)
@@ -130,10 +169,16 @@ router.get('/payoverview', protect, (req, res) => {
         june = jun.toFixed(2)
         july = jul.toFixed(2)
         august = aug.toFixed(2)
-        sepetember = sep.toFixed(2)
+        september = sep.toFixed(2)
         october = oct.toFixed(2)
         november = nov.toFixed(2)
         december = dec.toFixed(2)
+        totalTax = tax.toFixed(2)
+        totalPension = pension.toFixed(2)
+        totalCra = consolidationRelief.toFixed(2)
+        totalBonus = (bonus1+bonus2+bonus3).toFixed(2)
+        totalDeduction = otherDeduction.toFixed(2)
+        netPay = net.toFixed(2)
 
         const overview = {
             january,
@@ -144,10 +189,16 @@ router.get('/payoverview', protect, (req, res) => {
             june,
             july,
             august,
-            sepetember,
+            september,
             october,
             november,
             december,
+            netPay,
+            totalTax,
+            totalPension,
+            totalCra,
+            totalBonus,
+            totalDeduction
         }
         res.json(overview)
     })

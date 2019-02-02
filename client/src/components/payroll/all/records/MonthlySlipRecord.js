@@ -10,7 +10,6 @@ import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
 import { toast } from "react-toastify";
 import MonthlySlipRecordTable from "./MonthlySlipRecordTable";
-import ReactToPrint from "react-to-print";
 import { PDFExport } from "@progress/kendo-react-pdf";
 
 export class MonthlySlipRecord extends PureComponent {

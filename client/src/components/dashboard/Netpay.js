@@ -37,29 +37,19 @@ const Netpay = props => {
           net.november,
           net.december
         ],
-        backgroundColor: "rgb(62, 202, 202)"
+        backgroundColor: "rgb(62, 202, 202)",
+        pointRadius: 5,
       }
     ]
   };
-
-//   const option = {
-//     title: {
-//       display: true,
-//       text: "Employee Monthly netpay sum",
-//       fontSize: 23,
-//       fontColor: '#007bff'
-//     },
-//     legend: {
-//         display: true,
-//         position: 'bottom'
-//     }
-//   }
 
   return (
     <div className="col-md-12">
       <div className="card">
         <div className="card-body">
-          <Line data={data} height={90} />
+          <Line data={data} height={90} options={{
+
+          }} />
         </div>
       </div>
     </div>
