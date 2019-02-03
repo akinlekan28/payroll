@@ -38,10 +38,11 @@ class Dashboard extends Component {
               <ExceptionCard dashboard={dashboard} />
               <DeletedEmployeeCard dashboard={dashboard} />
             </div>
-            <h4 className="text-center mb-3">Yearly Analytics</h4>
+            <h4 className="text-center mb-3">Monthly Analysis</h4>
             <div className="row">
               <Netpay net={net} />
             </div>
+            <h4 className="text-center mb-3">Yearly Analysis</h4>
             <div className="row">
               <SalaryPay
                 net={net.netPay}
