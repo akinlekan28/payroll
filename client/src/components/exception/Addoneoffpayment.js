@@ -38,7 +38,7 @@ class Addoneoffpayment extends Component {
       name: this.state.name,
       amount: this.state.amount,
       employee: this.state.employee,
-      costType: this.state.costType,
+      // costType: this.state.costType,
       month: this.state.month
     };
 
@@ -91,7 +91,6 @@ class Addoneoffpayment extends Component {
 
     const exceptionFormContainer = (
       <form onSubmit={this.onSubmit}>
-        <p className="text-danger text-center">{errors.exception}</p>
 
         <TextFieldGroup
           type="text"

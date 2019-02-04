@@ -25,10 +25,16 @@ export const addException = exceptionDetails => dispatch => {
         payload: res.data
       })
     )
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
+    .catch(
+      err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors());
+        }, 5000);
       })
     );
 };
@@ -81,10 +87,16 @@ export const addOtherException = otherExceptionDetails => dispatch => {
         payload: res.data
       })
     )
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
+    .catch(
+      err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors());
+        }, 5000);
       })
     );
 };
@@ -141,6 +153,11 @@ export const addOneOffPayment = paymentData => dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
+      }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors())
+        }, 5000);
       })
     );
 };

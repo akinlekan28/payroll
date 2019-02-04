@@ -19,7 +19,7 @@ module.exports = function oneoffpaymentInput(data) {
   }
 
   if (validator.isEmpty(data.month)) {
-    errors.month = "Payment month field is required";
+    errors.month = "Month field is required";
   }
 
   if (validator.isEmpty(data.costType)) {

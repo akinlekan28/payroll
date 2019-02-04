@@ -14,7 +14,7 @@ import {
 export const getPayroll = id => dispatch => {
   dispatch(setPayrollLoading());
   return axios
-    .get(`/api/payslip/singleslip/${id}`)
+    .get(`/api/payslip/${id}`)
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL,
@@ -33,7 +33,7 @@ export const getPayroll = id => dispatch => {
 export const getMonthly = () => dispatch => {
   dispatch(setPayrollLoading());
   axios
-    .get("/api/payslip/monthlyslip")
+    .get("/api/payslip/record/allmonthlyslip")
     .then(res =>
       dispatch({
         type: VIEW_MONTHLY_PAYROLL,
@@ -52,7 +52,7 @@ export const getMonthly = () => dispatch => {
 export const getEmployeeYearlySlip = id => dispatch => {
   dispatch(setPayrollLoading());
   return axios
-    .get(`/api/payslip/allslip/${id}`)
+    .get(`/api/payslip/record/employeeallslip/${id}`)
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL_RECORDS,
@@ -71,7 +71,7 @@ export const getEmployeeYearlySlip = id => dispatch => {
 export const getAllYearlyPayslip = () => dispatch => {
   dispatch(setPayrollLoading());
   return axios
-    .get("/api/payslip/allyear")
+    .get("/api/payslip/record/allyear")
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL_RECORDS_YEARLY,
@@ -90,7 +90,7 @@ export const getAllYearlyPayslip = () => dispatch => {
 export const getMonthlyPayslip = payslipData => dispatch => {
   dispatch(clearErrors());
   return axios
-    .post("/api/payslip/monthly/singleslip", payslipData)
+    .post("/api/payslip/record/singlemonthlyslip", payslipData)
     .then(res =>
       dispatch({
         type: VIEW_PAYROLL_RECORDS_MONTHLY,
@@ -101,6 +101,11 @@ export const getMonthlyPayslip = payslipData => dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
+      }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors())
+        }, 5000);
       })
     );
 };

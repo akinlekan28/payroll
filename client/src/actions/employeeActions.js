@@ -9,7 +9,7 @@ import {
   DELETE_EMPLOYEE
 } from "./types";
 
-//Post employee
+//Post employeee
 export const registerEmployee = employeeData => dispatch => {
   dispatch(clearErrors());
   return axios
@@ -20,10 +20,16 @@ export const registerEmployee = employeeData => dispatch => {
         payload: res.data
       })
     )
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
+    .catch(
+      err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors());
+        }, 5000);
       })
     );
 };
@@ -85,16 +91,27 @@ export const getEmployee = employeeId => dispatch => {
 };
 
 export const editEmployee = (employeeId, employeeData) => dispatch => {
-  return axios.put(`/api/employee/${employeeId}`, employeeData)
-  .then(res => dispatch({
-    type: ADD_EMPLOYEE,
-    payload: res.data
-  }))
-  .catch(err => dispatch({
-    type: GET_ERRORS,
-    payload: err.response.data
-  }))
-}
+  return axios
+    .put(`/api/employee/${employeeId}`, employeeData)
+    .then(res =>
+      dispatch({
+        type: ADD_EMPLOYEE,
+        payload: res.data
+      })
+    )
+    .catch(
+      err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors());
+        }, 5000);
+      })
+    );
+};
 
 //Set loading state
 export const setEmployeeLoading = () => {

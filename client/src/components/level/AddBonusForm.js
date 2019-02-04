@@ -21,6 +21,11 @@ class AddBonusForm extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  componentDidMount = () => {
+    document.querySelector('.add-btn').disabled = true;
+  }
+  
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.errors) {
       return {
@@ -30,7 +35,13 @@ class AddBonusForm extends Component {
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      if(this.state.level !== ''){
+        document.querySelector('.add-btn').disabled = false;
+      } else {
+        document.querySelector('.add-btn').disabled = true;
+      }
+    });
   }
 
   onSubmit(e) {
@@ -52,6 +63,7 @@ class AddBonusForm extends Component {
             amount: '',
             level: ''
           })
+          document.querySelector('.add-btn').disabled = true;
         }
       })
       .catch(err => console.log(err));
@@ -98,7 +110,7 @@ class AddBonusForm extends Component {
         />
 
         <div className="text-center">
-          <button type="submit" className="btn btn-primary btn-lg" tabIndex="4">
+          <button type="submit" className="btn btn-primary btn-lg add-btn" tabIndex="4">
             Add Bonus
           </button>
         </div>

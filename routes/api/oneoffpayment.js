@@ -8,7 +8,7 @@ const Oneoffpayment = require("../../models/Oneoffpayment");
 const Employee = require("../../models/Employee");
 
 //validation rules
-const oneoffpaymentInput = require("../../validation/individualcost");
+const oneoffpaymentInput = require("../../validation/oneoffpayment");
 
 //@route  Post api/oneoffpayment
 //@desc Create/Edit Employee oneoffpayment exception route

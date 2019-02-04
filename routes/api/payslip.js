@@ -24,10 +24,10 @@ const date = new Date();
 let presentMonth = date.toLocaleString("en-us", { month: "long" });
 let presentYear = date.getFullYear();
 
-//@route  Get api/payslip/singleslip/:id
+//@route  Get api/payslip/:id
 //@desc Get Employee payslip route
 //@access Private
-router.get("/singleslip/:id", protect, (req, res) => {
+router.get("/:id", protect, (req, res) => {
 
   let salaryDay = date.getDate();
   // let salaryDay = 23;
@@ -549,10 +549,10 @@ router.get("/singleslip/:id", protect, (req, res) => {
   }
 });
 
-//@route  Post api/payslip/singleslip/send/:id
+//@route  Post api/payslip/send/:id
 //@desc Send Employee payslip pdf as email route
 //@access Private
-router.post("/singleslip/send/:id", protect, (req, res) => {
+router.post("/send/:id", protect, (req, res) => {
   const errors = {};
 
   Payslip.findOne({ employee: req.params.id }, { is_delete: 0 }).where('presentMonth').equals(presentMonth).where('presentYear')
@@ -777,10 +777,10 @@ router.post("/singleslip/send/:id", protect, (req, res) => {
     .catch(err => res.status(404).json({ message: "Error fetching payslip" }));
 });
 
-//@route  GET api/payslip/mothlyslip
+//@route  GET api/payslip/record/allmothlyslip
 //@desc Get all Employees monthly payslip route
 //@access Private
-router.get('/monthlyslip', protect, (req, res) => {
+router.get('/record/allmonthlyslip', protect, (req, res) => {
 
   let basicSum = 0, grossSum = 0, consolidationReliefSum = 0, pensionSum = 0, taxableIncomeSum = 0, taxSum = 0, netSum = 0;
 
@@ -814,10 +814,10 @@ router.get('/monthlyslip', protect, (req, res) => {
   .catch(err => console.log(err))
 })
 
-//@route  GET api/payslip/allslip/:id
+//@route  GET api/payslip/record/employeeallslip/:id
 //@desc Get single Employee all yearly payslip route
 //@access Private
-router.get('/allslip/:id', protect, (req, res) => {
+router.get('/record/employeeallslip/:id', protect, (req, res) => {
   const errors = {}
   
   Payslip.find({employee: req.params.id}, {is_delete: 0}).where('presentYear').equals(presentYear)
@@ -831,10 +831,10 @@ router.get('/allslip/:id', protect, (req, res) => {
   .catch(err => console.log(error))
 });
 
-//@route  GET api/payslip/allyear
+//@route  GET api/payslip/record/allyear
 //@desc Get all Employees yearly payslips route
 //@access Private
-router.get('/allyear', protect, (req, res) => {
+router.get('/record/allyear', protect, (req, res) => {
   const errors = {}
 
   Payslip.find( {is_delete: 0} ).where('presentYear').equals(presentYear)
@@ -850,10 +850,10 @@ router.get('/allyear', protect, (req, res) => {
   .catch(err => console.log(err))
 });
 
-//@route  GET api/monthly/singleslip
+//@route  POST api/monthly/singleslip
 //@desc Get Employee payslip monthly record route
 //@access Private
-router.post('/monthly/singleslip', protect, (req, res) => {
+router.post('/record/singlemonthlyslip', protect, (req, res) => {
 
     const { errors, isValid } = monthlyRecord(req.body)
 
@@ -874,6 +874,10 @@ router.post('/monthly/singleslip', protect, (req, res) => {
 
 });
 
+
+//@route  POST api/monthly/singleslip
+//@desc Get Employee payslip monthly record route
+//@access Private
 
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
