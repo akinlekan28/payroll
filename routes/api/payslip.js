@@ -8,6 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const emailTemplate = require("../../emailTemplates/emailTemplate");
 const nodemailer = require("nodemailer");
+const validator = require('validator');
 
 //Load models
 const Level = require("../../models/Level");
@@ -19,6 +20,8 @@ const OneOffPayment = require("../../models/Oneoffpayment");
 
 //Montly record validation rules
 const monthlyRecord = require('../../validation/monthlyrecord');
+const employeeMonthYear = require('../../validation/employeemonthyear');
+const monthYear = require('../../validation/monthyear');
 
 const date = new Date();
 let presentMonth = date.toLocaleString("en-us", { month: "long" });
@@ -850,7 +853,7 @@ router.get('/record/allyear', protect, (req, res) => {
   .catch(err => console.log(err))
 });
 
-//@route  POST api/monthly/singleslip
+//@route  POST api/payslip/record/singlemonthlyslip
 //@desc Get Employee payslip monthly record route
 //@access Private
 router.post('/record/singlemonthlyslip', protect, (req, res) => {
@@ -875,9 +878,76 @@ router.post('/record/singlemonthlyslip', protect, (req, res) => {
 });
 
 
-//@route  POST api/monthly/singleslip
-//@desc Get Employee payslip monthly record route
+//@route  POST api/payslip/record/byemployeemonthyear
+//@desc Get an employee payslip record by month and year route
 //@access Private
+router.post('/record/byemployeemonthyear', protect, (req, res) => {
+  const { errors, isValid } = employeeMonthYear(req.body)
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  Payslip.findOne({employee: req.body.employee}, { is_delete: 0 })
+  .where('presentYear').equals(req.body.year)
+  .where('presentMonth').equals(req.body.month)
+  .then(payslipItem => {
+    if(!payslipItem){
+      errors.payslip = 'Payslip not found or hasn\'t been generated';
+      return res.status(404).json(errors)
+    }
+    res.json(payslipItem)
+  })
+  .catch(err => console.log(err))
+});
+
+
+//@route  POST api/payslip/record/bymonthyear
+//@desc Get all employee payslip record by month and year route
+//@access Private
+router.post('/record/bymonthyear', protect, (req, res) => {
+  const { errors, isValid } = monthYear(req.body)
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  Payslip.find({ is_delete: 0 })
+  .where('presentYear').equals(req.body.year)
+  .where('presentMonth').equals(req.body.month)
+  .then(payslipItem => {
+    if(!payslipItem){
+      errors.payslips = 'Payslips not found or hasn\'t been generated';
+      return res.status(404).json(errors)
+    }
+    res.json(payslipItem)
+  })
+  .catch(err => console.log(err))
+});
+
+
+//@route  POST api/payslip/record/bymonthyear
+//@desc Get all employee payslip record by year route
+//@access Private
+router.post('/record/byyear', protect, (req, res) => {
+  const errors = {}
+
+  if(req.body.year === undefined || req.body.year === null){
+    errors.year = "Year field is required"
+    return res.status(400).json(errors)
+  }
+
+  Payslip.find({ is_delete: 0 })
+  .where('presentYear').equals(req.body.year)
+  .then(payslipItem => {
+    if(!payslipItem || Object.keys(payslipItem).length === 0){
+      errors.payslips = 'Payslips not found or hasn\'t been generated';
+      return res.status(404).json(errors)
+    }
+    res.json(payslipItem)
+  })
+  .catch(err => console.log(err))
+});
 
 
 const generatePdf = (docDefinition, successCallback, errorCallback) => {
