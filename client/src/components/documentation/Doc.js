@@ -3,8 +3,7 @@ import SearchBar from '../dashboard/SearchBar';
 import SideBar from '../dashboard/SideBar';
 import Footer from '../dashboard/Footer';
 
-export default () => {
-  return (
+export default () => (
     <div id="app">
       <div className="main-wrapper">
         <div className="navbar-bg"></div>
@@ -74,4 +73,3 @@ export default () => {
       </div>
     </div>
   )
-}

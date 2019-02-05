@@ -22,7 +22,7 @@ class AddDeductableForm extends Component {
   }
 
   componentDidMount = () => {
-    document.querySelector('.add-btn1').disabled = true;
+    this.refs.addBtn.disabled = true;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -36,9 +36,9 @@ class AddDeductableForm extends Component {
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
       if(this.state.level !== ''){
-        document.querySelector('.add-btn1').disabled = false;
+        this.refs.addBtn.disabled = false;
       } else {
-        document.querySelector('.add-btn1').disabled = true;
+        this.refs.addBtn.disabled = true;
       }
     });
   }
@@ -62,7 +62,7 @@ class AddDeductableForm extends Component {
             amount: '',
             level: ''
           })
-          document.querySelector('.add-btn1').disabled = true;
+          this.refs.addBtn.disabled = true;
         }
       })
       .catch(err => console.log(err));
@@ -108,7 +108,7 @@ class AddDeductableForm extends Component {
         />
 
         <div className="text-center">
-          <button type="submit" className="btn btn-primary btn-lg add-btn1" tabIndex="4">
+          <button type="submit" className="btn btn-primary btn-lg" ref="addBtn" tabIndex="4">
             Add Deductable
           </button>
         </div>

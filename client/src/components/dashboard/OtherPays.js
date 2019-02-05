@@ -1,12 +1,12 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
 
-const OtherPays = props => {
+const OtherPays = ({ tax, pension, deduction }) => {
   const data = {
     labels: ["Tax", "Pension", "Other Deductions"],
     datasets: [
       {
-        data: [props.tax, props.pension, props.deduction],
+        data: [tax, pension, deduction],
         backgroundColor: ["#fc544b", "#FFA426", "#63ED7A"]
       }
     ]

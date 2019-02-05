@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
-const Netpay = props => {
-  const { net } = props;
-
+const Netpay = ({ net }) => {
   const data = {
     labels: [
       "January",

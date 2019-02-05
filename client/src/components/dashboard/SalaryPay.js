@@ -1,12 +1,12 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 
-const SalaryPay = props => {
+const SalaryPay = ({ net, cra, bonus }) => {
   const data = {
     labels: ["Net Pay", "Consolidation Relief Allowance", "Bonuses"],
     datasets: [
       {
-        data: [props.net, props.cra, props.bonus],
+        data: [net, cra, bonus],
         backgroundColor: ["#3ECACA", "#808080", "#4a4a4a"]
       }
     ]
@@ -14,7 +14,7 @@ const SalaryPay = props => {
 
   const options = {
     tooltips: {
-        bodyFontSize: 21
+      bodyFontSize: 21
     }
   };
 
