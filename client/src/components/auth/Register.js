@@ -65,9 +65,9 @@ class Register extends Component {
         <div id="app">
           <section className="section">
             <div className="container">
-              <div className="row justify-content-center mt-5">
-                <div className="col-5">
-                  <div className="card card-primary mt-4">
+              <div className="row justify-content-center">
+                <div className="col-5 mt-5">
+                  <div className="card card-primary">
                     <div className="card-header justify-content-center">
                       <h3>Register</h3>
                     </div>
