@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
+import Button from "../common/Button";
 import { Link } from "react-router-dom";
 import { resetPassword } from "../../actions/authActions";
 import { toast } from "react-toastify";
@@ -97,13 +98,11 @@ class Reset extends Component {
                           Done resetting ? <Link to="/">Back to login</Link>
                         </p>
                         <div className="form-group mt-4 mb-5">
-                          <button
+                          <Button
                             type="submit"
-                            className="btn btn-primary btn-lg btn-block"
-                            tabIndex="4"
-                          >
-                            Set New Password
-                          </button>
+                            classnameItems="btn-primary btn-lg btn-block"
+                            btnName="Set New Password"
+                          />
                         </div>
                       </form>
                     </div>

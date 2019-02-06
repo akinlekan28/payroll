@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
+import Button from '../common/Button';
 
 class Login extends Component {
   constructor() {
@@ -89,13 +90,7 @@ class Login extends Component {
                           <Link to="/forgot-password">reset</Link>
                         </p>
                         <div className="form-group mt-4 mb-5">
-                          <button
-                            type="submit"
-                            className="btn btn-primary btn-lg btn-block"
-                            tabIndex="4"
-                          >
-                            Login
-                          </button>
+                          <Button type="submit" classnameItems="btn-primary btn-lg btn-block" btnName="Login"/>
                         </div>
                       </form>
                     </div>

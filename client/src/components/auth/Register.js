@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
+import Button from "../common/Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,7 +26,7 @@ class Register extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isAuthenticated) {
-      nextProps.history.push('/dashboard');
+      nextProps.history.push("/dashboard");
     }
     if (nextProps.errors) {
       return {
@@ -120,13 +121,12 @@ class Register extends Component {
                           Registered ? <Link to="/">Login</Link>
                         </p>
                         <div className="form-group mt-3 mb-3">
-                          <button
+                          <Button
                             type="submit"
-                            className="btn btn-primary btn-lg btn-block"
+                            classnameItems="btn-primary btn-lg btn-block"
                             tabIndex="4"
-                          >
-                            Register
-                          </button>
+                            btnName="Register"
+                          />
                         </div>
                       </form>
                     </div>

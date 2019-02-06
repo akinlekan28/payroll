@@ -5,6 +5,7 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { toast } from "react-toastify";
 import { addOtherException } from "../../actions/exceptionActions";
+import Button from "../common/Button";
 
 class AddOtherExceptionForm extends Component {
   constructor(props) {
@@ -117,9 +118,7 @@ class AddOtherExceptionForm extends Component {
         />
 
         <div className="text-center">
-          <button type="submit" className="btn btn-primary btn-lg" tabIndex="4">
-            Add Exception
-          </button>
+          <Button type="submit" classnameItems="btn-primary btn-lg" btnName="Add Exception"/>
         </div>
       </form>
     );

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
+import Button from "../common/Button";
 import { toast } from "react-toastify";
 import { addOneOffPayment } from "../../actions/exceptionActions";
 
@@ -38,7 +39,7 @@ class Addoneoffpayment extends Component {
       name: this.state.name,
       amount: this.state.amount,
       employee: this.state.employee,
-      // costType: this.state.costType,
+      costType: this.state.costType,
       month: this.state.month
     };
 
@@ -144,9 +145,7 @@ class Addoneoffpayment extends Component {
         />
 
         <div className="text-center">
-          <button type="submit" className="btn btn-primary btn-lg" tabIndex="4">
-            Add Exception
-          </button>
+          <Button type="submit" classnameItems="btn-primary btn-lg" btnName="Add Exception" />
         </div>
       </form>
     );

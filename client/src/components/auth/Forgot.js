@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { sendResetLink } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
+import Button from '../common/Button';
 import { toast } from "react-toastify";
 
 class Forgot extends Component {
@@ -85,13 +86,11 @@ class Forgot extends Component {
                           Back to <Link to="/">Login</Link>
                         </p>
                         <div className="form-group mt-4 mb-5">
-                          <button
+                          <Button
                             type="submit"
-                            className="btn btn-primary btn-lg btn-block"
-                            tabIndex="4"
-                          >
-                            Send Reset Link
-                          </button>
+                            classnameItems="btn-primary btn-lg btn-block"
+                            btnName="Send Reset Link"
+                          />
                         </div>
                       </form>
                     </div>

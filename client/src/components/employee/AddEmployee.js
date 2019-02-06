@@ -10,6 +10,7 @@ import SelectListGroup from "../common/SelectListGroup";
 import { getLevels } from "../../actions/levelActions";
 import { registerEmployee } from "../../actions/employeeActions";
 import Spinner from "../common/Spinner";
+import Button from "../common/Button";
 
 class AddEmployee extends Component {
   constructor() {
@@ -65,7 +66,7 @@ class AddEmployee extends Component {
             email: "",
             designation: "",
             department: "",
-            level: ''
+            level: ""
           });
         }
       })
@@ -149,13 +150,11 @@ class AddEmployee extends Component {
                       />
 
                       <div className="text-center">
-                        <button
+                        <Button
                           type="submit"
-                          className="btn btn-primary btn-lg"
-                          tabIndex="4"
-                        >
-                          Add Employee
-                        </button>
+                          classnameItems="btn-primary btn-lg"
+                          btnName="Add Employee"
+                        />
                       </div>
                     </form>
                   </div>
@@ -167,8 +166,8 @@ class AddEmployee extends Component {
       } else {
         employeeForm = (
           <h4 className="text-danger">
-            There's no previous employee salary level entry! Add atleast one
-            to proceed
+            There's no previous employee salary level entry! Add atleast one to
+            proceed
           </h4>
         );
       }

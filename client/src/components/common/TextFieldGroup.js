@@ -13,27 +13,25 @@ const TextFieldGroup = ({
   onChange,
   disabled,
   tabindex
-}) => {
-  return (
-    <div>
-      <div className="form-group">
-        <label htmlFor={label}>{label}</label>
-        <input
-          type={type}
-          className={classnames("form-control", { "is-invalid": error })}
-          name={name}
-          value={value}
-          onChange={onChange}
-          disabled={disabled}
-          placeholder={placeholder}
-          tabIndex={tabindex}
-        />
-        {info && <small className="form-text text-warning">{info}</small>}
-        {error && <div className="invalid-feedback">{error}</div>}
-      </div>
+}) => (
+  <div>
+    <div className="form-group">
+      <label htmlFor={label}>{label}</label>
+      <input
+        type={type}
+        className={classnames("form-control", { "is-invalid": error })}
+        name={name}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        placeholder={placeholder}
+        tabIndex={tabindex}
+      />
+      {info && <small className="form-text text-warning">{info}</small>}
+      {error && <div className="invalid-feedback">{error}</div>}
     </div>
-  );
-};
+  </div>
+);
 
 TextFieldGroup.propTypes = {
   label: PropTypes.string,
