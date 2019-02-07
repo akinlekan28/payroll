@@ -1,32 +1,35 @@
 import React, { PureComponent, Fragment } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { months } from "../../../common/Utilities";
 import { getEmployees } from "../../../../actions/employeeActions";
-import { getMonthlyPayslip } from "../../../../actions/payrollActions";
+import { getEmployeeMonthYear } from "../../../../actions/payrollActions";
 import SelectListGroup from "../../../common/SelectListGroup";
+import TextFieldGroup from "../../../common/TextFieldGroup";
+import Button from "../../../common/Button";
 import SearchBar from "../../../dashboard/SearchBar";
 import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
 import { toast } from "react-toastify";
-import MonthlySlipRecordTable from "./MonthlySlipRecordTable";
 import { PDFExport } from "@progress/kendo-react-pdf";
-import Button from "../../../common/Button";
+import AllTimeSingleTable from "./AllTimeSingleTable";
 
-export class MonthlySlipRecord extends PureComponent {
+export class AllTimeSingle extends PureComponent {
   static propTypes = {
     getEmployees: PropTypes.func.isRequired,
+    getEmployeeMonthYear: PropTypes.func.isRequired,
     employees: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       employee: "",
       month: "",
+      year: "",
       errors: {}
     };
 
@@ -52,19 +55,17 @@ export class MonthlySlipRecord extends PureComponent {
 
   onSubmit(e) {
     e.preventDefault();
-
-    const { employee, month } = this.state;
-
+    const { employee, month, year } = this.state;
     const payslipData = {
       employee,
-      month
+      month,
+      year
     };
-
     this.props
-      .getMonthlyPayslip(payslipData)
+      .getEmployeeMonthYear(payslipData)
       .then(res => {
-        if (res.type === "GET_ERRORS" && res.payload.monthlyslip) {
-          toast.warn(res.payload.monthlyslip);
+        if (res.type === "GET_ERRORS" && res.payload.payslip) {
+          toast.warn(res.payload.payslip);
         }
       })
       .catch(err => console.log(err));
@@ -75,14 +76,10 @@ export class MonthlySlipRecord extends PureComponent {
   };
 
   render() {
-    let date = new Date();
-    const year = date.getFullYear();
-
     const { errors } = this.state;
     const { employees, loading } = this.props.employees;
-    const { payrollRecordsMonthly } = this.props.payrollRecordsMonthly;
-
-    let searchContainer, monthlyPayslipContainer;
+    const { employeeMonthYear } = this.props.employeeMonthYear;
+    let searchContainer, payslipTableContainer;
 
     if (employees === null || loading) {
       searchContainer = <Spinner />;
@@ -92,7 +89,7 @@ export class MonthlySlipRecord extends PureComponent {
           <div>
             <div className="row justify-content-center">
               <div className="col-md-4">
-                <div className="card-body mt-4">
+                <div className="card-body mt-3">
                   <form onSubmit={this.onSubmit}>
                     <SelectListGroup
                       label="Employee"
@@ -114,11 +111,21 @@ export class MonthlySlipRecord extends PureComponent {
                       error={errors.month}
                     />
 
-                    <div className="text-center mx-auto">
+                    <TextFieldGroup
+                      label="Year"
+                      type="number"
+                      placeholder="Enter Year"
+                      name="year"
+                      value={this.state.year}
+                      onChange={this.onChange}
+                      error={errors.year}
+                    />
+
+                    <div className="mx-auto text-center">
                       <Button
                         type="submit"
                         classnameItems="btn-info btn-lg"
-                        btnName="Get payslip"
+                        btnName="Get payslips"
                       />
                       <Link
                         to="/payroll/all"
@@ -135,31 +142,31 @@ export class MonthlySlipRecord extends PureComponent {
         );
 
         if (
-          payrollRecordsMonthly === null ||
-          this.props.payrollRecordsMonthly.loading
+          employeeMonthYear === null ||
+          this.props.employeeMonthYear.loading
         ) {
-          monthlyPayslipContainer = <Spinner />;
+          payslipTableContainer = <Spinner />;
         } else {
-          if (Object.keys(payrollRecordsMonthly).length > 0) {
-            monthlyPayslipContainer = (
+          if (Object.keys(employeeMonthYear).length > 0) {
+            payslipTableContainer = (
               <Fragment>
                 <PDFExport
                   paperSize={"Letter"}
                   fileName={
-                    payrollRecordsMonthly.name +
+                    employeeMonthYear.name +
                     " payslip_" +
-                    payrollRecordsMonthly.presentMonth
+                    employeeMonthYear.presentMonth
                   }
                   title={
-                    payrollRecordsMonthly.name +
+                    employeeMonthYear.name +
                     " payslip_" +
-                    payrollRecordsMonthly.presentMonth
+                    employeeMonthYear.presentMonth
                   }
                   subject=""
                   keywords=""
                   ref={r => (this.resume = r)}
                 >
-                  <MonthlySlipRecordTable payroll={payrollRecordsMonthly} />
+                  <AllTimeSingleTable payroll={employeeMonthYear} />
                 </PDFExport>
                 <div className="text-center mb-5">
                   <Button
@@ -171,14 +178,13 @@ export class MonthlySlipRecord extends PureComponent {
               </Fragment>
             );
           } else {
-            monthlyPayslipContainer = "";
+            payslipTableContainer = "";
           }
         }
       } else {
         searchContainer = <h4>No previous employee entries in the system</h4>;
       }
     }
-
     return (
       <div id="app">
         <div className="main-wrapper">
@@ -192,11 +198,10 @@ export class MonthlySlipRecord extends PureComponent {
               </div>
 
               <h4 className="text-center mt-4">
-                Search generated employee payslip within any month for the year{" "}
-                {year}
+                Search generated employee payslip
               </h4>
               {searchContainer}
-              {monthlyPayslipContainer}
+              {payslipTableContainer}
             </section>
           </div>
         </div>
@@ -207,11 +212,11 @@ export class MonthlySlipRecord extends PureComponent {
 
 const mapStateToProps = state => ({
   employees: state.employees,
-  payrollRecordsMonthly: state.payroll,
+  employeeMonthYear: state.payroll,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  { getEmployees, getMonthlyPayslip }
-)(MonthlySlipRecord);
+  { getEmployees, getEmployeeMonthYear }
+)(AllTimeSingle);

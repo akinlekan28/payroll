@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { formatMoney } from "../common/Utilities";
 import PropTypes from "prop-types";
 import { deleteLevel } from "../../actions/levelActions";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 
 class ViewLevelTable extends Component {
-
   deleteDialog(id) {
     confirmAlert({
       title: "Delete employee level ?",
@@ -38,37 +38,30 @@ class ViewLevelTable extends Component {
   }
 
   render() {
-    const formatMoney = money => {
-      let formatedValue = money
-        .toString()
-        .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-      return formatedValue;
-    };
-
     const { levels } = this.props;
-        const levelTableContainer = levels.map(level => (
-          <tr key={level._id}>
-            <td>{level.name}</td>
-            <td>
-              <span>&#8358;</span> {formatMoney(level.basic)}
-            </td>
-            <td>{level.description}</td>
-            <td>
-              <Link
-                to={`/utilities/level/editlevel/${level._id}`}
-                className="btn btn-primary btn-sm"
-              >
-                Edit
-              </Link>{" "}
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={this.deleteDialog.bind(this, level._id)}
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ));
+    const levelTableContainer = levels.map(level => (
+      <tr key={level._id}>
+        <td>{level.name}</td>
+        <td>
+          <span>&#8358;</span> {formatMoney(level.basic)}
+        </td>
+        <td>{level.description}</td>
+        <td>
+          <Link
+            to={`/utilities/level/editlevel/${level._id}`}
+            className="btn btn-primary btn-sm"
+          >
+            Edit
+          </Link>{" "}
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={this.deleteDialog.bind(this, level._id)}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ));
 
     return (
       <div className="row justify-content-center">
@@ -102,4 +95,7 @@ ViewLevelTable.proptypes = {
   deleteLevel: PropTypes.func.isRequired
 };
 
-export default connect(null,{ deleteLevel })(ViewLevelTable);
+export default connect(
+  null,
+  { deleteLevel }
+)(ViewLevelTable);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getEmployees } from "../../../../actions/employeeActions";
 import { getEmployeeYearlySlip } from "../../../../actions/payrollActions";
@@ -10,6 +10,7 @@ import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
 import { toast } from "react-toastify";
 import SingleEmployeeTable from "./SingleEmployeeTable";
+import Button from "../../../common/Button";
 
 class SingleEmployee extends Component {
   constructor(props) {
@@ -65,31 +66,31 @@ class SingleEmployee extends Component {
       if (Object.keys(employees).length > 0) {
         searchContainer = (
           <div>
-            <div className="row">
-              <div className="col-md-9">
+            <div className="row justify-content-center">
+              <div className="col-md-4">
                 <div className="card-body mt-4">
-                  <form onSubmit={this.onSubmit} className="form-inline">
-                    <div className="col-md-4">
-                      <SelectListGroup
-                        label="Employee&nbsp;"
-                        placeholder="Select employee level"
-                        name="employee"
-                        value={this.state.employee}
-                        onChange={this.onChange}
-                        options={employees}
-                      />
-                    </div>
-                    <div className="col-md-3">
-                      <button
+                  <form onSubmit={this.onSubmit}>
+                    <SelectListGroup
+                      label="Employee"
+                      placeholder="Select employee level"
+                      name="employee"
+                      value={this.state.employee}
+                      onChange={this.onChange}
+                      options={employees}
+                    />
+                    <div className="text-center mx-auto">
+                      <Button
                         type="submit"
-                        className="btn btn-info btn-lg"
-                        tabIndex="4"
+                        classnameItems="btn-info btn-lg"
+                        btnName="Get payslips"
+                      />
+
+                      <Link
+                        to="/payroll/all"
+                        className="btn btn-lg btn-warning"
                       >
-                        Get payslips
-                      </button>
-                    </div>
-                    <div className="col-md-2">
-                    <Link to="/payroll/all" className="btn btn-lg btn-warning">Back</Link>
+                        Back
+                      </Link>
                     </div>
                   </form>
                 </div>
@@ -102,7 +103,9 @@ class SingleEmployee extends Component {
           payslipTableContainer = <Spinner />;
         } else {
           if (Object.keys(payrollRecords).length > 0) {
-            payslipTableContainer = <SingleEmployeeTable payrollRecords={payrollRecords} />;    
+            payslipTableContainer = (
+              <SingleEmployeeTable payrollRecords={payrollRecords} />
+            );
           } else {
             payslipTableContainer = "";
           }

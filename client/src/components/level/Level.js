@@ -19,19 +19,12 @@ class Level extends Component {
 
   componentDidMount = () => {
     this.props.getLevels();
-    this._isMounted = true;
   };
 
-  componentWillUnmount = () => {
-    this._isMounted = false;
-  }
-
   render() {
-
     let levelContainer;
 
-    if(this._isMounted){
-      const { levels, loading } = this.props.levels;
+    const { levels, loading } = this.props.levels;
 
     if (levels === null || loading) {
       levelContainer = <Spinner />;
@@ -89,7 +82,7 @@ class Level extends Component {
         </div>
       );
     }
-  }
+
     return (
       <div id="app">
         <div className="main-wrapper">

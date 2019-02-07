@@ -8,6 +8,9 @@ import MonthlyTax from "./links/MonthlyTax";
 import YearlySingleEmployee from "./links/YearlySingleEmployee";
 import YearlyAllEmployee from "./links/YearlyAllEmployee";
 import YearlyMonthlyslip from "./links/YearlyMonthlyslip";
+import EmployeeMonthYear from "./links/EmployeeMonthYear";
+import MonthYear from "./links/MonthYear";
+import Year from "./links/Year";
 
 const MonthlyDashboard = () => {
   let date = new Date();
@@ -29,19 +32,28 @@ const MonthlyDashboard = () => {
               <h4 className="text-center">
                 Payroll Report for the month of {presentMonth}
               </h4>
-              <div className="row mt-5">
+              <div className="row mt-3">
                 <MonthlyPayroll />
                 <MonthlyPension />
                 <MonthlyTax />
               </div>
 
-              <h4 className="text-center mt-5">
+              <h4 className="text-center mt-3">
                 Payroll Report for the year {year}
               </h4>
-              <div className="row mt-5">
+              <div className="row mt-4">
                 <YearlyMonthlyslip />
                 <YearlySingleEmployee />
                 <YearlyAllEmployee />
+              </div>
+
+              <h4 className="text-center mt-3">
+                All Time Payroll Report
+              </h4>
+              <div className="row mt-4">
+                <EmployeeMonthYear />
+                <MonthYear />
+                <Year />
               </div>
             </section>
           </div>

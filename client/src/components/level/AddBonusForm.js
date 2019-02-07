@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addBonus } from "../../actions/levelActions";
 import TextFieldGroup from "../common/TextFieldGroup";
-import Button from "../common/Button";
 import SelectListGroup from "../common/SelectListGroup";
 import { toast } from "react-toastify";
 

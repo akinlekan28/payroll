@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { months } from "../common/Utilities";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import Button from "../common/Button";
@@ -73,22 +74,6 @@ class Addoneoffpayment extends Component {
       { name: "Income", value: "income", _id: "income" },
       { name: "Deduction", value: "deduction", _id: "deduction" }
     ];
-
-    const months = [
-        {name: "January", value: "January", _id: "January"},
-        {name: "February", value: "February", _id: "February"},
-        {name: "March", value: "March", _id: "March"},
-        {name: "April", value: "April", _id: "April"},
-        {name: "May", value: "May", _id: "May"},
-        {name: "June", value: "June", _id: "June"},
-        {name: "July", value: "July", _id: "July"},
-        {name: "August", value: "August", _id: "August"},
-        {name: "September", value: "September", _id: "September"},
-        {name: "October", value: "October", _id: "October"},
-        {name: "November", value: "November", _id: "November"},
-        {name: "December", value: "December", _id: "December"},
-        
-    ]
 
     const exceptionFormContainer = (
       <form onSubmit={this.onSubmit}>

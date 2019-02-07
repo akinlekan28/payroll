@@ -29,6 +29,8 @@ import Tax from "./components/payroll/all/Tax";
 import SingleEmployee from './components/payroll/all/records/SingleEmployee';
 import AllEmployee from './components/payroll/all/records/AllEmployee';
 import MonthlySlipRecord from './components/payroll/all/records/MonthlySlipRecord';
+import AllTimeSingle from './components/payroll/all/records/AllTimeSingle';
+import AllTimeMonthYear from './components/payroll/all/records/AllTimeMonthYear';
 import Documentation from './components/documentation/Doc';
 
 //check for token
@@ -121,6 +123,12 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/payroll/all/monthly" component={MonthlySlipRecord} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/all/employeemonthyear" component={AllTimeSingle} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/payroll/all/monthyear" component={AllTimeMonthYear} />
             </Switch>
             <Switch>
               <PrivateRoute exact path="/documentation" component={Documentation} />
