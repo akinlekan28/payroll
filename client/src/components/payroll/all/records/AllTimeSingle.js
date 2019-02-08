@@ -198,7 +198,7 @@ export class AllTimeSingle extends PureComponent {
               </div>
 
               <h4 className="text-center mt-4">
-                Search generated employee payslip
+                Search generated employee payslip by name, month and year.
               </h4>
               {searchContainer}
               {payslipTableContainer}

@@ -6,6 +6,7 @@ import {
   VIEW_PAYROLL_RECORDS_MONTHLY,
   VIEW_PAYROLL_RECORDS_YEARLY,
   VIEW_EMPLOYEE_MONTH_YEAR,
+  VIEW_MONTH_YEAR,
   PAYROLL_LOADING,
   GET_ERRORS,
   CLEAR_ERRORS
@@ -120,6 +121,31 @@ export const getEmployeeMonthYear = payslipData => dispatch => {
     .then(res =>
       dispatch({
         type: VIEW_EMPLOYEE_MONTH_YEAR,
+        payload: res.data
+      })
+    )
+    .catch(
+      err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        }),
+      dispatch(() => {
+        setTimeout(function() {
+          dispatch(clearErrors());
+        }, 5000);
+      })
+    );
+};
+
+//Get employee payslip by month and year
+export const getMonthYear = payslipData => dispatch => {
+  dispatch(clearErrors());
+  return axios
+    .post("/api/payslip/record/bymonthyear", payslipData)
+    .then(res =>
+      dispatch({
+        type: VIEW_MONTH_YEAR,
         payload: res.data
       })
     )

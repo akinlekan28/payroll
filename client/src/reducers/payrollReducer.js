@@ -5,6 +5,7 @@ import {
   VIEW_PAYROLL_RECORDS_MONTHLY,
   VIEW_PAYROLL_RECORDS_YEARLY,
   VIEW_EMPLOYEE_MONTH_YEAR,
+  VIEW_MONTH_YEAR,
   PAYROLL_LOADING
 } from "../actions/types";
 
@@ -15,6 +16,7 @@ const initialState = {
   payrollRecordsMonthly: [],
   payrollRecordsYearly: [],
   employeeMonthYear: [],
+  monthYear: [],
   loading: false
 };
 
@@ -53,12 +55,18 @@ export default function(state = initialState, action) {
         payrollRecordsYearly: action.payload,
         loading: false
       };
-    case VIEW_EMPLOYEE_MONTH_YEAR: 
+    case VIEW_EMPLOYEE_MONTH_YEAR:
       return {
         ...state,
         employeeMonthYear: action.payload,
         loading: false
-      }
+      };
+    case VIEW_MONTH_YEAR:
+      return {
+        ...state,
+        monthYear: action.payload,
+        loading: false
+      };
     case PAYROLL_LOADING:
       return {
         ...state,

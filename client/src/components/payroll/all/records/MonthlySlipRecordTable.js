@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-const MonthlySlipRecordTable = (props) => {
-    
-    const { payroll } = props;
+const MonthlySlipRecordTable = ({payroll}) => {
 
     let extraEarning = [];
     let extraDeduction = [];
