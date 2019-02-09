@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -10,9 +10,11 @@ import Button from "../../../common/Button";
 import SearchBar from "../../../dashboard/SearchBar";
 import SideBar from "../../../dashboard/SideBar";
 import { toast } from "react-toastify";
+import AllTImeMonthYearTable from "./AllTImeMonthYearTable";
 
-export class AllTimeMonthYear extends Component {
+export class AllTimeMonthYear extends PureComponent {
   static propTypes = {
+    getMonthYear: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired
   };
 
@@ -51,8 +53,8 @@ export class AllTimeMonthYear extends Component {
     this.props
       .getMonthYear(payslipData)
       .then(res => {
-        if (res.type === "GET_ERRORS" && res.payload.payslip) {
-          toast.warn(res.payload.payslip);
+        if (res.type === "VIEW_MONTH_YEAR" && Object.keys(res.payload).length === 0) {
+          toast.warn("Payslips not found or hasn't been generated");
         }
       })
       .catch(err => console.log(err));
@@ -66,6 +68,12 @@ export class AllTimeMonthYear extends Component {
     const { errors } = this.state;
     const { monthYear } = this.props.monthYear;
     let payslipTableContainer;
+
+    if (monthYear !== null) {
+      if (Object.keys(monthYear).length > 0) {
+        payslipTableContainer = <AllTImeMonthYearTable payroll={monthYear} />;
+      }
+    }
 
     return (
       <div id="app">
