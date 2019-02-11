@@ -932,10 +932,12 @@ router.post('/record/bymonthyear', protect, (req, res) => {
 router.post('/record/byyear', protect, (req, res) => {
   const errors = {}
 
-  if(req.body.year === undefined || req.body.year === null){
+  if(req.body.year === undefined || req.body.year === null || req.body.year === ''){
     errors.year = "Year field is required"
     return res.status(400).json(errors)
   }
+
+  console.log(req.body)
 
   Payslip.find({ is_delete: 0 })
   .where('presentYear').equals(req.body.year)
