@@ -5,14 +5,15 @@ import SearchBar from "../../../dashboard/SearchBar";
 import SideBar from "../../../dashboard/SideBar";
 import Spinner from "../../../common/Spinner";
 import { toast } from "react-toastify";
-import SingleEmployeeTable from "./SingleEmployeeTable";
 import Button from "../../../common/Button";
 import Axios from "axios";
+import AllTimeYearTable from "./AllTimeYearTable";
 
 export default () => {
   const [year, setYear] = useState("");
   const [error, setError] = useState("");
-  const [payslip, setPayslip] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [payslips, setPayslip] = useState([]);
 
   const onChangeYear = e => {
     setYear(e.target.value);
@@ -24,19 +25,36 @@ export default () => {
     const payslipYear = {
       year
     };
+    setLoading(true);
+
     Axios.post(`/api/payslip/record/byyear/`, payslipYear)
       .then(res => {
         setPayslip(res.data);
+        setLoading(false);
       })
       .catch(err => {
         if (err.response.data.year) {
           setError(err.response.data.year);
+          setTimeout(function() {
+            setError("");
+          }, 5000);
+          setLoading(false);
         }
         if (err.response.data.payslips) {
           toast.warn(err.response.data.payslips);
+          setLoading(false);
         }
       });
   };
+
+  let payslipTableContainer;
+
+  if (loading) {
+    payslipTableContainer = <Spinner />;
+  }
+  if (Object.keys(payslips).length > 0) {
+    payslipTableContainer = <AllTimeYearTable payslips={payslips} />;
+  }
 
   return (
     <div id="app">
@@ -60,6 +78,7 @@ export default () => {
                     <form onSubmit={onSubmit}>
                       <TextFieldGroup
                         label="Year"
+                        type="number"
                         placeholder="Enter year"
                         name="year"
                         value={year}
@@ -85,7 +104,7 @@ export default () => {
                 </div>
               </div>
             </div>
-            {/* {payslipTableContainer} */}
+            {payslipTableContainer}
           </section>
         </div>
       </div>

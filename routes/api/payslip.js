@@ -937,8 +937,6 @@ router.post('/record/byyear', protect, (req, res) => {
     return res.status(400).json(errors)
   }
 
-  console.log(req.body)
-
   Payslip.find({ is_delete: 0 })
   .where('presentYear').equals(req.body.year)
   .then(payslipItem => {
