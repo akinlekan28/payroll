@@ -43,6 +43,11 @@ router.post("/", protect, (req, res) => {
       designation: req.body.designation,
       department: req.body.department,
       level: req.body.level,
+      stateResidence: req.body.stateResidence,
+      bankName: req.body.bankName,
+      accountNumber: req.body.accountNumber,
+      pfaName: req.body.pfaName,
+      pensionAccountNumber: req.body.pensionAccountNumber,
       levelName
     });
   
@@ -74,6 +79,11 @@ router.put("/:id", protect, (req, res) => {
       designation: req.body.designation,
       department: req.body.department,
       level: req.body.level,
+      stateResidence: req.body.stateResidence,
+      bankName: req.body.bankName,
+      accountNumber: req.body.accountNumber,
+      pfaName: req.body.pfaName,
+      pensionAccountNumber: req.body.pensionAccountNumber,
       levelName
     };
   

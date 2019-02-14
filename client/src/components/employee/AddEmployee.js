@@ -22,6 +22,11 @@ class AddEmployee extends Component {
       designation: "",
       department: "",
       level: "",
+      stateResidence: "",
+      bankName: "",
+      accountNumber: "",
+      pfaName: "",
+      pensionAccountNumber: "",
       errors: {}
     };
 
@@ -53,7 +58,12 @@ class AddEmployee extends Component {
       email: this.state.email,
       designation: this.state.designation,
       department: this.state.department,
-      level: this.state.level
+      level: this.state.level,
+      stateResidence: this.state.stateResidence,
+      bankName: this.state.bankName,
+      accountNumber: this.state.accountNumber,
+      pfaName: this.state.pfaName,
+      pensionAccountNumber: this.state.pensionAccountNumber
     };
 
     this.props
@@ -66,7 +76,12 @@ class AddEmployee extends Component {
             email: "",
             designation: "",
             department: "",
-            level: ""
+            level: "",
+            stateResidence: "",
+            bankName: "",
+            accountNumber: "",
+            pfaName: "",
+            pensionAccountNumber: ""
           });
         }
       })
@@ -95,59 +110,129 @@ class AddEmployee extends Component {
                   </div>
                   <div className="card-body">
                     <form onSubmit={this.onSubmit}>
-                      <TextFieldGroup
-                        type="text"
-                        label="Full Name"
-                        placeholder="Enter full name"
-                        name="name"
-                        value={this.state.name}
-                        error={errors.name}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                      <fieldset>
+                        <legend className="text-center">
+                          Personal Information
+                        </legend>
+                        <TextFieldGroup
+                          type="text"
+                          label="Full Name"
+                          placeholder="Enter full name"
+                          name="name"
+                          value={this.state.name}
+                          error={errors.name}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
 
-                      <TextFieldGroup
-                        type="email"
-                        label="Email"
-                        placeholder="Enter valid email"
-                        name="email"
-                        value={this.state.email}
-                        error={errors.email}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                        <TextFieldGroup
+                          type="email"
+                          label="Email"
+                          placeholder="Enter valid email"
+                          name="email"
+                          value={this.state.email}
+                          error={errors.email}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
 
-                      <TextFieldGroup
-                        type="text"
-                        label="Department"
-                        placeholder="Enter department"
-                        name="department"
-                        value={this.state.department}
-                        error={errors.department}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                        <TextFieldGroup
+                          type="text"
+                          label="State of Residence"
+                          placeholder="Enter state of residence"
+                          name="stateResidence"
+                          value={this.state.stateResidence}
+                          error={errors.stateResidence}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+                      </fieldset>
 
-                      <TextFieldGroup
-                        type="text"
-                        label="Designation"
-                        placeholder="Enter designation"
-                        name="designation"
-                        value={this.state.designation}
-                        error={errors.designation}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                      <fieldset>
+                        <legend className="text-center">
+                          Payslip Information
+                        </legend>
+                        <TextFieldGroup
+                          type="text"
+                          label="Bank Name"
+                          placeholder="Enter bank name"
+                          name="bankName"
+                          value={this.state.bankName}
+                          error={errors.bankName}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
 
-                      <SelectListGroup
-                        label="Employee level"
-                        placeholder="Select employee level"
-                        name="level"
-                        value={this.state.level}
-                        onChange={this.onChange}
-                        error={errors.level}
-                        options={levels}
-                      />
+                        <TextFieldGroup
+                          type="text"
+                          label="Account Number"
+                          placeholder="Enter account number"
+                          name="accountNumber"
+                          value={this.state.accountNumber}
+                          error={errors.accountNumber}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <TextFieldGroup
+                          type="text"
+                          label="PFA Name"
+                          placeholder="Enter Pfa name"
+                          name="pfaName"
+                          value={this.state.pfaName}
+                          error={errors.pfaName}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <TextFieldGroup
+                          type="text"
+                          label="Pension Account Number"
+                          placeholder="Enter account number"
+                          name="pensionAccountNumber"
+                          value={this.state.pensionAccountNumber}
+                          error={errors.pensionAccountNumber}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+                      </fieldset>
+
+                      <fieldset>
+                        <legend className="text-center">
+                          Company Information
+                        </legend>
+                        <TextFieldGroup
+                          type="text"
+                          label="Department"
+                          placeholder="Enter department"
+                          name="department"
+                          value={this.state.department}
+                          error={errors.department}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <TextFieldGroup
+                          type="text"
+                          label="Designation"
+                          placeholder="Enter designation"
+                          name="designation"
+                          value={this.state.designation}
+                          error={errors.designation}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <SelectListGroup
+                          label="Employee level"
+                          placeholder="Select employee level"
+                          name="level"
+                          value={this.state.level}
+                          onChange={this.onChange}
+                          error={errors.level}
+                          options={levels}
+                        />
+                      </fieldset>
 
                       <div className="text-center">
                         <Button

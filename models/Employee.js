@@ -22,6 +22,26 @@ const EmployeeSchema = new Schema({
     type: String,
     required: true
   },
+  stateResidence: {
+    type: String,
+    required: true
+  },
+  bankName: {
+    type: String,
+    required: true
+  },
+  accountNumber: {
+    type: String,
+    required: true
+  },
+  pfaName: {
+    type: String,
+    required: true
+  },
+  pensionAccountNumber: {
+    type: String,
+    required: true
+  },
   level: {
     type: Schema.Types.ObjectId,
     ref: "level"

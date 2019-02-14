@@ -19,8 +19,8 @@ class EmployeeTable extends Component {
             this.props
               .deleteEmployee(id)
               .then(res => {
-                if (res.type === "DELETE_EMPLOYEE"){
-                  toast.success("Employee record deleted!")
+                if (res.type === "DELETE_EMPLOYEE") {
+                  toast.success("Employee record deleted!");
                 }
               })
               .catch(err => console.log(err));
@@ -42,10 +42,15 @@ class EmployeeTable extends Component {
         <td>{employee.tag}</td>
         <td>{employee.name}</td>
         <td>{employee.levelName}</td>
-        <td>{employee.email}</td>
         <td>{employee.department}</td>
         <td>{employee.designation}</td>
         <td>
+          <Link
+            to={`/employee/view/${employee._id}`}
+            className="btn btn-info btn-sm"
+          >
+            View
+          </Link>{" "}
           <Link
             to={`/employee/edit/${employee._id}`}
             className="btn btn-primary btn-sm"
@@ -67,7 +72,7 @@ class EmployeeTable extends Component {
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h4 className="text-center">Employee details</h4>
+              <h4 className="text-center">Basic employee details</h4>
             </div>
             <div className="card-body">
               <div className="table-responsive">
@@ -77,7 +82,6 @@ class EmployeeTable extends Component {
                       <th>Tag</th>
                       <th>Name</th>
                       <th>Level</th>
-                      <th>Email</th>
                       <th>Department</th>
                       <th>Designation</th>
                       <th>Action</th>
@@ -95,9 +99,8 @@ class EmployeeTable extends Component {
 }
 
 EmployeeTable.propTypes = {
-  deleteEmployee: PropTypes.func.isRequired,
+  deleteEmployee: PropTypes.func.isRequired
 };
-
 
 export default connect(
   null,

@@ -28,6 +28,11 @@ class EditEmployee extends Component {
       designation: "",
       department: "",
       level: "",
+      stateResidence: "",
+      bankName: "",
+      accountNumber: "",
+      pfaName: "",
+      pensionAccountNumber: "",
       levelName: "",
       errors: {}
     };
@@ -55,12 +60,22 @@ class EditEmployee extends Component {
       employee.levelName = !isEmpty(employee.levelName)
         ? employee.levelName
         : "";
+        employee.bankName = !isEmpty(employee.bankName) ? employee.bankName : "";
+        employee.pfaName = !isEmpty(employee.pfaName) ? employee.pfaName : "";
+        employee.pensionAccountNumber = !isEmpty(employee.pensionAccountNumber) ? employee.pensionAccountNumber : "";
+        employee.accountNumber = !isEmpty(employee.accountNumber) ? employee.accountNumber : "";
+        employee.stateResidence = !isEmpty(employee.stateResidence) ? employee.stateResidence : "";
 
       this.setState({
         name: employee.name,
         email: employee.email,
         designation: employee.designation,
         department: employee.department,
+        bankName: employee.bankName,
+        stateResidence: employee.stateResidence,
+        pfaName: employee.pfaName,
+        pensionAccountNumber: employee.pensionAccountNumber,
+        accountNumber: employee.accountNumber,
         levelName: employee.levelName
       });
     }
@@ -78,7 +93,12 @@ class EditEmployee extends Component {
       email: this.state.email,
       designation: this.state.designation,
       department: this.state.department,
-      level: this.state.level
+      level: this.state.level,
+      stateResidence: this.state.stateResidence,
+      bankName: this.state.bankName,
+      accountNumber: this.state.accountNumber,
+      pfaName: this.state.pfaName,
+      pensionAccountNumber: this.state.pensionAccountNumber
     };
 
     this.props
@@ -112,15 +132,17 @@ class EditEmployee extends Component {
       if (Object.keys(levels).length > 0) {
         levelContainer = (
           <Fragment>
-            <strong className="text-warning">Current level is {this.state.levelName}</strong>
+            <strong className="text-warning">
+              Current level is {this.state.levelName}
+            </strong>
             <SelectListGroup
-            label="Employee level"
-            placeholder="Select employee level"
-            name="level"
-            value={this.state.level}
-            onChange={this.onChange}
-            error={errors.level}
-            options={levels}
+              label="Employee level"
+              placeholder="Select employee level"
+              name="level"
+              value={this.state.level}
+              onChange={this.onChange}
+              error={errors.level}
+              options={levels}
             />
           </Fragment>
         );
@@ -145,51 +167,121 @@ class EditEmployee extends Component {
                   </div>
                   <div className="card-body">
                     <form onSubmit={this.onSubmit}>
-                      <TextFieldGroup
-                        type="text"
-                        label="Full Name"
-                        placeholder="Enter full name"
-                        name="name"
-                        value={this.state.name}
-                        error={errors.name}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                      <fieldset>
+                        <legend className="text-center">
+                          Personal Information
+                        </legend>
+                        <TextFieldGroup
+                          type="text"
+                          label="Full Name"
+                          placeholder="Enter full name"
+                          name="name"
+                          value={this.state.name}
+                          error={errors.name}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
 
-                      <TextFieldGroup
-                        type="email"
-                        label="Email"
-                        placeholder="Enter valid email"
-                        name="email"
-                        value={this.state.email}
-                        error={errors.email}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                        <TextFieldGroup
+                          type="email"
+                          label="Email"
+                          placeholder="Enter valid email"
+                          name="email"
+                          value={this.state.email}
+                          error={errors.email}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
 
-                      <TextFieldGroup
-                        type="text"
-                        label="Department"
-                        placeholder="Enter department"
-                        name="department"
-                        value={this.state.department}
-                        error={errors.department}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                        <TextFieldGroup
+                          type="text"
+                          label="State of Residence"
+                          placeholder="Enter state of residence"
+                          name="stateResidence"
+                          value={this.state.stateResidence}
+                          error={errors.stateResidence}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+                      </fieldset>
 
-                      <TextFieldGroup
-                        type="text"
-                        label="Designation"
-                        placeholder="Enter designation"
-                        name="designation"
-                        value={this.state.designation}
-                        error={errors.designation}
-                        onChange={this.onChange}
-                        tabindex="1"
-                      />
+                      <fieldset>
+                        <legend className="text-center">
+                          Payslip Information
+                        </legend>
+                        <TextFieldGroup
+                          type="text"
+                          label="Bank Name"
+                          placeholder="Enter bank name"
+                          name="bankName"
+                          value={this.state.bankName}
+                          error={errors.bankName}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
 
-                      {levelContainer}
+                        <TextFieldGroup
+                          type="text"
+                          label="Account Number"
+                          placeholder="Enter account number"
+                          name="accountNumber"
+                          value={this.state.accountNumber}
+                          error={errors.accountNumber}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <TextFieldGroup
+                          type="text"
+                          label="PFA Name"
+                          placeholder="Enter Pfa name"
+                          name="pfaName"
+                          value={this.state.pfaName}
+                          error={errors.pfaName}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <TextFieldGroup
+                          type="text"
+                          label="Pension Account Number"
+                          placeholder="Enter account number"
+                          name="pensionAccountNumber"
+                          value={this.state.pensionAccountNumber}
+                          error={errors.pensionAccountNumber}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+                      </fieldset>
+
+                      <fieldset>
+                        <legend className="text-center">
+                          Company Information
+                        </legend>
+                        <TextFieldGroup
+                          type="text"
+                          label="Department"
+                          placeholder="Enter department"
+                          name="department"
+                          value={this.state.department}
+                          error={errors.department}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        <TextFieldGroup
+                          type="text"
+                          label="Designation"
+                          placeholder="Enter designation"
+                          name="designation"
+                          value={this.state.designation}
+                          error={errors.designation}
+                          onChange={this.onChange}
+                          tabindex="1"
+                        />
+
+                        {levelContainer}
+                      </fieldset>
 
                       <div className="text-center">
                         <button
