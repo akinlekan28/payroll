@@ -16,6 +16,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import AddEmployee from "./components/employee/AddEmployee";
 import ViewEmployee from "./components/employee/ViewEmployee";
 import EditEmployee from "./components/employee/EditEmployee";
+import EmployeeProfile from './components/employee/EmployeeProfile';
 import Level from "./components/level/Level";
 import EditLevel from './components/level/EditLevel';
 import Exception from './components/exception/Exception';
@@ -84,6 +85,13 @@ class App extends Component {
                 exact
                 path="/employee/edit/:id"
                 component={EditEmployee}
+              />
+            </Switch>
+            <Switch>
+              <PrivateRoute
+                exact
+                path="/employee/view/:id"
+                component={EmployeeProfile}
               />
             </Switch>
             <Switch>

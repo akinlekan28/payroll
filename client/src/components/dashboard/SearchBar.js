@@ -6,6 +6,10 @@ import { logoutUser } from "../../actions/authActions";
 
 class SearchBar extends Component {
   
+  state = {
+    isOpen: false
+  }
+  
   logOut(e) {
     e.preventDefault();
 
@@ -26,7 +30,7 @@ class SearchBar extends Component {
                   data-toggle="sidebar"
                   className="nav-link nav-link-lg"
                 >
-                  <i className="fas fa-bars" />
+                  <i className="fas fa-bars"/>
                 </a>
               </li>
               <li>
