@@ -91,6 +91,22 @@ const PayslipSchema = new Schema({
   taxableIncome: {
     type: Number
   },
+  bankName: {
+    type: String,
+    required: true
+  },
+  accountNumber: {
+    type: String,
+    required: true
+  },
+  pfaName: {
+    type: String,
+    required: true
+  },
+  pensionAccountNumber: {
+    type: String,
+    required: true
+  },
   presentMonth: {
     type: String
   },

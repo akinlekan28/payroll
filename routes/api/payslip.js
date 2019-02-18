@@ -44,6 +44,10 @@ router.get("/:id", protect, (req, res) => {
         const department = employeeDetails.department;
         const employeeEmail = employeeDetails.email;
         const designation = employeeDetails.designation;
+        const bankName = employeeDetails.bankName;
+        const accountNumber = employeeDetails.accountNumber;
+        const pfaName = employeeDetails.pfaName;
+        const pensionAccountNumber = employeeDetails.pensionAccountNumber;
         let oneOffPaymentIncomeSum = 0;
         let oneOffPaymentDeductionSum = 0;
         let oneOffPaymentArray = [];
@@ -175,7 +179,11 @@ router.get("/:id", protect, (req, res) => {
                               level,
                               individualcost,
                               employeeException,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber
                             };
 
                             //payslip variables for server side further processing
@@ -199,6 +207,10 @@ router.get("/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber,
                               presentMonth,
                               presentYear
                             };
@@ -271,7 +283,11 @@ router.get("/:id", protect, (req, res) => {
                               individualcost,
                               level,
                               employeeException,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber
                             };
 
                             const payslipDetails = {
@@ -293,6 +309,10 @@ router.get("/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber,
                               presentMonth,
                               presentYear
                             };
@@ -384,7 +404,11 @@ router.get("/:id", protect, (req, res) => {
                               employeeDetails,
                               individualcost,
                               level,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber
                             };
 
                             const payslipDetails = {
@@ -406,6 +430,10 @@ router.get("/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber,
                               presentMonth,
                               presentYear
                             };
@@ -477,7 +505,11 @@ router.get("/:id", protect, (req, res) => {
                               employeeDetails,
                               individualcost,
                               level,
-                              oneOffPaymentArray
+                              oneOffPaymentArray,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber
                             };
 
                             const payslipDetails = {
@@ -499,6 +531,10 @@ router.get("/:id", protect, (req, res) => {
                               individualcost,
                               oneOffPaymentArray,
                               taxableIncome,
+                              bankName,
+                              accountNumber,
+                              pfaName,
+                              pensionAccountNumber,
                               presentMonth,
                               presentYear
                             };

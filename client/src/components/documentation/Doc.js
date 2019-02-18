@@ -56,6 +56,7 @@ export default () => (
             <div className="col-md-12 card card-body card-success">
                 <h5 className="text-center mb-3 mt-3">4.0     Dashboard</h5>
                 <p>The dashboard gives an analytical view of the whole system, the aggregate of information currently in the database. The number of registered admin, active employees, deleted employees, levels and salary exceptions.</p>
+                <p>There is a line chart which gives monthly analytics of payble net income and gross income, also is a doughnut chart which shows total net pay, consolidation relief allowance and employee bonuses payable by the employer within a calendar year. Piechart shows the total tax, pension and deductions payable by employee within a calendar year.</p>
                 <p>There is also an overview of the last five registered employees on display with their basic information.</p>
 
                 <h5 className="text-center mb-3 mt-3">5.0     Payroll</h5>
@@ -64,7 +65,8 @@ export default () => (
                 <p><strong>Note: </strong> Employee payroll can only be generated after 21 days of the present month. On the employee payslip page, a copy of the payslip can be downloaded in a portable document file(pdf), it can also be printed by a single button and lastly a pdf copy can be sent to employee email attached to the employee profile.</p>
 
                 <h6 className="mt-3">All report</h6>
-                <p>The all report page has in it three control buttons, payroll with pension, employee pension and employee tax. The payroll with pension displays in a table all employees and the payroll break down, the employee pension shows the pension contribution of all employees while the employee tax displays the tax payable by employees.</p>
+                <p>The all report page has in it first column three control buttons, payroll with pension, employee pension and employee tax. The payroll with pension displays in a table all employees and the payroll break down, the employee pension shows the pension contribution of all employees while the employee tax displays the tax payable by employees.</p>
+                <p>The other two columns are links to which payroll records can be retrieved, records can be filtered by employee name, month and year. These records can also be exported in an excel format.</p>
             </div>
            </div>
             </section>

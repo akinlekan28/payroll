@@ -1,5 +1,5 @@
 {
-  "name": "payroll",
+  "name": "payeroll",
   "version": "1.0.0",
   "description": "An enterprise payroll application",
   "main": "server.js",
@@ -7,6 +7,20 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "now": {
+    "version": 2, 
+    "alias": "payeroll",
+    "name": "payeroll",
+    "env": {
+      "MONGO_URI" : "@MONGO_URI",
+      "SECRET_KEY": "@SECRET_KEY",
+      "SENDGRID_KEY": "@SENDGRID_KEY",
+      "SERVICE": "@SERVICE",
+      "USER_EMAIL": "@USER_EMAIL",
+      "USER_PASS": "@USER_PASS",
+      "EMAIL_SMTP": "@EMAIL_SMTP"
+    }
   },
   "repository": {
     "type": "git",

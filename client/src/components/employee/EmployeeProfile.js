@@ -38,7 +38,7 @@ export default () => {
               <h4 className="text-center">{employee.name}</h4>
               <div className="card-description">
                 {employee.levelName} employee
-                <br></br>
+                <br />
                 Employee tag: {employee.tag}
               </div>
             </div>
@@ -135,11 +135,11 @@ export default () => {
               Employee List
             </Link>
             <Link
-            to={`/employee/edit/${employeeId}`}
-            className="btn btn-lg btn-primary m-2"
-          >
-            Edit
-          </Link>
+              to={`/employee/edit/${employeeId}`}
+              className="btn btn-lg btn-primary m-2"
+            >
+              Edit
+            </Link>
           </div>
         </div>
       );

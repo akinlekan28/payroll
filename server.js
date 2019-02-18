@@ -2,6 +2,7 @@ const express = require("express");
 const bodyPaser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const path = require('path');
 
 const users = require('./routes/api/users');
 const level = require('./routes/api/levels');
@@ -46,6 +47,16 @@ app.use('/api/payslip', payslip);
 app.use('/api/dashboard', dashboard);
 app.use('/api/individualcost', individualcost);
 app.use('/api/oneoffpayment', oneoffpayment);
+
+// Server static assets if in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`App is running on port ${PORT}`));

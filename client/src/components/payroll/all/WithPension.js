@@ -100,6 +100,10 @@ class WithPension extends PureComponent {
                     <th>Taxable Income</th>
                     <th>Tax Payable</th>
                     <th>Monthly Net Pay</th>
+                    <th>Bank Name</th>
+                    <th>Account No</th>
+                    <th>PFA Name</th>
+                    <th>Pension Account No</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,6 +118,10 @@ class WithPension extends PureComponent {
                             <td><span>&#8358;</span>{formatMoney(payrollItem.taxableIncome.toFixed(2))}</td>
                             <td><span>&#8358;</span>{formatMoney(payrollItem.tax.toFixed(2))}</td>
                             <td><span>&#8358;</span>{formatMoney(payrollItem.netPay.toFixed(2))}</td>
+                            <td>{payrollItem.bankName}</td>
+                            <td>{payrollItem.accountNumber}</td>
+                            <td>{payrollItem.pfaName}</td>
+                            <td>{payrollItem.pensionAccountNumber}</td>
                         </tr>
                     ))}
                     <tr>
