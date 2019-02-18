@@ -3,12 +3,11 @@ const router = express.Router();
 const passport = require("passport");
 const protect = passport.authenticate("jwt", { session: false });
 const keys = require("../../config/keys");
+const mailer = require('@sendgrid/mail');
 const pdfMakePrinter = require("pdfmake/src/printer");
 const path = require("path");
-const fs = require("fs");
 const emailTemplate = require("../../emailTemplates/emailTemplate");
-const nodemailer = require("nodemailer");
-const validator = require('validator');
+
 
 //Load models
 const Level = require("../../models/Level");
@@ -33,7 +32,6 @@ let presentYear = date.getFullYear();
 router.get("/:id", protect, (req, res) => {
 
   let salaryDay = date.getDate();
-  // let salaryDay = 23;
 
   if (salaryDay >= 21) {
     Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
@@ -593,6 +591,7 @@ router.get("/:id", protect, (req, res) => {
 //@access Private
 router.post("/send/:id", protect, (req, res) => {
   const errors = {};
+  mailer.setApiKey(keys.sendGridKey);
 
   Payslip.findOne({ employee: req.params.id }, { is_delete: 0 }).where('presentMonth').equals(presentMonth).where('presentYear')
   .equals(presentYear)
@@ -766,51 +765,26 @@ router.post("/send/:id", protect, (req, res) => {
       };
 
       generatePdf(docDefinition, response => {
-        pdfLocation = path.join(__dirname, "../../", "docs", "/payroll.pdf");
-
-        const transporter = nodemailer.createTransport({
-          service: keys.service,
-          auth: {
-            user: keys.username,
-            pass: keys.password,
-            host: keys.smtp
-          }
-        });
 
         const htmlData = emailTemplate(employeePayslip);
-
-        const options = {
-          from: "no-reply@payroller.com",
-          to: `${employeePayslip.email}`,
-          subject: "Monthly Payroll",
-          html: htmlData,
-          attachments: [
-            {
-              path: pdfLocation,
-              filename: "payroll.pdf"
-            }
-          ]
-        };
-
-        transporter.sendMail(options, (error, info) => {
-          if (error) {
-            fs.unlink(pdfLocation, err => {
-              if(err){
-                console.log(err)
+          
+          const mailData = {
+            from: "Monthlypayslip@payeroll.app",
+            to: `${employeePayslip.email}`,
+            subject: "Monthly Payslip",
+            html: htmlData,
+            attachments: [
+              {
+                content: response,
+                filename: "payslip.pdf",
+                type: 'application/pdf',
               }
-            })
-            return res
-              .status(400)
-              .json({ message: "Error sending employee payslip" });
-          } else {
-            fs.unlink(pdfLocation, err => {
-              if (err) {
-                console.log(err);
-              }
-              return res.json({ message: "Payslip successfully sent!" });
-            });
-          }
-        });
+            ]
+          };
+
+          mailer.send(mailData)
+          .then(() => res.json({ message: "Payslip successfully sent!" }))
+          .catch(err => res.status(400).json({ message: "Error sending employee payslip" }))
       });
     })
     .catch(err => res.status(404).json({ message: "Error fetching payslip" }));
@@ -1005,14 +979,16 @@ const generatePdf = (docDefinition, successCallback, errorCallback) => {
     const printer = new pdfMakePrinter(fontDescriptors);
     const doc = printer.createPdfKitDocument(docDefinition);
 
-    doc.pipe(
-      fs.createWriteStream("docs/payslip.pdf").on("error", err => {
-        errorCallback(err.message);
-      })
-    );
+    let chunks = [];
+    let result;
+
+    doc.on('data', function (chunk) {
+      chunks.push(chunk);
+    });
 
     doc.on("end", () => {
-      successCallback("PDF successfully created and stored");
+      result = Buffer.concat(chunks);
+      successCallback(result.toString('base64'));
     });
 
     doc.end();

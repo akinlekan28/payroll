@@ -148,7 +148,7 @@ router.post("/forgotpassword", (req, res) => {
 
               const resetMessage = {
                 to: `${user.email}`,
-                from: 'no-reply@payroller.com',
+                from: 'no-reply@payeroll.app',
                 subject: 'Password Reset',
                 html:`<html>
                         <head>
@@ -157,7 +157,7 @@ router.post("/forgotpassword", (req, res) => {
                         <body>
                           <div>
                             <h3>Dear ${user.name},</h3>
-                            <p>You requested for a password reset on Payroller, kindly use this <a href="https://${req.headers.host}/resetpassword/${user.token}">link</a> to reset your password</p>
+                            <p>You requested for a password reset on Payeroll, kindly use this <a href="https://${req.headers.host}/resetpassword/${user.token}">link</a> to reset your password</p>
                             <br>
                             <p>Cheers!</p>
                           </div>
