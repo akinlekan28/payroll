@@ -5,17 +5,8 @@
   "scripts": {
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
-  },
-  "now": {
-    "version": 2,
-    "alias": "payeroll",
-    "name": "payeroll",
-    "env": {
-      "MONGO_URI": "@mongo_uri",
-      "SECRET_KEY": "@secret_key",
-      "SENDGRID_KEY": "@sendgrid_key"
-    }
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
     "type": "git",
