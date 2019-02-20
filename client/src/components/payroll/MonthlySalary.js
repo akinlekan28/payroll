@@ -46,7 +46,8 @@ class MonthlySalary extends Component {
 
     let employeeTable, generateBtn;
     let date = new Date();
-    let salaryDay = date.getDate();
+    // let salaryDay = date.getDate();
+    let salaryDay = 23;
 
     if (employees === null || loading) {
       employeeTable = <Spinner />;

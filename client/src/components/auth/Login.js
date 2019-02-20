@@ -95,10 +95,10 @@ class Login extends Component {
                       </form>
                     </div>
                     <div className="text-muted text-center">
-                      <p>
+                      {/* <p>
                         Don't have an account?{" "}
                         <Link to="/register">Create One</Link>
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                   <div className="simple-footer text-white">

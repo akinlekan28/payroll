@@ -58,7 +58,7 @@ class EmployeeTable extends Component {
             Edit
           </Link>{" "}
           <button
-            className="btn btn-danger btn-sm"
+            className="btn btn-danger btn-sm" disabled
             onClick={this.deleteDialog.bind(this, employee._id)}
           >
             Delete
@@ -70,6 +70,7 @@ class EmployeeTable extends Component {
     return (
       <div className="row">
         <div className="col-12">
+        <p>Delete button for employee is diabled for demo purposes</p>
           <div className="card">
             <div className="card-header">
               <h4 className="text-center">Basic employee details</h4>
