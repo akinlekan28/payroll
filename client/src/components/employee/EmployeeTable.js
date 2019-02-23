@@ -6,8 +6,29 @@ import { Link } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { toast } from "react-toastify";
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class EmployeeTable extends Component {
+
+  state = {
+    search: ''
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      let text = this.state.search.toLowerCase();
+      document.querySelectorAll("#search-item").forEach(payslipRow => {
+        const item = payslipRow.firstChild.textContent;
+        const name = payslipRow.childNodes[1].textContent;
+        if (item.toLowerCase().indexOf(text) !== -1 || name.toLowerCase().indexOf(text) !== -1) {
+          payslipRow.style.display = "table-row";
+        } else {
+          payslipRow.style.display = "none";
+        }
+      });
+    });
+  }
+
   deleteDialog(id) {
     confirmAlert({
       title: "Delete employee record ?",
@@ -37,10 +58,8 @@ class EmployeeTable extends Component {
   render() {
     const { employees, auth } = this.props;
 
-    console.log(auth)
-
     let employeeDetails = employees.map(employee => (
-      <tr key={employee._id}>
+      <tr key={employee._id} id="search-item">
         <td>{employee.tag}</td>
         <td>{employee.name}</td>
         <td>{employee.levelName}</td>
@@ -75,6 +94,18 @@ class EmployeeTable extends Component {
           <div className="card">
             <div className="card-header">
               <h4 className="text-center">Basic employee details</h4>
+            </div>
+            <div className="live-search ml-4">
+            <TextFieldGroup
+                  type="text"
+                  name="search"
+                  label="Search payslip"
+                  placeholder="Employee tag or name"
+                  value={this.state.search}
+                  onChange={this.onChange.bind(this)}
+                  tabindex="1"
+                  className="live-search"
+                />
             </div>
             <div className="card-body">
               <div className="table-responsive">

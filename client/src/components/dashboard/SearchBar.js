@@ -1,6 +1,6 @@
 import React, { Component } from "react";
+import {Link} from 'react-router-dom';
 import Avatar from "./avatar.png";
-import Settings from './settings.jpg';
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
@@ -52,25 +52,18 @@ class SearchBar extends Component {
                 data-toggle="dropdown"
                 className="nav-link dropdown-toggle nav-link-lg nav-link-user"
               >
-                {/* <img
-                  alt="avatar"
-                  src={Settings}
-                  style={{ width: "30px" }}
-                  className="rounded-circle mr-1"
-                /> */}
-                <i className="fas fa-gears"></i>
+                <i className="fas fa-cog" style={{ width: "30px" }}></i>
                 <div className="d-sm-none d-lg-inline-block">
                   Admin settings
                 </div>
               </a>
               <div className="dropdown-menu dropdown-menu-right">
-                <a
-                  href="#"
-                  onClick={this.logOut.bind(this)}
-                  className="dropdown-item has-icon text-danger"
+                <Link
+                  to="/user/role"
+                  className="dropdown-item has-icon text-primary"
                 >
-                  <i className="fas fa-sign-out-alt" /> Logout
-                </a>
+                Add role
+                </Link>
               </div>
             </li>
             <li className="dropdown">
