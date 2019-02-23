@@ -35,7 +35,9 @@ class EmployeeTable extends Component {
   }
 
   render() {
-    const { employees } = this.props;
+    const { employees, auth } = this.props;
+
+    console.log(auth)
 
     let employeeDetails = employees.map(employee => (
       <tr key={employee._id}>
@@ -57,12 +59,12 @@ class EmployeeTable extends Component {
           >
             Edit
           </Link>{" "}
-          <button
+          {auth.user.is_admin === 0 ? null : (<button
             className="btn btn-danger btn-sm"
             onClick={this.deleteDialog.bind(this, employee._id)}
           >
             Delete
-          </button>
+          </button>)}
         </td>
       </tr>
     ));
@@ -102,7 +104,11 @@ EmployeeTable.propTypes = {
   deleteEmployee: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => ({
+  auth: state.auth
+})
+
 export default connect(
-  null,
+  mapStateToProps,
   { deleteEmployee }
 )(EmployeeTable);

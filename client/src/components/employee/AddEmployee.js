@@ -9,6 +9,7 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { getLevels } from "../../actions/levelActions";
 import { registerEmployee } from "../../actions/employeeActions";
+import { banks } from "../common/Utilities";
 import Spinner from "../common/Spinner";
 import Button from "../common/Button";
 
@@ -152,15 +153,14 @@ class AddEmployee extends Component {
                         <legend className="text-center">
                           Payslip Information
                         </legend>
-                        <TextFieldGroup
-                          type="text"
+
+                        <SelectListGroup
                           label="Bank Name"
-                          placeholder="Enter bank name"
                           name="bankName"
                           value={this.state.bankName}
-                          error={errors.bankName}
                           onChange={this.onChange}
-                          tabindex="1"
+                          error={errors.bankName}
+                          options={banks}
                         />
 
                         <TextFieldGroup
