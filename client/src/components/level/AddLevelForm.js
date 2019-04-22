@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import TextFieldGroup from "../common/TextFieldGroup";
 import { addLevel } from "../../actions/levelActions";
+import Button from "../common/Button";
 
 class AddLevelForm extends Component {
   constructor(props) {
@@ -35,6 +36,12 @@ class AddLevelForm extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Adding "
+    loadingBtn.appendChild(loadingComp)
+
     const levelDetails = {
       name: this.state.name,
       basic: this.state.basic,
@@ -51,6 +58,8 @@ class AddLevelForm extends Component {
             basic: "",
             description: ""
           });
+
+          loadingBtn.innerHTML = "Add Level"
         }
       })
       .catch(err => console.log(err));
@@ -103,13 +112,7 @@ class AddLevelForm extends Component {
               />
 
               <div className="text-center">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-lg"
-                  tabIndex="4"
-                >
-                  Add Level
-                </button>
+                <Button classnameItems="btn-primary btn-lg" type="submit" btnName="Add Level" />         
               </div>
             </form>
           </div>

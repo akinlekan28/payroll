@@ -44,10 +44,20 @@ class Reset extends Component {
       password2: this.state.password2
     };
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Set New Password "
+    loadingBtn.appendChild(loadingComp)
+
     this.props.resetPassword(this.props.match.params.token, userCredentials)
     .then(res => {
-        if(res.type === 'GET_SUCCESS')
-            toast.success("Yaay! password has been reset, proceed to login")
+        if(res.type === 'GET_SUCCESS'){
+          toast.success("Yaay! password has been reset, proceed to login")
+        }
+        if(res.type === 'GET_ERRORS'){
+          loadingBtn.innerHTML = "Set New password"
+        }
     })
     .catch(err => console.log(err))
   }
@@ -108,7 +118,7 @@ class Reset extends Component {
                     </div>
                   </div>
                   <div className="simple-footer text-white">
-                    Copyright &copy; Payroller 2018
+                    Copyright &copy; Payeroll 2018
                   </div>
                 </div>
               </div>

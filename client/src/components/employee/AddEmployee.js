@@ -9,6 +9,7 @@ import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import { getLevels } from "../../actions/levelActions";
 import { registerEmployee } from "../../actions/employeeActions";
+import { banks } from "../common/Utilities";
 import Spinner from "../common/Spinner";
 import Button from "../common/Button";
 
@@ -53,6 +54,12 @@ class AddEmployee extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Adding "
+    loadingBtn.appendChild(loadingComp)
+
     const employeeDetails = {
       name: this.state.name,
       email: this.state.email,
@@ -84,6 +91,8 @@ class AddEmployee extends Component {
             pensionAccountNumber: ""
           });
         }
+
+        loadingBtn.innerHTML = "Add Employee"
       })
       .catch(err => console.log(err));
   }
@@ -152,15 +161,14 @@ class AddEmployee extends Component {
                         <legend className="text-center">
                           Payslip Information
                         </legend>
-                        <TextFieldGroup
-                          type="text"
+
+                        <SelectListGroup
                           label="Bank Name"
-                          placeholder="Enter bank name"
                           name="bankName"
                           value={this.state.bankName}
-                          error={errors.bankName}
                           onChange={this.onChange}
-                          tabindex="1"
+                          error={errors.bankName}
+                          options={banks}
                         />
 
                         <TextFieldGroup

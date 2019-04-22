@@ -6,6 +6,7 @@ import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
@@ -33,6 +34,7 @@ import MonthlySlipRecord from './components/payroll/all/records/MonthlySlipRecor
 import AllTimeSingle from './components/payroll/all/records/AllTimeSingle';
 import AllTimeMonthYear from './components/payroll/all/records/AllTimeMonthYear';
 import AllTimeYear from './components/payroll/all/records/AllTimeYear';
+import AddRole from './components/userlevel/AddRole';
 import Documentation from './components/documentation/Doc';
 
 //check for token
@@ -141,6 +143,9 @@ class App extends Component {
             </Switch>
             <Switch>
               <PrivateRoute exact path="/payroll/all/year" component={AllTimeYear} />
+            </Switch>
+            <Switch>
+              <PrivateRoute exact path="/user/role" component={AddRole} />
             </Switch>
             <Switch>
               <PrivateRoute exact path="/documentation" component={Documentation} />
