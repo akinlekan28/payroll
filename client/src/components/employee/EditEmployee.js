@@ -12,6 +12,7 @@ import SelectListGroup from "../common/SelectListGroup";
 import Spinner from "../common/Spinner";
 import isEmpty from "../../validation/is-empty";
 import { toast } from "react-toastify";
+import Button from '../common/Button';
 
 class EditEmployee extends Component {
   componentDidMount() {
@@ -88,6 +89,12 @@ class EditEmployee extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Adding "
+    loadingBtn.appendChild(loadingComp)
+
     const employeeData = {
       name: this.state.name,
       email: this.state.email,
@@ -113,7 +120,9 @@ class EditEmployee extends Component {
             department: ""
           });
         }
-      })
+        loadingBtn.innerHTML = "Edit Employee";
+      }
+      )
       .catch(err => console.log(err));
   }
 
@@ -284,13 +293,7 @@ class EditEmployee extends Component {
                       </fieldset>
 
                       <div className="text-center">
-                        <button
-                          type="submit"
-                          className="btn btn-primary btn-lg"
-                          tabIndex="4"
-                        >
-                          Edit Employee
-                        </button>
+                        <Button classnameItems="btn-primary btn-lg" btnName="Edit Employee" type="submit" />
                         <Link
                           to="/employee/all"
                           className="btn btn-lg btn-warning ml-3"

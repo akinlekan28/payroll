@@ -35,6 +35,12 @@ class SingleEmployee extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Fetching payslips "
+    loadingBtn.appendChild(loadingComp)
+
     this.props
       .getEmployeeYearlySlip(this.state.employee)
       .then(res => {
@@ -48,6 +54,8 @@ class SingleEmployee extends Component {
         if (res.type === "GET_ERRORS" && typeof res.payload === "string") {
           toast.error("Please select an employee");
         }
+
+        loadingBtn.innerHTML = "Get Payslips"
       })
       .catch(err => console.log(err));
   }

@@ -30,8 +30,6 @@ const AllTimeSingleTable = ({ payroll }) => {
     return formatedValue;
   };
 
-  const date = new Date();
-
   return (
     <div className="row mt-5">
       <div className="col-12">
@@ -50,7 +48,7 @@ const AllTimeSingleTable = ({ payroll }) => {
                 </td>
                 <td>
                   Tax Year:{" "}
-                  <strong className="ml-5">{date.getFullYear()}</strong>
+                  <strong className="ml-5">{payroll.presentYear}</strong>
                 </td>
               </tr>
               <tr>
@@ -60,7 +58,7 @@ const AllTimeSingleTable = ({ payroll }) => {
                 <td>
                   Pay Period:{" "}
                   <strong className="ml-5">
-                    {date.toLocaleString("en-us", { month: "long" })}
+                  {payroll.presentMonth}
                   </strong>
                 </td>
               </tr>

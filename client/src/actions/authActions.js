@@ -6,7 +6,10 @@ import {
   SET_CURRENT_USER,
   GET_SUCCESS,
   CLEAR_ERRORS,
-  ADD_USER
+  ADD_USER,
+  VIEW_USERS,
+  EMPLOYEE_LOADING,
+  ASSIGN_ROLE
 } from "./types";
 
 //Register user
@@ -37,7 +40,7 @@ export const registerUser = userData => dispatch => {
 //Login user
 export const loginUser = userData => dispatch => {
   dispatch(clearErrors());
-  axios
+  return axios
     .post("/api/users/login", userData)
     .then(res => {
       //Save to local storage
@@ -76,6 +79,27 @@ export const setCurrentUser = decoded => {
     payload: decoded
   };
 };
+
+//View all users
+export const getUsers = () => dispatch => {
+  dispatch(setLoading(                                                                                          ))
+  axios.get('/api/users/all')
+  .then(res => dispatch({
+     type: VIEW_USERS,
+    payload: res.data
+  }))
+  .catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    }),
+    dispatch(() => {
+      setTimeout(function() {
+        dispatch(clearErrors())
+      }, 5000);
+    })
+  );
+}
 
 //log user out
 export const logoutUser = () => dispatch => {
@@ -137,6 +161,36 @@ export const resetPassword = (token, userPass) => dispatch => {
         }, 5000);
       })
     );
+};
+
+//assign role
+export const assignRole = rolePayload => dispatch => {
+  dispatch(clearErrors());
+  
+  return axios.post('/api/users/assignrole', rolePayload)
+  .then(res => dispatch({
+    type: ASSIGN_ROLE,
+    payload: res.data
+  }))
+  .catch(
+    err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      }),
+    dispatch(() => {
+      setTimeout(function() {
+        dispatch(clearErrors());
+      }, 5000);
+    })
+  );
+}
+
+//Set loding state
+export const setLoading = () => {
+  return {
+    type: EMPLOYEE_LOADING
+  };
 };
 
 //Clear Error

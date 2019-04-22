@@ -9,6 +9,7 @@ import Footer from "../dashboard/Footer";
 import MonthlySalaryTable from './MonthlySalaryTable';
 import axios from 'axios';
 import { toast } from "react-toastify";
+import Button from '../common/Button';
 
 class MonthlySalary extends Component {
 
@@ -21,6 +22,12 @@ class MonthlySalary extends Component {
     let completeGeneration = 0;
     let failedGeneration = 0;
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Generating "
+    loadingBtn.appendChild(loadingComp)
+
     employees.forEach(employee => {
       axios.get(`/api/payslip/${employee._id}`)
         .then(res => {
@@ -31,9 +38,11 @@ class MonthlySalary extends Component {
           }
           if(completeGeneration === totalEmployees){
             toast.success('All payslip generated successfully!')
+            loadingBtn.innerHTML = "Generate All Payslips"
           }
           if(failedGeneration !== 0){
             toast.warn(`Could not generate ${failedGeneration} payroll of ${totalEmployees}`)
+            loadingBtn.innerHTML = "Generate All Payslips"
           }
         })
         .catch(err => console.log(err))
@@ -56,7 +65,7 @@ class MonthlySalary extends Component {
         employeeTable = <MonthlySalaryTable employees={employees} />;
 
         if(salaryDay >= 21){
-          generateBtn = <button className="btn btn-lg btn-info mb-4" onClick={this.generateAll.bind(this, employees)}>Generate All Payslips</button>
+          generateBtn = <Button classnameItems="btn-lg btn-info mb-4" btnName="Generate All Payslips" onClick={this.generateAll.bind(this, employees)} />
         }
         
       } else {

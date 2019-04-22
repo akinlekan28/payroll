@@ -67,6 +67,13 @@ export default () => (
                 <h6 className="mt-3">All report</h6>
                 <p>The all report page has in it first column three control buttons, payroll with pension, employee pension and employee tax. The payroll with pension displays in a table all employees and the payroll break down, the employee pension shows the pension contribution of all employees while the employee tax displays the tax payable by employees.</p>
                 <p>The other two columns are links to which payroll records can be retrieved, records can be filtered by employee name, month and year. These records can also be exported in an excel format.</p>
+
+                <h5 className="text-center mb-3 mt-3">6.0     Role privileges</h5>
+                <h6>Super Administrator</h6>
+                <p>This user has full access, the ability to create, edit and delete records from this system.</p>
+                <h6>Administrator</h6>
+                <p>Newly registered accounts on this platform are assigned the role of administrator by default and so they can't delete or create employee exceptions.</p>
+
             </div>
            </div>
             </section>

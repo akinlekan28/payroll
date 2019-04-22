@@ -31,8 +31,6 @@ const MonthlySlipRecordTable = ({payroll}) => {
       return formatedValue;
     };
 
-    const date = new Date();
-
   return (
     <div className="row">
     <div className="col-12">
@@ -51,7 +49,7 @@ const MonthlySlipRecordTable = ({payroll}) => {
                 {payroll.name}
               </strong>
             </td>
-            <td>Tax Year: <strong className="ml-5">{date.getFullYear()}</strong></td>
+            <td>Tax Year: <strong className="ml-5">{payroll.presentYear}</strong></td>
           </tr>
           <tr>
             <td>
@@ -60,7 +58,7 @@ const MonthlySlipRecordTable = ({payroll}) => {
                 {payroll.tag}
               </strong>
             </td>
-            <td>Pay Period: <strong className="ml-5">{date.toLocaleString('en-us', {month: 'long'})}</strong></td>
+            <td>Pay Period: <strong className="ml-5">{payroll.presentMonth}</strong></td>
           </tr>
           <tr>
             <td>

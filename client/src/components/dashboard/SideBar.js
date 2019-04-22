@@ -14,6 +14,7 @@ class SideBar extends Component {
 
 render() {
 
+    const { auth } = this.props;
    return (
     <div className="main-sidebar">
      <aside id="sidebar-wrapper">
@@ -37,7 +38,7 @@ render() {
 
             <li className="menu-header">Utilities</li>
             <li><Link to="/utilities/level" className="nav-link"><i className="fas fa-location-arrow"></i> <span>Employee level</span></Link></li>
-            <li><Link to="/utilities/exception" className="nav-link"><i className="fas fa-sign"></i> <span>Salary Exception</span></Link></li>
+            {auth.user.is_admin === 0 ? null : (<li><Link to="/utilities/exception" className="nav-link"><i className="fas fa-sign"></i> <span>Salary Exception</span></Link></li>) }
 
             <li className="menu-header">Extra</li> 
             <li><Link to="" className="nav-link" onClick={this.onHandleClick.bind(this)}><i className="fas fa-sign-out-alt"></i> <span>Logout</span></Link></li>

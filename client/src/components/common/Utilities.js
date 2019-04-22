@@ -37,6 +37,11 @@ export const banks = [
   { name: "Zenith Bank Plc", value: "Zenith Bank Plc", _id: "Zenith Bank Plc" }
 ]
 
+export const roles = [
+  {name: "Administrator", value: 0, _id: 0},
+  {name: "Super Administrator", value: 1, _id: 1}
+]
+
 export const formatMoney = money => {
   let formatedValue = money
     .toString()

@@ -38,21 +38,25 @@ class MonthlySlip extends PureComponent {
   };
 
   sendEmail(e) {
-    let d = document.querySelector(".sendE");
-    d.disabled = true;
-    d.innerHTML = "Sending...";
+    
+    let loadingBtn = document.querySelector('.sendE');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Sending "
+    loadingBtn.appendChild(loadingComp)
+    loadingBtn.disabled = true;
 
     axios
       .post(`/api/payslip/send/${this.props.match.params.id}`)
       .then(res => {
         toast.success("Employee payslip successfully sent!");
-        d.disabled = false;
-        d.innerHTML = "Send to employee";
+        loadingBtn.disabled = false;
+        loadingBtn.innerHTML = "Send to employee";
       })
       .catch(err => {
         toast.error("Error sending email, resend");
-        d.disabled = false;
-        d.innerHTML = "Send to employee";
+        loadingBtn.disabled = false;
+        loadingBtn.innerHTML = "Send to employee";
       });
   }
 

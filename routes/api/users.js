@@ -12,6 +12,7 @@ const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
 const validateResetInput = require("../../validation/reset");
 const validateNewInput = require("../../validation/newpassword");
+const validateRoleInput = require("../../validation/role");
 
 //Load user model
 const User = require("../../models/User");
@@ -110,6 +111,66 @@ router.get(
     });
   }
 );
+
+//@route  Get api/users/all
+//@desc Get all users
+//@access Private
+
+router.get('/all', passport.authenticate("jwt", { session: false }), (req, res) => {
+  User.find({is_delete: 0})
+  .then(users => res.json(users))
+  .catch(err => console.log(err))
+})
+
+//@route  Post api/users/assignrole
+//@desc asign user role
+//@access Private
+
+router.post('/assignrole', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const {errors, isValid} = validateRoleInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const userFields = {};
+
+  if(req.body.user) userFields.user = req.body.user;
+  if(req.body.role) userFields.is_admin = req.body.role;
+
+  User.findOne({_id: req.body.user}).where('is_delete').equals(0)
+  .then(user => {
+    if(user){
+     let role = parseInt(req.body.role);
+     let currentUser = req.body.currentUser;
+     let userId = JSON.stringify(user._id).replace(/^"(.*)"$/, '$1');
+     let loggedPrivilege = req.body.loggedPrivilege;
+
+      if(userId === currentUser){
+        errors.role = 'You cannot set current logged user role';
+        return res.status(400).json(errors)
+     }
+
+     if(loggedPrivilege === 0){
+      errors.role = "You dont have the appropriate privileges";
+      return res.status(400).json(errors);
+    }
+
+     if(user.is_admin === role){
+       errors.role = 'User already has this role';
+       return res.status(400).json(errors)
+     }
+
+     User.findOneAndUpdate(
+      {_id: req.body.user},
+      {$set: userFields},
+      {new: true}
+    ).then(user => res.status(200).json({success: true}))
+    .catch(err => console.log(err))
+    }
+  })
+  .catch(err => console.log(err))
+})
 
 //@route  Post api/users/forgotpassword
 //@desc Send resetpassword token

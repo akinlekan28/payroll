@@ -49,11 +49,21 @@ class Register extends Component {
       password2: this.state.password2
     };
 
+    let loadingBtn = document.querySelector(".loading");
+    let loadingComp = document.createElement("i");
+    loadingComp.classList = "fas fa-circle-notch fa-spin";
+    loadingBtn.innerHTML = "Registering ";
+    loadingBtn.appendChild(loadingComp);
+
     this.props
       .registerUser(userData)
       .then(res => {
-        if (res.type === "ADD_USER")
+        if (res.type === "ADD_USER"){
           toast.success("User successfully registered, proceed to login!");
+        }
+        if (res.type === "GET_ERRORS") {
+          loadingBtn.innerHTML = "Register";
+        }
       })
       .catch(err => console.log(err));
   }
@@ -132,7 +142,7 @@ class Register extends Component {
                     </div>
                   </div>
                   <div className="simple-footer text-white">
-                    Copyright &copy; Payroller 2018
+                    Copyright &copy; Payeroll 2018
                   </div>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
-import Button from '../common/Button';
+import Button from "../common/Button";
 
 class Login extends Component {
   constructor() {
@@ -14,17 +14,16 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {},
+      errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isAuthenticated) {
-      nextProps.history.push('/dashboard');
+      nextProps.history.push("/dashboard");
     }
     if (nextProps.errors) {
       return {
@@ -36,12 +35,25 @@ class Login extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector(".loading");
+    let loadingComp = document.createElement("i");
+    loadingComp.classList = "fas fa-circle-notch fa-spin";
+    loadingBtn.innerHTML = "Login ";
+    loadingBtn.appendChild(loadingComp);
+
     const loginData = {
       email: this.state.email,
       password: this.state.password
     };
 
-    this.props.loginUser(loginData);
+    this.props
+      .loginUser(loginData)
+      .then(res => {
+        if (res.type === "GET_ERRORS") {
+          loadingBtn.innerHTML = "Login";
+        }
+      })
+      .catch(err => console.log(err));
   }
 
   onChange(e) {
@@ -90,7 +102,11 @@ class Login extends Component {
                           <Link to="/forgot-password">reset</Link>
                         </p>
                         <div className="form-group mt-4 mb-5">
-                          <Button type="submit" classnameItems="btn-primary btn-lg btn-block" btnName="Login"/>
+                          <Button
+                            type="submit"
+                            classnameItems="btn-primary btn-lg btn-block"
+                            btnName="Login"
+                          />
                         </div>
                       </form>
                     </div>
@@ -102,7 +118,7 @@ class Login extends Component {
                     </div>
                   </div>
                   <div className="simple-footer text-white">
-                    Copyright &copy; Payroller 2018
+                    Copyright &copy; Payeroll 2018
                   </div>
                 </div>
               </div>

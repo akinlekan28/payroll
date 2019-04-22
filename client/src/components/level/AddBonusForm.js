@@ -53,6 +53,10 @@ class AddBonusForm extends Component {
       level: this.state.level
     };
 
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    this.refs.addBtn.appendChild(loadingComp)
+
     this.props
       .addBonus(bonusDetails, this.state.level)
       .then(res => {
@@ -65,6 +69,7 @@ class AddBonusForm extends Component {
           })
           this.refs.addBtn.disabled = true;
         }
+        this.refs.addBtn.innerHTML = "Add Bonus "
       })
       .catch(err => console.log(err));
   }
@@ -111,7 +116,7 @@ class AddBonusForm extends Component {
 
         <div className="text-center">
           <button type="submit" className="btn btn-primary btn-lg" ref="addBtn" tabIndex="4">
-            Add Bonus
+            Add Bonus {" "}
           </button>
         </div>
       </form>

@@ -54,6 +54,12 @@ class AddEmployee extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Adding "
+    loadingBtn.appendChild(loadingComp)
+
     const employeeDetails = {
       name: this.state.name,
       email: this.state.email,
@@ -85,6 +91,8 @@ class AddEmployee extends Component {
             pensionAccountNumber: ""
           });
         }
+
+        loadingBtn.innerHTML = "Add Employee"
       })
       .catch(err => console.log(err));
   }
