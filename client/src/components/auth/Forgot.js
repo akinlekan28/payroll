@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { sendResetLink } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
-import Button from '../common/Button';
+import Button from "../common/Button";
 import { toast } from "react-toastify";
 
 class Forgot extends Component {
@@ -22,7 +22,7 @@ class Forgot extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isAuthenticated) {
-      nextProps.history.push('/dashboard');
+      nextProps.history.push("/dashboard");
     }
     if (nextProps.errors) {
       return {
@@ -39,14 +39,24 @@ class Forgot extends Component {
     e.preventDefault();
 
     const userEmail = {
-        email: this.state.email
-    }
+      email: this.state.email
+    };
+
+    let loadingBtn = document.querySelector(".loading");
+    let loadingComp = document.createElement("i");
+    loadingComp.classList = "fas fa-circle-notch fa-spin";
+    loadingBtn.innerHTML = "Sending ";
+    loadingBtn.appendChild(loadingComp);
 
     this.props
       .sendResetLink(userEmail)
       .then(res => {
-        if (res.type === "GET_SUCCESS")
+        if (res.type === "GET_SUCCESS") {
           toast.success("Password reset link sent, check your inbox!");
+        }
+        if (res.type === "GET_ERRORS") {
+          loadingBtn.innerHTML = "Send Reset Link";
+        }
       })
       .catch(err => console.log(err));
   }
@@ -66,8 +76,7 @@ class Forgot extends Component {
                       <h3>Reset Password</h3>
                     </div>
                     <p className="mx-auto text-warning">
-                      *We will email you a password reset
-                      link
+                      *We will email you a password reset link
                     </p>
                     <div className="card-body">
                       <form onSubmit={this.onSubmit}>
@@ -96,7 +105,7 @@ class Forgot extends Component {
                     </div>
                   </div>
                   <div className="simple-footer text-white">
-                    Copyright &copy; Payroller 2018
+                    Copyright &copy; Payeroll 2018
                   </div>
                 </div>
               </div>

@@ -45,17 +45,26 @@ export class AllTimeMonthYear extends PureComponent {
 
   onSubmit(e) {
     e.preventDefault();
+
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Fetching payslips "
+    loadingBtn.appendChild(loadingComp)
+
     const { month, year } = this.state;
     const payslipData = {
       month,
       year
     };
+    
     this.props
       .getMonthYear(payslipData)
       .then(res => {
         if (res.type === "VIEW_MONTH_YEAR" && Object.keys(res.payload).length === 0) {
           toast.warn("Payslips not found or hasn't been generated");
         }
+        loadingBtn.innerHTML = "Get payslips"
       })
       .catch(err => console.log(err));
   }

@@ -52,6 +52,10 @@ class AddDeductableForm extends Component {
       level: this.state.level
     };
 
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    this.refs.addBtn.appendChild(loadingComp)
+
     this.props
       .addDeductable(deductableDetails, this.state.level)
       .then(res => {
@@ -64,6 +68,7 @@ class AddDeductableForm extends Component {
           })
           this.refs.addBtn.disabled = true;
         }
+        this.refs.addBtn.innerHTML = "Add Deductable "
       })
       .catch(err => console.log(err));
   }
@@ -108,8 +113,8 @@ class AddDeductableForm extends Component {
         />
 
         <div className="text-center">
-          <button type="submit" className="btn btn-primary btn-lg" ref="addBtn" tabIndex="4">
-            Add Deductable
+          <button type="submit" className="btn btn-primary btn-lg loading" ref="addBtn" tabIndex="4">
+            Add Deductable{" "}
           </button>
         </div>
       </form>

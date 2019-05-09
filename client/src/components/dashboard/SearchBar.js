@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Link} from 'react-router-dom';
 import Avatar from "./avatar.png";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -45,6 +46,26 @@ class SearchBar extends Component {
             </ul>
           </form>
           <ul className="navbar-nav navbar-right">
+          <li className="dropdown">
+              <a
+                href="#"
+                data-toggle="dropdown"
+                className="nav-link dropdown-toggle nav-link-lg nav-link-user"
+              >
+                <i className="fas fa-cog" style={{ width: "30px" }}></i>
+                <div className="d-sm-none d-lg-inline-block">
+                  Admin settings
+                </div>
+              </a>
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  to="/user/role"
+                  className="dropdown-item has-icon text-primary"
+                >
+                Add role
+                </Link>
+              </div>
+            </li>
             <li className="dropdown">
               <a
                 href="#"

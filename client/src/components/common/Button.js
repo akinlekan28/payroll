@@ -5,7 +5,7 @@ import classnames from "classnames";
 const Button = ({ type, classnameItems, btnName, onClick }) => (
   <button
     type={type}
-    className={classnames("btn", classnameItems)}
+    className={classnames("btn loading", classnameItems)}
     tabIndex="4"
     onClick={onClick}
   >

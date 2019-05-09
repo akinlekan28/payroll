@@ -53,6 +53,12 @@ export class MonthlySlipRecord extends PureComponent {
   onSubmit(e) {
     e.preventDefault();
 
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Fetching payslip "
+    loadingBtn.appendChild(loadingComp)
+
     const { employee, month } = this.state;
 
     const payslipData = {
@@ -66,6 +72,7 @@ export class MonthlySlipRecord extends PureComponent {
         if (res.type === "GET_ERRORS" && res.payload.monthlyslip) {
           toast.warn(res.payload.monthlyslip);
         }
+        loadingBtn.innerHTML = "Get Payslip"
       })
       .catch(err => console.log(err));
   }

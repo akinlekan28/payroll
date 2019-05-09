@@ -61,12 +61,20 @@ export class AllTimeSingle extends PureComponent {
       month,
       year
     };
+
+    let loadingBtn = document.querySelector('.loading');
+    let loadingComp = document.createElement("i")
+    loadingComp.classList = "fas fa-circle-notch fa-spin"
+    loadingBtn.innerHTML = "Fetching payslip "
+    loadingBtn.appendChild(loadingComp)
+
     this.props
       .getEmployeeMonthYear(payslipData)
       .then(res => {
         if (res.type === "GET_ERRORS" && res.payload.payslip) {
           toast.warn(res.payload.payslip);
         }
+        loadingBtn.innerHTML = "Get payslip";
       })
       .catch(err => console.log(err));
   }
@@ -125,7 +133,7 @@ export class AllTimeSingle extends PureComponent {
                       <Button
                         type="submit"
                         classnameItems="btn-info btn-lg"
-                        btnName="Get payslips"
+                        btnName="Get payslip"
                       />
                       <Link
                         to="/payroll/all"
