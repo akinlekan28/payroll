@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import Login from "./components/auth/Login";
-// import Register from "./components/auth/Register";
+import Register from "./components/auth/Register";
 import Forgot from "./components/auth/Forgot";
 import Reset from "./components/auth/Reset";
 import PrivateRoute from "./components/common/PrivateRoute";
@@ -67,7 +67,7 @@ class App extends Component {
             <ToastContainer autoClose={4000} />
             <Route exact path="/" component={Login} />
             <Route exact path="/forgot-password" component={Forgot} />
-            {/* <Route exact path="/register" component={Register} /> */}
+            <Route exact path="/register" component={Register} />
             <Route exact path="/resetpassword/:token" component={Reset} />
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
