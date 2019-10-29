@@ -3,6 +3,7 @@ const bodyPaser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
+const cors = require('cors');
 
 const users = require('./routes/api/users');
 const level = require('./routes/api/levels');
@@ -12,12 +13,14 @@ const payslip = require('./routes/api/payslip');
 const dashboard = require('./routes/api/dashboard');
 const individualcost = require('./routes/api/individualcost');
 const oneoffpayment = require('./routes/api/oneoffpayment');
+const record = require('./routes/api/record');
 
 const app = express();
 
 //Body parser middleware
 app.use(bodyPaser.urlencoded({ extended: false }));
 app.use(bodyPaser.json());
+app.use(cors())
 
 //Db
 const db = require("./config/keys").mongoURI;
@@ -47,6 +50,7 @@ app.use('/api/payslip', payslip);
 app.use('/api/dashboard', dashboard);
 app.use('/api/individualcost', individualcost);
 app.use('/api/oneoffpayment', oneoffpayment);
+app.use('/api/record', record);
 
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') {

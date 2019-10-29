@@ -47,7 +47,7 @@ router.get("/analytics", protect, (req, res) => {
                                 .where("is_delete")
                                 .equals(0)
                                 .limit(5)
-                                .sort({ date: -1 })
+                                .sort({$natural:-1})
                                 .then(employee => {
                                   const totalCount = {
                                     employee,

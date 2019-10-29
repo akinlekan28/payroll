@@ -12,6 +12,7 @@ import { registerEmployee } from "../../actions/employeeActions";
 import { banks } from "../common/Utilities";
 import Spinner from "../common/Spinner";
 import Button from "../common/Button";
+import {Link} from 'react-router-dom';
 
 class AddEmployee extends Component {
   constructor() {
@@ -60,6 +61,8 @@ class AddEmployee extends Component {
     loadingBtn.innerHTML = "Adding "
     loadingBtn.appendChild(loadingComp)
 
+    let bankName = this.state.bankName;
+    bankName = bankName.toUpperCase();
     const employeeDetails = {
       name: this.state.name,
       email: this.state.email,
@@ -67,7 +70,7 @@ class AddEmployee extends Component {
       department: this.state.department,
       level: this.state.level,
       stateResidence: this.state.stateResidence,
-      bankName: this.state.bankName,
+      bankName,
       accountNumber: this.state.accountNumber,
       pfaName: this.state.pfaName,
       pensionAccountNumber: this.state.pensionAccountNumber
@@ -115,6 +118,7 @@ class AddEmployee extends Component {
                   <div className="card-header">
                     <h4 className="justify-content-center text-danger">
                       *All fields are required
+                      <p className="btn-primary btn-lg mt-3"><Link to="/employee/upload" className="to-upload">Upload Employee Records</Link></p>
                     </h4>
                   </div>
                   <div className="card-body">

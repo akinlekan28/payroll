@@ -35,6 +35,7 @@ import AllTimeSingle from './components/payroll/all/records/AllTimeSingle';
 import AllTimeMonthYear from './components/payroll/all/records/AllTimeMonthYear';
 import AllTimeYear from './components/payroll/all/records/AllTimeYear';
 import AddRole from './components/userlevel/AddRole';
+import UploadEmployee from './components/employee/UploadEmployee';
 import Documentation from './components/documentation/Doc';
 
 //check for token
@@ -82,6 +83,7 @@ class App extends Component {
                 component={ViewEmployee}
               />
             </Switch>
+            <Switch><PrivateRoute exact path="/employee/upload" component={UploadEmployee} />></Switch>
             <Switch>
               <PrivateRoute
                 exact

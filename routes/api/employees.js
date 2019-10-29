@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const protect = passport.authenticate("jwt", { session: false });
+const fs = require('fs');
+const multer = require('multer');
+const excelToJson = require('convert-excel-to-json');
 
 const EmployeeInput = require("../../validation/employee");
+global.__basedir = __dirname;
 
 //Load models
 const Employee = require("../../models/Employee");
@@ -278,5 +282,83 @@ router.delete("/:id", protect, (req, res) => {
       res.status(404).json({ message: "Error fetching employee information" })
     );
 });
+
+
+//multer upload storage
+const storage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, __basedir + '/docs/')
+  },
+  filename: (req, res, cb) => {
+    cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname)
+  }
+})
+
+const upload = multer({storage: storage});
+
+//@route Post api/employee/upload
+//@desc Upload employee route
+//@access Private
+router.post("/upload", protect, upload.single("uploadfile"), (req, res) => {
+  importExcelData2MongoDB(__basedir + '/docs/' + req.file.filename);
+    res.json({
+        'msg': 'File uploaded/import successfully!', 'file': req.file
+    });
+})
+
+function importExcelData2MongoDB(filePath){
+  // -> Read Excel File to Json Data
+  const excelData = excelToJson({
+      sourceFile: filePath,
+      sheets:[{
+          // Excel Sheet Name
+          name: 'Customers',
+
+          // Header Row -> be skipped and will not be present at our result object.
+          header:{
+             rows: 1
+          },
+    
+          // Mapping columns to keys
+          columnToKey: {
+              A: 'tag',
+              B: 'name',
+              C: 'email',
+              D: 'designation',
+              E: 'department',
+              F: 'stateResidence',
+              G: 'bankName',
+              H: 'accountNumber',
+              I: 'pfaName',
+              J: 'pensionAccountNumber',
+              K: 'level'
+          }
+      }]
+  });
+
+  // -> Log Excel Data to Console
+  console.log(excelData);
+
+  /**
+  { 
+      Customers:
+      [ 
+          { _id: 1, name: 'Jack Smith', address: 'Massachusetts', age: 23 },
+          { _id: 2, name: 'Adam Johnson', address: 'New York', age: 27 },
+          { _id: 3, name: 'Katherin Carter', address: 'Washington DC', age: 26 },
+          { _id: 4, name: 'Jack London', address: 'Nevada', age: 33 },
+          { _id: 5, name: 'Jason Bourne', address: 'California', age: 36 } 
+      ] 
+  }
+  */	
+
+  // Insert Json-Object to MongoDB
+      Employee.insertMany(excelData.Customers, (err, res) => {
+          if (err) throw err;
+          console.log("Number of documents inserted: " + res.insertedCount);
+      });
+    
+  fs.unlinkSync(filePath);
+}
 
 module.exports = router;
