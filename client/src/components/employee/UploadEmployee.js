@@ -88,6 +88,7 @@ class UploadEmployee extends Component{
                                         <div className="card-body">
                                             <form onSubmit={this.onSubmit}>
                                                 <div className="form-group">
+                                                    <p className="text-danger">*Employee level name is case sensitive and it should be spelt accordingly</p>
                                                     <input 
                                                         type="file" 
                                                         className="form-control" 
