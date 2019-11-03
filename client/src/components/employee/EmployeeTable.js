@@ -7,11 +7,21 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { toast } from "react-toastify";
 import TextFieldGroup from '../common/TextFieldGroup';
+import Pagination from '../common/Pagination';
+import SelectListGroup from '../common/SelectListGroup';
 
 class EmployeeTable extends Component {
 
-  state = {
-    search: ''
+  constructor() {
+    super();
+
+    this.state = {
+      search: '',
+      currentPage: 1,
+      employeePerPage: "10"
+    }
+
+    this.onChange = this.onChange.bind(this)
   }
 
   onChange(e) {
@@ -55,10 +65,27 @@ class EmployeeTable extends Component {
     });
   }
 
+  paginate(pageNumber) {
+    this.setState({
+      currentPage: pageNumber
+    })
+  }
+
   render() {
     const { employees, auth } = this.props;
+    const { currentPage, employeePerPage } = this.state;
 
-    let employeeDetails = employees.map(employee => (
+    const indexOfLastEmployee = currentPage * employeePerPage;
+    const indexOfFirstEmployee = indexOfLastEmployee - employeePerPage;
+    const currentEmployee = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    let recordGroup = [
+      {_id: "5", name: "5"},
+      { name: "10", _id: "10" },
+      { name: "20", _id: "20" },
+      { name: "30", _id: "30" }
+    ]
+
+    let employeeDetails = currentEmployee.map(employee => (
       <tr key={employee._id} id="search-item">
         <td>{employee.tag}</td>
         <td>{employee.name}</td>
@@ -95,19 +122,31 @@ class EmployeeTable extends Component {
             <div className="card-header">
               <h4 className="text-center">Basic employee details</h4>
             </div>
-            <div className="live-search ml-4">
-            <TextFieldGroup
-                  type="text"
-                  name="search"
-                  label="Search payslip"
-                  placeholder="Employee tag or name"
-                  value={this.state.search}
-                  onChange={this.onChange.bind(this)}
-                  tabindex="1"
-                  className="live-search"
-                />
-            </div>
             <div className="card-body">
+              <div className="row">
+                <div className="col-md-3">
+                  <TextFieldGroup
+                    type="text"
+                    name="search"
+                    label="Search payslip"
+                    placeholder="Employee tag or name"
+                    value={this.state.search}
+                    onChange={this.onChange}
+                    tabindex="1"
+                    className="live-search"
+                  />
+                </div>
+                <div className="col-md-3">
+                  <SelectListGroup
+                    label="Record per page"
+                    placeholder="Select record per page"
+                    name="employeePerPage"
+                    value={this.state.employeePerPage}
+                    onChange={this.onChange}
+                    options={recordGroup}
+                  />
+                </div>
+              </div>
               <div className="table-responsive">
                 <table className="table table-stripped" id="table-1">
                   <thead>
@@ -123,6 +162,7 @@ class EmployeeTable extends Component {
                   <tbody>{employeeDetails}</tbody>
                 </table>
               </div>
+              <Pagination employeePerPage={employeePerPage} totalEmployees={employees.length} paginate={this.paginate.bind(this)} />
             </div>
           </div>
         </div>
