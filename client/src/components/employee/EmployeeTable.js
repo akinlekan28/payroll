@@ -18,7 +18,7 @@ class EmployeeTable extends Component {
     this.state = {
       search: '',
       currentPage: 1,
-      employeePerPage: "10"
+      employeePerPage: "5"
     }
 
     this.onChange = this.onChange.bind(this)
@@ -78,6 +78,7 @@ class EmployeeTable extends Component {
     const indexOfLastEmployee = currentPage * employeePerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - employeePerPage;
     const currentEmployee = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    let paginateVisibility = parseInt(employeePerPage);
     let recordGroup = [
       {_id: "5", name: "5"},
       { name: "10", _id: "10" },
@@ -136,7 +137,7 @@ class EmployeeTable extends Component {
                     className="live-search"
                   />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-2">
                   <SelectListGroup
                     label="Record per page"
                     placeholder="Select record per page"
@@ -162,7 +163,7 @@ class EmployeeTable extends Component {
                   <tbody>{employeeDetails}</tbody>
                 </table>
               </div>
-              <Pagination employeePerPage={employeePerPage} totalEmployees={employees.length} paginate={this.paginate.bind(this)} />
+              {employees.length < paginateVisibility ? '' : (<Pagination employeePerPage={employeePerPage} totalEmployees={employees.length} paginate={this.paginate.bind(this)} currentPage={currentPage} />)}
             </div>
           </div>
         </div>

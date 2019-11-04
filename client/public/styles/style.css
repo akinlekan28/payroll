@@ -4638,3 +4638,7 @@ body.layout-3 .main-wrapper {
 .push-download{
   cursor: pointer;
 }
+.pagination-active, .pagination-active:hover{
+  background: #6777ef;
+  color: #ffffff !important;
+}

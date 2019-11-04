@@ -6,8 +6,25 @@ import PropTypes from "prop-types";
 import { deleteLevel } from "../../actions/levelActions";
 import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
+import SelectListGroup from '../common/SelectListGroup';
+import Pagination from '../common/Pagination';
 
 class ViewLevelTable extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      currentPage: 1,
+      levelPerPage: "5"
+    }
+  }
+
+  paginate(pageNumber) {
+    this.setState({
+      currentPage: pageNumber
+    })
+  }
+
   deleteDialog(id) {
     confirmAlert({
       title: "Delete employee level ?",
@@ -37,9 +54,27 @@ class ViewLevelTable extends Component {
     });
   }
 
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   render() {
     const { levels } = this.props;
-    const levelTableContainer = levels.map(level => (
+    const { currentPage, levelPerPage } = this.state;
+
+    const indexOfLastLevel = currentPage * levelPerPage;
+    const indexOfFirstLevel = indexOfLastLevel - levelPerPage;
+    const currentLevel = levels.slice(indexOfFirstLevel, indexOfLastLevel);
+    let paginateVisibility = parseInt(levelPerPage);
+
+    let recordGroup = [
+      { _id: "5", name: "5" },
+      { name: "10", _id: "10" },
+      { name: "20", _id: "20" },
+      { name: "30", _id: "30" }
+    ]
+
+    const levelTableContainer = currentLevel.map(level => (
       <tr key={level._id}>
         <td>{level.name}</td>
         <td>
@@ -70,6 +105,18 @@ class ViewLevelTable extends Component {
             <h4 className="justify-content-center">View all employee levels</h4>
           </div>
           <div className="card-body">
+            <div className="row">
+              <div className="col-md-3">
+                <SelectListGroup
+                  label="Record per page"
+                  placeholder="Select record per page"
+                  name="employeePerPage"
+                  value={this.state.levelPerPage}
+                  onChange={this.onChange.bind(this)}
+                  options={recordGroup}
+                />
+              </div>
+            </div>
             <div className="table-responsive">
               <table className="table table-stripped" id="table-1">
                 <thead>
@@ -83,6 +130,7 @@ class ViewLevelTable extends Component {
                 <tbody>{levelTableContainer}</tbody>
               </table>
             </div>
+            {levels.length < paginateVisibility ? '' : (<Pagination employeePerPage={levelPerPage} totalEmployees={levels.length} paginate={this.paginate.bind(this)} currentPage={currentPage} />)}
           </div>
         </div>
       </div>
