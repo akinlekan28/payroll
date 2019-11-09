@@ -59,7 +59,7 @@ class Register extends Component {
       .registerUser(userData)
       .then(res => {
         if (res.type === "ADD_USER"){
-          toast.success("User successfully registered, proceed to login!");
+          return ((toast.success("User successfully registered, proceed to login!")) && (loadingBtn.innerHTML = "Register"))
         }
         if (res.type === "GET_ERRORS") {
           loadingBtn.innerHTML = "Register";

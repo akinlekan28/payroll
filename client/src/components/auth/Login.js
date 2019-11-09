@@ -49,7 +49,7 @@ class Login extends Component {
     this.props
       .loginUser(loginData)
       .then(res => {
-        if (res.type === "GET_ERRORS") {
+        if (res && res.type === "GET_ERRORS") {
           loadingBtn.innerHTML = "Login";
         }
       })
