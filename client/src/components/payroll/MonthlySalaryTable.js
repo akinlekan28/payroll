@@ -116,7 +116,7 @@ class MonthlySalaryTable extends Component {
                   <tbody>{employeeDetails}</tbody>
                 </table>
               </div>
-              {employees.length < paginateVisibility ? '' : (<Pagination employeePerPage={employeePerPage} totalEmployees={employees.length} paginate={this.paginate.bind(this)} currentPage={currentPage} />)}
+              {employees.length < paginateVisibility ? '' : (<Pagination employeePerPage={employeePerPage} totalEmployees={employees.length} paginate={this.paginate.bind(this)} currentPage={currentPage} currentLevel={currentEmployee} />)}
             </div>
           </div>
         </div>

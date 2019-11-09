@@ -17,6 +17,8 @@ class ViewLevelTable extends Component {
       currentPage: 1,
       levelPerPage: "5"
     }
+
+    this.onChange = this.onChange.bind(this);
   }
 
   paginate(pageNumber) {
@@ -110,9 +112,9 @@ class ViewLevelTable extends Component {
                 <SelectListGroup
                   label="Record per page"
                   placeholder="Select record per page"
-                  name="employeePerPage"
+                  name="levelPerPage"
                   value={this.state.levelPerPage}
-                  onChange={this.onChange.bind(this)}
+                  onChange={this.onChange}
                   options={recordGroup}
                 />
               </div>
@@ -130,7 +132,7 @@ class ViewLevelTable extends Component {
                 <tbody>{levelTableContainer}</tbody>
               </table>
             </div>
-            {levels.length < paginateVisibility ? '' : (<Pagination employeePerPage={levelPerPage} totalEmployees={levels.length} paginate={this.paginate.bind(this)} currentPage={currentPage} />)}
+            {levels.length < paginateVisibility ? '' : (<Pagination employeePerPage={levelPerPage} totalEmployees={levels.length} paginate={this.paginate.bind(this)} currentPage={currentPage} currentLevel={currentLevel} />)}
           </div>
         </div>
       </div>

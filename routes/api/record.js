@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({storage, fileFilter: (req, file, callback) => {
-    if(['xls', 'xlsx'].indexOf(file.originalname.split('.')[file.originalname.split('.').length-1]) === -1){
+    if(['xls', 'xlsx', 'NUMBERS'].indexOf(file.originalname.split('.')[file.originalname.split('.').length-1]) === -1){
         return callback(new Error('Wrong extension type'));
     }
     callback(null, true);
@@ -66,9 +66,6 @@ const importToDb = filePath => {
         }]
     });
 
-    let fTag = Math.random().toString(9).substring(2, 7) + Math.random().toString(36).substring(2, 4);
-    let tag = "EMP" + fTag;
-
     excelData.Employees.forEach(employee => {
         let name = employee.name;
         let email = employee.email;
@@ -81,6 +78,8 @@ const importToDb = filePath => {
         let pfaName = employee.pfaName;
         let pensionAccountNumber = employee.pensionAccountNumber;
         let levelName = employee.levelName;
+        let fTag = Math.random().toString(9).substring(2, 7) + Math.random().toString(36).substring(2, 4);
+        let tag = "EMP" + fTag;
  
         Level.findOne({name: employee.levelName}).where('is_delete').equals(0)
         .then(level => {
