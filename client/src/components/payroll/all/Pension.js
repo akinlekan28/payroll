@@ -62,7 +62,7 @@ class Pension extends PureComponent {
           <div className="card-header justify-content-center">
             <h3>Employees Pension</h3>
           </div>
-          <div className="live-search ml-4">
+            <div className="card-body">
             <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">Back</Link>
             <ReactHTMLTableToExcel
                 id="test-table-xls-button"
@@ -72,18 +72,18 @@ class Pension extends PureComponent {
                 sheet="employee pension"
                 buttonText="Download excel"
               />
-              <TextFieldGroup
-                  type="text"
-                  name="search"
-                  label="Search employee"
-                  placeholder="Enter name"
-                  value={this.state.search}
-                  onChange={this.onChange}
-                  tabindex="1"
-                  className="live-search"
-              />
-           </div>
-            <div className="card-body">
+              <div className="live-search">
+                  <TextFieldGroup
+                      type="text"
+                      name="search"
+                      label="Search employee"
+                      placeholder="Enter name"
+                      value={this.state.search}
+                      onChange={this.onChange}
+                      tabindex="1"
+                      className="live-search"
+                  />
+              </div>
               <div className="table-responsive">
                 <table className="table table-stripped" id="table-to-xls">
                   <thead>

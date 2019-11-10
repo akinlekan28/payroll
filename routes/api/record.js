@@ -35,6 +35,7 @@ const upload = multer({storage, fileFilter: (req, file, callback) => {
 router.post('/', protect, upload.single("file"), (req, res) => {
     let recordPath = path.join(__basedir, '../../', 'docs/' + req.file.filename)
     importToDb(recordPath);
+    fs.unlinkSync(recordPath);
     res.json({'msg': 'Employee record uploaded and successfully imported', 'file': req.file})
 })
 
@@ -112,7 +113,6 @@ const importToDb = filePath => {
         })
         .catch(err => console.log(err))
     })
-    fs.unlinkSync(filePath);
 }
 
 module.exports = router;

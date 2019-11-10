@@ -63,18 +63,17 @@ class WithPension extends PureComponent {
             <div className="card-header justify-content-center">
               <h3>Employees payslips with pension</h3>
             </div>
-            <div className="live-search ml-4">
-                <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">
-                    Back
-                </Link>
-                <ReactHTMLTableToExcel
-                    id="test-table-xls-button"
-                    className="download-table-xls-button btn btn-lg btn-primary mb-4 ml-3"
-                    table="table-to-xls"
-                    filename="payroll"
-                    sheet="Payroll with pension"
-                    buttonText="Download excel"
-                />
+            <div className="card-body">
+              <Link to="/payroll/all" className="btn btn-lg btn-warning mb-4">Back</Link>
+              <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button btn btn-lg btn-primary mb-4 ml-3"
+                table="table-to-xls"
+                filename="payroll"
+                sheet="Payroll with pension"
+                buttonText="Download excel"
+              />
+              <div className="live-search">
                 <TextFieldGroup
                     type="text"
                     name="search"
@@ -86,7 +85,6 @@ class WithPension extends PureComponent {
                     className="live-search"
                   />
               </div>
-            <div className="card-body">
             <div className="table-responsive">
               <table className="table table-stripped" id="table-to-xls">
                 <thead>
