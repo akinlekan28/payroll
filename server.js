@@ -14,6 +14,7 @@ const dashboard = require('./routes/api/dashboard');
 const individualcost = require('./routes/api/individualcost');
 const oneoffpayment = require('./routes/api/oneoffpayment');
 const record = require('./routes/api/record');
+const {createSuperAdmin} = require('./utils/createSuperAdmin');
 
 const app = express();
 
@@ -63,4 +64,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`App is running on port ${PORT}`));
+app.listen(PORT, () => {
+  
+  console.log(`App is running on port ${PORT}`)
+  setTimeout( () => {
+    createSuperAdmin()
+  }, 20000)
+
+});
