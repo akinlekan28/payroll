@@ -31,7 +31,9 @@ let presentYear = date.getFullYear();
 //@access Private
 router.get("/:id", protect, (req, res) => {
 
-  let salaryDay = date.getDate();
+//   let salaryDay = date.getDate();
+  
+  let salaryDay = 23;
 
   if (salaryDay >= 21) {
     Employee.findOne({ _id: req.params.id }).where('is_delete').equals(0)
