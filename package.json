@@ -30,11 +30,11 @@
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "concurrently": "^4.1.0",
     "convert-excel-to-json": "^1.6.1",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.15",
     "multer": "^1.4.2",
