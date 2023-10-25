@@ -859,10 +859,7 @@ router.post('/send/:id', protect, (req, res) => {
           .catch((err) =>
             res
               .status(400)
-              .json({
-                message: 'Error sending employee payslip',
-                error: err,
-              })
+              .json({ message: 'Error sending employee payslip' })
           );
       });
     })
