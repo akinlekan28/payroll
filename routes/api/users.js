@@ -1,26 +1,26 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const passport = require("passport");
-const keys = require("../../config/keys");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const keys = require('../../config/keys');
 const mailer = require('@sendgrid/mail');
 mailer.setApiKey(keys.sendGridKey);
 
 //Load input validation
-const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
-const validateResetInput = require("../../validation/reset");
-const validateNewInput = require("../../validation/newpassword");
-const validateRoleInput = require("../../validation/role");
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
+const validateResetInput = require('../../validation/reset');
+const validateNewInput = require('../../validation/newpassword');
+const validateRoleInput = require('../../validation/role');
 
 //Load user model
-const User = require("../../models/User");
+const User = require('../../models/User');
 
 //@route  Get api/users/register
 //@desc Register user route
 //@access Public
-router.post("/register", (req, res) => {
+router.post('/register', (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
@@ -28,17 +28,17 @@ router.post("/register", (req, res) => {
   }
 
   User.findOne({
-    email: req.body.email
+    email: req.body.email,
   })
-    .then(user => {
+    .then((user) => {
       if (user) {
-        errors.email = "Email Already exists";
+        errors.email = 'Email Already exists';
         return res.status(400).json(errors);
       } else {
         const newUser = new User({
           name: req.body.name,
           email: req.body.email,
-          password: req.body.password
+          password: req.body.password,
         });
 
         bcrypt.genSalt(10, (err, salt) => {
@@ -47,19 +47,19 @@ router.post("/register", (req, res) => {
             newUser.password = hash;
             newUser
               .save()
-              .then(user => res.json(user))
-              .catch(err => console.log(err));
+              .then((user) => res.json(user))
+              .catch((err) => console.log(err));
           });
         });
       }
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 });
 
 //@route  Post api/users/login
 //@desc Login user route
 //@access Public
-router.post("/login", (req, res) => {
+router.post('/login', (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
 
   if (!isValid) {
@@ -70,30 +70,39 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
 
   User.findOne({ email })
-    .then(user => {
+    .then((user) => {
       if (!user) {
-        errors.email = "User not found";
+        errors.email = 'User not found';
         return res.status(404).json(errors);
       }
-      bcrypt.compare(password, user.password).then(isMatch => {
+      bcrypt.compare(password, user.password).then((isMatch) => {
         if (isMatch) {
           //User match
-          const payload = { id: user.id, name: user.name, is_admin: user.is_admin }; //Create JWT Payload
+          const payload = {
+            id: user.id,
+            name: user.name,
+            is_admin: user.is_admin,
+          }; //Create JWT Payload
 
           //Sign token
-          jwt.sign(payload, keys.secretKey, { expiresIn: 7200 }, (e, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token
-            });
-          });
+          jwt.sign(
+            payload,
+            keys.secretKey,
+            { expiresIn: 7200 },
+            (e, token) => {
+              res.json({
+                success: true,
+                token: 'Bearer ' + token,
+              });
+            }
+          );
         } else {
-          errors.password = "Password incorrect";
+          errors.password = 'Password incorrect';
           return res.status(400).json(errors);
         }
       });
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 });
 
 //@route  Get api/users/current
@@ -101,13 +110,13 @@ router.post("/login", (req, res) => {
 //@access Private
 
 router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
+  '/current',
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     res.json({
       id: req.user.id,
       name: req.user.name,
-      email: req.user.email
+      email: req.user.email,
     });
   }
 );
@@ -116,67 +125,81 @@ router.get(
 //@desc Get all users
 //@access Private
 
-router.get('/all', passport.authenticate("jwt", { session: false }), (req, res) => {
-  User.find({is_delete: 0})
-  .then(users => res.json(users))
-  .catch(err => console.log(err))
-})
+router.get(
+  '/all',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.find({ is_delete: 0 })
+      .then((users) => res.json(users))
+      .catch((err) => console.log(err));
+  }
+);
 
 //@route  Post api/users/assignrole
 //@desc asign user role
 //@access Private
 
-router.post('/assignrole', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const {errors, isValid} = validateRoleInput(req.body);
+router.post(
+  '/assignrole',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateRoleInput(req.body);
 
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
-
-  const userFields = {};
-
-  if(req.body.user) userFields.user = req.body.user;
-  if(req.body.role) userFields.is_admin = req.body.role;
-
-  User.findOne({_id: req.body.user}).where('is_delete').equals(0)
-  .then(user => {
-    if(user){
-     let role = parseInt(req.body.role);
-     let currentUser = req.body.currentUser;
-     let userId = JSON.stringify(user._id).replace(/^"(.*)"$/, '$1');
-     let loggedPrivilege = req.body.loggedPrivilege;
-
-      if(userId === currentUser){
-        errors.role = 'You cannot set current logged user role';
-        return res.status(400).json(errors)
-     }
-
-     if(loggedPrivilege === 0){
-      errors.role = "You dont have the appropriate privileges";
+    if (!isValid) {
       return res.status(400).json(errors);
     }
 
-     if(user.is_admin === role){
-       errors.role = 'User already has this role';
-       return res.status(400).json(errors)
-     }
+    const userFields = {};
 
-     User.findOneAndUpdate(
-      {_id: req.body.user},
-      {$set: userFields},
-      {new: true}
-    ).then(user => res.status(200).json({success: true}))
-    .catch(err => console.log(err))
-    }
-  })
-  .catch(err => console.log(err))
-})
+    if (req.body.user) userFields.user = req.body.user;
+    if (req.body.role) userFields.is_admin = req.body.role;
+
+    User.findOne({ _id: req.body.user })
+      .where('is_delete')
+      .equals(0)
+      .then((user) => {
+        if (user) {
+          let role = parseInt(req.body.role);
+          let currentUser = req.body.currentUser;
+          let userId = JSON.stringify(user._id).replace(
+            /^"(.*)"$/,
+            '$1'
+          );
+          let loggedPrivilege = req.body.loggedPrivilege;
+
+          if (userId === currentUser) {
+            errors.role = 'You cannot set current logged user role';
+            return res.status(400).json(errors);
+          }
+
+          if (loggedPrivilege === 0) {
+            errors.role = 'You dont have the appropriate privileges';
+            return res.status(400).json(errors);
+          }
+
+          if (user.is_admin === role) {
+            errors.role = 'User already has this role';
+            return res.status(400).json(errors);
+          }
+
+          User.findOneAndUpdate(
+            { _id: req.body.user },
+            { $set: userFields },
+            { new: true }
+          )
+            .then((user) => res.status(200).json({ success: true }))
+            .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+);
 
 //@route  Post api/users/forgotpassword
 //@desc Send resetpassword token
 //@access Public
 
-router.post("/forgotpassword", (req, res) => {
+router.post('/forgotpassword', (req, res) => {
   const { errors, isValid } = validateResetInput(req.body);
 
   if (!isValid) {
@@ -184,34 +207,33 @@ router.post("/forgotpassword", (req, res) => {
   }
 
   User.findOne({ email: req.body.email })
-    .then(user => {
+    .then((user) => {
       if (!user) {
-        errors.email = "User not found";
+        errors.email = 'User not found';
         return res.status(404).json(errors);
       }
 
       let token = token1();
 
-          const resetUser = {
-            email: req.body.email,
-            name: user.name,
-            token: token,
-            password: user.password,
-            expiry: Date.now() + 86400000
-          };
-          
-          User.findOneAndUpdate(
-            { name: user.name },
-            { $set: resetUser },
-            { new: true }
-          )
-            .then(user => {
+      const resetUser = {
+        email: req.body.email,
+        name: user.name,
+        token: token,
+        password: user.password,
+        expiry: Date.now() + 86400000,
+      };
 
-              const resetMessage = {
-                to: `${user.email}`,
-                from: 'no-reply@payeroll.app',
-                subject: 'Password Reset',
-                html:`<html>
+      User.findOneAndUpdate(
+        { name: user.name },
+        { $set: resetUser },
+        { new: true }
+      )
+        .then((user) => {
+          const resetMessage = {
+            to: `${user.email}`,
+            from: 'no-reply@payeroll.app',
+            subject: 'Password Reset',
+            html: `<html>
                         <head>
                           <title>Forget Password Email</title>
                         </head>
@@ -224,29 +246,32 @@ router.post("/forgotpassword", (req, res) => {
                           </div>
                         </body>
                       </html>`,
-              }
+          };
 
-              mailer.send(resetMessage)
-              .then(() => {
-                return res
-                  .status(200)
-                  .json({ success: "Password link sent successfully!" });
-              })
-              .catch(() => {
-                  errors.email = "Error sending password reset link";
-                  return res.status(400).json(errors);
-              });
+          mailer
+            .send(resetMessage)
+            .then(() => {
+              return res
+                .status(200)
+                .json({
+                  success: 'Password link sent successfully!',
+                });
             })
-            .catch(err => console.log(err));
+            .catch(() => {
+              errors.email = 'Error sending password reset link';
+              return res.status(400).json(errors);
+            });
+        })
+        .catch((err) => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch((err) => console.log(err));
 });
 
 //@route  Post api/users/forgotpassword
 //@desc Reset user password
 //@access Public
 
-router.post("/resetpassword/:token", (req, res) => {
+router.post('/resetpassword/:token', (req, res) => {
   const { errors, isValid } = validateNewInput(req.body);
 
   if (!isValid) {
@@ -254,12 +279,12 @@ router.post("/resetpassword/:token", (req, res) => {
   }
 
   User.findOne({ token: req.params.token })
-    .then(user => {
+    .then((user) => {
       if (!user.token) {
-        errors.noToken = "Password reset token not found or invalid!";
+        errors.noToken = 'Password reset token not found or invalid!';
         return res.status(404).json(errors);
       } else if (user.expiry < Date.now()) {
-        errors.email = "Password reset token expired!";
+        errors.email = 'Password reset token expired!';
         return res.status(422).json(errors);
       }
       if (req.params.token === user.token) {
@@ -272,32 +297,38 @@ router.post("/resetpassword/:token", (req, res) => {
               { password: req.body.password },
               { name: user.name }
             )
-              .then(user => {
+              .then((user) => {
                 res
                   .status(200)
-                  .json({ user, success: "Password successfully changed!" });
+                  .json({
+                    user,
+                    success: 'Password successfully changed!',
+                  });
               })
-              .catch(err => console.log(err));
+              .catch((err) => console.log(err));
           });
         });
       } else {
-        errors.email = "Password reset token does not match";
+        errors.email = 'Password reset token does not match';
         return res.status(400).json(errors);
       }
     })
-    .catch(err => {
-      errors.noToken = "Password reset token not found or invalid!";
+    .catch((err) => {
+      errors.noToken = 'Password reset token not found or invalid!';
       return res.status(404).json(errors);
     });
 });
 
 const token1 = () => {
-  let text = "";
-  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for( let i = 0; i < 20; i ++){
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  let text = '';
+  let possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 20; i++) {
+    text += possible.charAt(
+      Math.floor(Math.random() * possible.length)
+    );
   }
   return text;
-}
+};
 
 module.exports = router;

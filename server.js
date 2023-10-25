@@ -1,9 +1,10 @@
-const express = require("express");
+const express = require('express');
 const bodyPaser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
 const cors = require('cors');
+// const redis = require('redis');
 
 const users = require('./routes/api/users');
 const level = require('./routes/api/levels');
@@ -14,33 +15,29 @@ const dashboard = require('./routes/api/dashboard');
 const individualcost = require('./routes/api/individualcost');
 const oneoffpayment = require('./routes/api/oneoffpayment');
 const record = require('./routes/api/record');
-const {createSuperAdmin} = require('./utils/createSuperAdmin');
+const { createSuperAdmin } = require('./utils/createSuperAdmin');
 
 const app = express();
 
 //Body parser middleware
 app.use(bodyPaser.urlencoded({ extended: false }));
 app.use(bodyPaser.json());
-app.use(cors())
+app.use(cors());
 
 //Db
-const db = require("./config/keys").mongoURI;
+const db = require('./config/keys').mongoURI;
 
 //MongoDB connection
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.log(err));
 
 //Passport Middleware
 app.use(passport.initialize());
 
 //Passport config
 require('./config/passport')(passport);
-
 
 //Use routes
 app.use('/api/users', users);
@@ -59,16 +56,24 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    res.sendFile(
+      path.resolve(__dirname, 'client', 'build', 'index.html')
+    );
   });
 }
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  
-  console.log(`App is running on port ${PORT}`)
-  setTimeout( () => {
-    createSuperAdmin()
-  }, 20000)
+const PORT = process.env.PORT || 6000;
+// const REDIS_PORT = process.env.REDIS_PORT || 6379;
 
+// const client = redis.createClient(REDIS_PORT);
+
+// client.on('connect', () => {
+//   console.log(`Redis coonected on port ${REDIS_PORT}`);
+// });
+
+app.listen(PORT, () => {
+  console.log(`App is running on port ${PORT}`);
+  setTimeout(() => {
+    createSuperAdmin();
+  }, 20000);
 });

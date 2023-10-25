@@ -24,13 +24,14 @@ const createSuperAdmin = () => {
             .then(registered => {
                 if(registered){
                     _sendEmail(registered)
-                    .then(res => console.log(res))
+                    .then(res => console.log("Message successfully sent!"))
                     .catch(err => console.log(err))
                 } 
             })
             .catch(err => console.log(err))
+        } else {
+            console.log("User email already exist")
         }
-        console.log("User email already exist")
     })
     .catch(err => condsole.log(err))
 
