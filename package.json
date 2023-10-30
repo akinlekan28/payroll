@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/akinlekan28/payroll#readme",
   "dependencies": {
-    "@sendgrid/mail": "^6.3.1",
+    "@sendgrid/mail": "^6.5.5",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "concurrently": "^4.1.0",

@@ -1,35 +1,34 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 class PayslipTable extends PureComponent {
-
   render() {
     const { payroll } = this.props;
 
     let extraEarning = [];
     let extraDeduction = [];
 
-    payroll.individualcost.forEach(individualcostItem => {
-      if (individualcostItem.costType === "income") {
+    payroll.individualcost.forEach((individualcostItem) => {
+      if (individualcostItem.costType === 'income') {
         extraEarning.push(individualcostItem);
       } else {
         extraDeduction.push(individualcostItem);
       }
     });
 
-    payroll.oneOffPaymentArray.forEach(oneOff => {
-      if (oneOff.costType === "income") {
+    payroll.oneOffPaymentArray.forEach((oneOff) => {
+      if (oneOff.costType === 'income') {
         extraEarning.push(oneOff);
       } else {
         extraDeduction.push(oneOff);
       }
     });
 
-    const formatMoney = money => {
+    const formatMoney = (money) => {
       let formatedValue = money
         .toFixed(2)
         .toString()
-        .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
       return formatedValue;
     };
 
@@ -48,39 +47,43 @@ class PayslipTable extends PureComponent {
                 </tr>
                 <tr>
                   <td>
-                    Employee Name:{" "}
+                    Employee Name:{' '}
                     <strong className="ml-2">
                       {payroll.employeeDetails.name}
                     </strong>
                   </td>
                   <td>
-                    Tax Year:{" "}
-                    <strong className="ml-5">{date.getFullYear()}</strong>
+                    Tax Year:{' '}
+                    <strong className="ml-5">
+                      {date.getFullYear()}
+                    </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    Employee Tag:{" "}
+                    Employee Tag:{' '}
                     <strong className="ml-5">
                       {payroll.employeeDetails.tag}
                     </strong>
                   </td>
                   <td>
-                    Pay Period:{" "}
+                    Pay Period:{' '}
                     <strong className="ml-5">
-                      {date.toLocaleString("en-us", { month: "long" })}
+                      {date.toLocaleString('en-us', {
+                        month: 'long',
+                      })}
                     </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    Designation:{" "}
+                    Designation:{' '}
                     <strong className="ml-5">
                       {payroll.employeeDetails.designation}
                     </strong>
                   </td>
                   <td>
-                    Department:{" "}
+                    Department:{' '}
                     <strong className="ml-5">
                       {payroll.employeeDetails.department}
                     </strong>
@@ -100,30 +103,32 @@ class PayslipTable extends PureComponent {
                           </td>
                           <td>
                             <strong>
-                              <span>&#8358;</span> {formatMoney(payroll.basic)}
+                              <span>₦</span>{' '}
+                              {formatMoney(payroll.basic)}
                             </strong>
                           </td>
                         </tr>
-                        {payroll.level.bonuses.map(bonus => (
+                        {payroll.level.bonuses.map((bonus) => (
                           <tr key={bonus._id}>
                             <td>
                               <strong>{bonus.name}</strong>
                             </td>
                             <td>
                               <strong>
-                                <span>&#8358;</span> {formatMoney(bonus.amount)}
+                                <span>₦</span>{' '}
+                                {formatMoney(bonus.amount)}
                               </strong>
                             </td>
                           </tr>
                         ))}
-                        {extraEarning.map(extraEarningItem => (
+                        {extraEarning.map((extraEarningItem) => (
                           <tr key={extraEarningItem._id}>
                             <td>
                               <strong>{extraEarningItem.name}</strong>
                             </td>
                             <td>
                               <strong>
-                                <span>&#8358;</span>{" "}
+                                <span>₦</span>{' '}
                                 {formatMoney(extraEarningItem.amount)}
                               </strong>
                             </td>
@@ -146,7 +151,8 @@ class PayslipTable extends PureComponent {
                           </td>
                           <td className="text-danger">
                             <strong>
-                              <span>&#8358;</span> {formatMoney(payroll.tax)}
+                              <span>₦</span>{' '}
+                              {formatMoney(payroll.tax)}
                             </strong>
                           </td>
                         </tr>
@@ -156,33 +162,39 @@ class PayslipTable extends PureComponent {
                           </td>
                           <td className="text-danger">
                             <strong>
-                              <span>&#8358;</span>{" "}
+                              <span>₦</span>{' '}
                               {formatMoney(payroll.pension)}
                             </strong>
                           </td>
                         </tr>
-                        {payroll.level.deductables.map(deductable => (
-                          <tr key={deductable._id}>
-                            <td>
-                              <strong>{deductable.name}</strong>
-                            </td>
-                            <td>
-                              <strong className="text-danger">
-                                <span>&#8358;</span>{" "}
-                                {formatMoney(deductable.amount)}
-                              </strong>
-                            </td>
-                          </tr>
-                        ))}
-                        {extraDeduction.map(extraDeductionItem => (
+                        {payroll.level.deductables.map(
+                          (deductable) => (
+                            <tr key={deductable._id}>
+                              <td>
+                                <strong>{deductable.name}</strong>
+                              </td>
+                              <td>
+                                <strong className="text-danger">
+                                  <span>₦</span>{' '}
+                                  {formatMoney(deductable.amount)}
+                                </strong>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                        {extraDeduction.map((extraDeductionItem) => (
                           <tr key={extraDeductionItem._id}>
                             <td>
-                              <strong>{extraDeductionItem.name}</strong>
+                              <strong>
+                                {extraDeductionItem.name}
+                              </strong>
                             </td>
                             <td>
                               <strong className="text-danger">
-                                <span>&#8358;</span>{" "}
-                                {formatMoney(extraDeductionItem.amount)}
+                                <span>₦</span>{' '}
+                                {formatMoney(
+                                  extraDeductionItem.amount
+                                )}
                               </strong>
                             </td>
                           </tr>
@@ -208,7 +220,7 @@ class PayslipTable extends PureComponent {
                           </td>
                           <td>
                             <strong>
-                              <span>&#8358;</span>{" "}
+                              <span>₦</span>{' '}
                               {formatMoney(payroll.grossEarning)}
                             </strong>
                           </td>
@@ -219,7 +231,7 @@ class PayslipTable extends PureComponent {
                           </td>
                           <td>
                             <strong className="text-danger">
-                              <span>&#8358;</span>{" "}
+                              <span>₦</span>{' '}
                               {formatMoney(payroll.totalDeductable)}
                             </strong>
                           </td>
@@ -230,7 +242,8 @@ class PayslipTable extends PureComponent {
                           </td>
                           <td>
                             <strong>
-                              <span>&#8358;</span> {formatMoney(payroll.netPay)}
+                              <span>₦</span>{' '}
+                              {formatMoney(payroll.netPay)}
                             </strong>
                           </td>
                         </tr>
@@ -255,7 +268,7 @@ class PayslipTable extends PureComponent {
 }
 
 PayslipTable.propTypes = {
-  payroll: PropTypes.object.isRequired
+  payroll: PropTypes.object.isRequired,
 };
 
 export default PayslipTable;

@@ -1,74 +1,78 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { deleteEmployee } from "../../actions/employeeActions";
-import { Link } from "react-router-dom";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
-import { toast } from "react-toastify";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { deleteEmployee } from '../../actions/employeeActions';
+import { Link } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { toast } from 'react-toastify';
 import TextFieldGroup from '../common/TextFieldGroup';
 import Pagination from '../common/Pagination';
 import SelectListGroup from '../common/SelectListGroup';
 
 class EmployeeTable extends Component {
-
   constructor() {
     super();
 
     this.state = {
       search: '',
       currentPage: 1,
-      employeePerPage: "5"
-    }
+      employeePerPage: '20',
+    };
 
-    this.onChange = this.onChange.bind(this)
+    this.onChange = this.onChange.bind(this);
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
       let text = this.state.search.toLowerCase();
-      document.querySelectorAll("#search-item").forEach(payslipRow => {
-        const item = payslipRow.firstChild.textContent;
-        const name = payslipRow.childNodes[1].textContent;
-        if (item.toLowerCase().indexOf(text) !== -1 || name.toLowerCase().indexOf(text) !== -1) {
-          payslipRow.style.display = "table-row";
-        } else {
-          payslipRow.style.display = "none";
-        }
-      });
+      document
+        .querySelectorAll('#search-item')
+        .forEach((payslipRow) => {
+          const item = payslipRow.firstChild.textContent;
+          const name = payslipRow.childNodes[1].textContent;
+          if (
+            item.toLowerCase().indexOf(text) !== -1 ||
+            name.toLowerCase().indexOf(text) !== -1
+          ) {
+            payslipRow.style.display = 'table-row';
+          } else {
+            payslipRow.style.display = 'none';
+          }
+        });
     });
   }
 
   deleteDialog(id) {
     confirmAlert({
-      title: "Delete employee record ?",
-      message: "Are you sure to do this",
+      title: 'Delete employee record ?',
+      message: 'Are you sure to do this',
       buttons: [
         {
-          label: "Yes Delete employee!",
+          label: 'Yes Delete employee!',
           onClick: () => {
             this.props
               .deleteEmployee(id)
-              .then(res => {
-                if (res.type === "DELETE_EMPLOYEE") {
-                  toast.success("Employee record deleted!");
+              .then((res) => {
+                if (res.type === 'DELETE_EMPLOYEE') {
+                  toast.success('Employee record deleted!');
                 }
               })
-              .catch(err => console.log(err));
-          }
+              .catch((err) => console.log(err));
+          },
         },
         {
-          label: "No cancel delete!",
-          onClick: () => {}
-        }
-      ]
+          label: 'No cancel delete!',
+          onClick: () => {},
+        },
+      ],
     });
   }
 
   paginate(pageNumber) {
     this.setState({
-      currentPage: pageNumber
-    })
+      currentPage: pageNumber,
+    });
   }
 
   render() {
@@ -76,17 +80,21 @@ class EmployeeTable extends Component {
     const { currentPage, employeePerPage } = this.state;
 
     const indexOfLastEmployee = currentPage * employeePerPage;
-    const indexOfFirstEmployee = indexOfLastEmployee - employeePerPage;
-    const currentEmployee = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    const indexOfFirstEmployee =
+      indexOfLastEmployee - employeePerPage;
+    const currentEmployee = employees.slice(
+      indexOfFirstEmployee,
+      indexOfLastEmployee
+    );
     let paginateVisibility = parseInt(employeePerPage);
     let recordGroup = [
-      {_id: "5", name: "5"},
-      { name: "10", _id: "10" },
-      { name: "20", _id: "20" },
-      { name: "30", _id: "30" }
-    ]
+      { _id: '5', name: '5' },
+      { name: '10', _id: '10' },
+      { name: '20', _id: '20' },
+      { name: '30', _id: '30' },
+    ];
 
-    let employeeDetails = currentEmployee.map(employee => (
+    let employeeDetails = currentEmployee.map((employee) => (
       <tr key={employee._id} id="search-item">
         <td>{employee.tag}</td>
         <td>{employee.name}</td>
@@ -99,19 +107,21 @@ class EmployeeTable extends Component {
             className="btn btn-info btn-sm"
           >
             View
-          </Link>{" "}
+          </Link>{' '}
           <Link
             to={`/employee/edit/${employee._id}`}
             className="btn btn-primary btn-sm"
           >
             Edit
-          </Link>{" "}
-          {auth.user.is_admin === 0 ? null : (<button
-            className="btn btn-danger btn-sm"
-            onClick={this.deleteDialog.bind(this, employee._id)}
-          >
-            Delete
-          </button>)}
+          </Link>{' '}
+          {auth.user.is_admin === 0 ? null : (
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={this.deleteDialog.bind(this, employee._id)}
+            >
+              Delete
+            </button>
+          )}
         </td>
       </tr>
     ));
@@ -163,7 +173,17 @@ class EmployeeTable extends Component {
                   <tbody>{employeeDetails}</tbody>
                 </table>
               </div>
-              {employees.length < paginateVisibility ? '' : (<Pagination employeePerPage={employeePerPage} totalEmployees={employees.length} paginate={this.paginate.bind(this)} currentPage={currentPage} currentLevel={currentEmployee} />)}
+              {employees.length < paginateVisibility ? (
+                ''
+              ) : (
+                <Pagination
+                  employeePerPage={employeePerPage}
+                  totalEmployees={employees.length}
+                  paginate={this.paginate.bind(this)}
+                  currentPage={currentPage}
+                  currentLevel={currentEmployee}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -173,14 +193,13 @@ class EmployeeTable extends Component {
 }
 
 EmployeeTable.propTypes = {
-  deleteEmployee: PropTypes.func.isRequired
+  deleteEmployee: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
-})
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 
-export default connect(
-  mapStateToProps,
-  { deleteEmployee }
-)(EmployeeTable);
+export default connect(mapStateToProps, { deleteEmployee })(
+  EmployeeTable
+);
