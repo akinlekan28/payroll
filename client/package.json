@@ -6,7 +6,7 @@
     "@progress/kendo-drawing": "^1.5.7",
     "@progress/kendo-react-pdf": "^2.5.0",
     "@trendmicro/react-sidenav": "^0.4.5",
-    "axios": "^0.18.0",
+    "axios": "^1.6.0",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
     "jwt-decode": "^2.2.0",
